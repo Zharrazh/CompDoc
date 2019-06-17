@@ -5,6 +5,6 @@ interface Props {
 }
 
 export const TBody: React.FC<React.PropsWithChildren<Props>> =
-  ({ className, children, ...other }) => {
-    return <tbody className={className} {...other}>{children}</tbody>
+  ({ className, children }) => {
+    return <tbody className={className}>{children}</tbody>
   };

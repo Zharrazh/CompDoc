@@ -3,7 +3,7 @@ import { ActionType } from 'actions/actionType';
 import { findLoaderItem } from 'core/reduxHelper';
 import { useSelector } from 'react-redux';
 
-import { Button, Line, Spinner } from 'components/shared/base';
+import { Button, Line, Spinner, Block } from 'components/shared/base';
 import { StoreType } from 'core/store';
 
 interface Props {
@@ -18,7 +18,7 @@ export const RepeatPanel: React.FC<React.PropsWithChildren<Props>> = ({ actionTy
     return (
       <Line justifyContent="center" alignItems="center">
         <Spinner />
-        <span className="ml-2">Loading...</span>
+        <Block inline ml="2">Loading...</Block>
       </Line>
     );
   if (item && item.isError)

@@ -1,7 +1,7 @@
 import { ActionType } from "actions/actionType";
 import { history } from './history';
 import { counter } from "./counter";
-import { tryGetMessage } from "./errorHelper";
+import { parseError } from "./parseError";
 import { NotFoundError } from "./notFoundError";
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { StoreType } from "./store";
@@ -28,7 +28,7 @@ interface LoaderData {
   isOk: boolean;
   isWait: boolean;
   isError: boolean;
-  error?: string;
+  error?: string | string[];
 
   [actionType: string]: any;
 }
@@ -53,7 +53,7 @@ const ok = (id: ActionType, number: number, mod?: string) =>
 const wait = (id: ActionType, number: number, mod?: string) =>
   createAction<LoaderData>(ActionType.CORE_LOADER)({ id, number, mod, isOk: false, isWait: true, isError: false });
 
-const error = (id: ActionType, number: number, error: string, mod?: string) =>
+const error = (id: ActionType, number: number, error: string | string[], mod?: string) =>
   createAction<LoaderData>(ActionType.CORE_LOADER)({ id, number, mod, isOk: false, isWait: false, isError: true, error });
 
 export function createReducer<T extends BaseInitialState>(initialState: T, info: ReducerDefinition<T>, supportReset: boolean = true) {
@@ -104,7 +104,7 @@ export function createAsyncAction<T>(type: ActionType, actionBody: ActionBody<T>
       else {
         if (exc instanceof NotFoundError)
           history.push('/app/notfound');
-        dispatch(error(type, number, tryGetMessage(exc), mod));
+        dispatch(error(type, number, parseError(exc), mod));
       }
     }
     return findLoaderItem(getState().loader, type, mod);

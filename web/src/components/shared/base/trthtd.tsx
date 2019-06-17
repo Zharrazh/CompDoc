@@ -1,7 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
+import { SpaceProps, propsToSpace } from './utils/spaceUtil';
 
-interface Props {
+interface Props extends SpaceProps {
   className?: string;
   active?: boolean;
   primary?: boolean;
@@ -30,18 +31,18 @@ function propsToColors({ active, primary, secondary, success, danger, warning, i
 
 export const Tr: React.FC<React.PropsWithChildren<Props>> =
   ({ className, children, ...other }) => {
-    const classes = classNames(propsToColors(other), className);
+    const classes = classNames(propsToColors(other), propsToSpace(other), className);
     return <tr className={classes} {...other}>{children}</tr>
   };
 
 export const Th: React.FC<React.PropsWithChildren<Props>> =
   ({ className, children, ...other }) => {
-    const classes = classNames(propsToColors(other), className);
+    const classes = classNames(propsToColors(other), propsToSpace(other), className);
     return <th className={classes} {...other}>{children}</th>
   };
 
 export const Td: React.FC<React.PropsWithChildren<Props>> =
-  ({ className, active, primary, secondary, success, danger, warning, info, light, dark, children, ...other }) => {
-    const classes = classNames(propsToColors(other), className);
+  ({ className, children, ...other }) => {
+    const classes = classNames(propsToColors(other), propsToSpace(other), className);
     return <td className={classes} {...other}>{children}</td>
   };

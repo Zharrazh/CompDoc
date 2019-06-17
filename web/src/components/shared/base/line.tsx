@@ -1,7 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
+import { SpaceProps, propsToSpace } from './utils/spaceUtil';
+import { SizeProps, propsToSize } from './utils/sizeUtil';
 
-interface Props {
+interface Props extends SpaceProps, SizeProps {
   tag?: React.ElementType;
   className?: string;
   vertical?: boolean;
@@ -17,6 +19,6 @@ export const Line: React.FC<React.PropsWithChildren<Props>> =
       `justify-content-md-${justifyContent}`,
       `align-items-md-${alignItems}`, {
         'flex-md-wrap': wrap
-      }, className);
+      }, propsToSpace(other), propsToSize(other), className);
     return <Tag className={classes} {...other}>{children}</Tag>
   };

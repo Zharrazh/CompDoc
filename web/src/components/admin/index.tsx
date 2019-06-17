@@ -1,15 +1,12 @@
 import React from 'react';
-import { Switch, Route, RouteComponentProps } from 'react-router-dom';
-import { WidgetEntryPoint } from './widget';
-import { Dashboard } from './dashboard/dashboard';
-import { Sidebar } from './sidebar/sidebar';
+import { Switch, Route, RouteComponentProps, Redirect } from 'react-router-dom';
+import { WidgetIndex } from './widget';
+import { Dashboard } from 'components/admin/dashboard/dashboard';
 
-export const AdminEntryPoint = ({ match }: RouteComponentProps) => (
-  <>
-    <Sidebar></Sidebar>
-    <Switch>
-      <Route path={`${match.url}/widget`} component={WidgetEntryPoint} />
-      <Route path={match.url} component={Dashboard} />
-    </Switch>
-  </>
+export const AdminIndex = ({ match }: RouteComponentProps) => (
+  <Switch>
+    <Route path={`${match.url}/widget`} component={WidgetIndex} />
+    <Route exact path={match.url} component={Dashboard} />
+    <Redirect to={match.url} />
+  </Switch>
 );

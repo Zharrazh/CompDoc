@@ -4,6 +4,7 @@ export { Spinner } from './spinner';
 export { Container } from './container';
 export { Row } from './row';
 export { Col } from './col';
+export { Block } from './block';
 export { Table } from './table';
 export { THead } from './thead';
 export { TBody } from './tbody';

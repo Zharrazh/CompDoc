@@ -8,10 +8,10 @@ interface Props {
 }
 
 export const THead: React.FC<React.PropsWithChildren<Props>> =
-  ({ className, light, dark, children, ...other }) => {
+  ({ className, light, dark, children }) => {
     const classes = classNames({
       'thead-dark': dark,
       'thead-light': light,
     }, className);
-    return <thead className={classes} {...other}>{children}</thead>
+    return <thead className={classes}>{children}</thead>
   };
