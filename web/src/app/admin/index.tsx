@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route, RouteComponentProps, Redirect } from 'react-router-dom';
 import { WidgetIndex } from './widget';
-import { Dashboard } from 'components/admin/dashboard/dashboard';
+import { Dashboard } from './dashboard/dashboard';
 
 export const AdminIndex = ({ match }: RouteComponentProps) => (
   <Switch>

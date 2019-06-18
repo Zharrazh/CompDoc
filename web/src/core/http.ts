@@ -10,13 +10,13 @@ export const http = axios.create({
 
 http.interceptors.response.use(response => response, error => {
   if (error.response && error.response.status === 401) {
-    history.push('/app/login');
+    history.push('/login');
   }
   if (error.response && error.response.status === 403) {
-    history.push('/app/accessdenied');
+    history.push('/accessdenied');
   }
   if (error.response && error.response.status === 404) {
-    history.push('/app/notfound');
+    history.push('/notfound');
   }
   return Promise.reject(error);
 });

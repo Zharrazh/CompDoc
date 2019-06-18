@@ -1,9 +1,9 @@
 import React from 'react';
-import { ActionType } from 'actions/actionType';
+import { ActionType } from 'app/actionType';
 import { findLoaderItem } from 'core/reduxHelper';
 import { useSelector } from 'react-redux';
 
-import { Button, Line, Spinner, Block } from 'components/shared/base';
+import { Button, Line, Spinner, Block } from './base';
 import { StoreType } from 'core/store';
 
 interface Props {

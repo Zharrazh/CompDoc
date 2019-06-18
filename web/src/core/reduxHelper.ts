@@ -37,7 +37,7 @@ interface LoaderState extends BaseInitialState {
   [actionType: string]: LoaderData | { [mod: string]: LoaderData };
 }
 
-type ActionBody<T> = (funcs: { dispatch: Function, isLast: () => void, getState: Function }, data: T) => Promise<any>;
+type ActionBody<T> = (funcs: { dispatch: ThunkDispatch<StoreType, null, Action<string>>, isLast: () => void, getState: () => StoreType }, data: T) => Promise<any>;
 
 class ActionCancelledError extends Error {
   constructor(message?: string) {
@@ -103,7 +103,7 @@ export function createAsyncAction<T>(type: ActionType, actionBody: ActionBody<T>
       if (exc instanceof ActionCancelledError) { }
       else {
         if (exc instanceof NotFoundError)
-          history.push('/app/notfound');
+          history.push('/notfound');
         dispatch(error(type, number, parseError(exc), mod));
       }
     }

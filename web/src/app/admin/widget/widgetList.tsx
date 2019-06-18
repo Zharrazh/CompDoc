@@ -1,14 +1,14 @@
 import React, { useEffect, useCallback } from 'react';
-import { ActionType } from 'actions/actionType';
+import { ActionType } from 'app/actionType';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { StoreType } from 'core/store';
 import { AppDispatch } from 'core/reduxHelper';
-import { getPageAsync } from 'actions/admin/widgetAction';
+import { getPageAsync } from './actions';
 import { useMatch } from 'core/routerHooks';//, useLocation
 
-import { RepeatPanel, LinkButton } from 'components/shared';
-import { Table, THead, TBody, Tr, Th, Td, Line, Block } from 'components/shared/base';
+import { RepeatPanel, LinkButton } from 'shared';
+import { Table, THead, TBody, Tr, Th, Td, Line, Block } from 'shared/base';
 
 //import { parse } from 'query-string';
 

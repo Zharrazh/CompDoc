@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
 import { loaderReducer } from 'core/reduxHelper';
-import { admin } from './admin';
+import { adminReducer } from './admin/adminReducer';
 
-export const reducer = combineReducers({
+export const appReducer = combineReducers({
   loader: loaderReducer,
-  admin
+  admin: adminReducer
 });

@@ -1,11 +1,11 @@
 import { createAction, createAsyncAction } from 'core/reduxHelper';
-import { ActionType } from 'actions/actionType';
-import { getPage, getItem, save } from 'api/admin/widgetApi';
-import { Widget } from 'models/widget';
+import { ActionType } from 'app/actionType';
+import { getPage, getItem, save } from './api';
+import { WidgetModel } from './models';
 import { Page } from 'core/page';
 
-export const setPage = createAction<Page<Widget>>(ActionType.ADMIN_WIDGET_SETPAGE);
-export const setItem = createAction<Widget>(ActionType.ADMIN_WIDGET_SETITEM);
+export const setPage = createAction<Page<WidgetModel>>(ActionType.ADMIN_WIDGET_SETPAGE);
+export const setItem = createAction<WidgetModel>(ActionType.ADMIN_WIDGET_SETITEM);
 
 export const getPageAsync = createAsyncAction(ActionType.ADMIN_WIDGET_GETPAGEASYNC,
   async ({ dispatch, isLast }, { page }: { page: number }) => {
@@ -22,7 +22,7 @@ export const getItemAsync = createAsyncAction(ActionType.ADMIN_WIDGET_GETITEMASY
   });
 
 export const saveAsync = createAsyncAction(ActionType.ADMIN_WIDGET_SAVEASYNC,
-  async ({ dispatch }, model: Widget) => {
+  async ({ dispatch }, model: WidgetModel) => {
     await save(model);
     dispatch(setItem());
   });

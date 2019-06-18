@@ -5,14 +5,14 @@ import { Provider } from 'react-redux';
 import { history } from 'core/history';
 import { store } from 'core/store';
 
-import { Header } from 'components/common/header';
-import { Sidebar } from 'components/common/sidebar';
-import { Container, Row, Block } from 'components/shared/base';
+import { Header } from './layout/header';
+import { Sidebar } from './layout/sidebar';
+import { Container, Row, Block } from 'shared/base';
 
-import { Login } from 'components/login/login';
-import { NotFound } from 'components/common/notFound';
-import { AdminIndex } from 'components/admin';
-import { ClientIndex } from 'components/client';
+import { Login } from './common/auth/login';
+import { NotFound } from './common/notFound';
+import { AdminIndex } from './admin';
+import { ClientIndex } from './client';
 
 
 const RenderLayout: React.FC = () => (

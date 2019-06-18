@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route, RouteComponentProps, Redirect } from 'react-router-dom';
-import { DashboardIndex } from 'components/client/dashboard';
-import { SomeReport } from 'components/client/someReport/someReport';
+import { DashboardIndex } from './dashboard';
+import { SomeReport } from './someReport/someReport';
 
 export const ClientIndex = ({ match }: RouteComponentProps) => (
   <Switch>

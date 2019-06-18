@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Block, Line, Button } from 'components/shared/base';
-import { TextBoxField } from 'components/shared/fields/textBoxField';
 import * as yup from 'yup';
-import { MessagesView } from 'components/shared';
 import { parseError } from 'core/parseError';
+import { MessagesView } from 'shared';
+import { Block, Line, Button } from 'shared/base';
+import { TextBoxField } from 'shared/fields/textBoxField';
 
 const schema = yup.object().shape({
   login: yup.string().nullable().required().min(3).max(20).label('Login'),
