@@ -1,6 +1,6 @@
 import { createReducer } from 'core/reduxHelper';
 import { Page } from 'core/page';
-import { ActionType } from 'app/actionType';
+import { SyncActions } from 'app/actionTypes';
 import { WidgetModel } from './models';
 
 interface WidgetInitialState {
@@ -8,9 +8,9 @@ interface WidgetInitialState {
   item?: WidgetModel;
 }
 
-const initialState: WidgetInitialState = {};
+const initialState: () => WidgetInitialState = () => ({});
 
 export const widgetReducer = createReducer(initialState, {
-  [ActionType.ADMIN_WIDGET_SETPAGE]: "page",
-  [ActionType.ADMIN_WIDGET_SETITEM]: "item"
+  [SyncActions.ADMIN_WIDGET_SETPAGE]: "page",
+  [SyncActions.ADMIN_WIDGET_SETITEM]: "item"
 });

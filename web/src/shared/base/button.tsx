@@ -45,7 +45,7 @@ export const Button: React.FC<React.PropsWithChildren<ButtonProps>> =
       'btn-outline-dark': !!outline && dark,
       'btn-outline-link': !!outline && link,
       'btn-lg': large,
-      'btn-md': small,
+      'btn-sm': small,
       'btn-block': block
     }, propsToSpace(other), className);
     return <Tag type={Tag === 'button' ? 'button' : undefined} className={classes} onClick={onClick} {...other}>{children}</Tag>

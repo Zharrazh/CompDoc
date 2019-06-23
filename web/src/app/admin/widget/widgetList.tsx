@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
-import { ActionType } from 'app/actionType';
+import { AsyncActions } from 'app/actionTypes';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { StoreType } from 'core/store';
@@ -28,7 +28,7 @@ export const WidgetList: React.FC = () => {
         <LinkButton primary to={`${match.url}/add`}>Add</LinkButton>
         <LinkButton primary to={`${match.url}/asdasd/as`}>Go to not found</LinkButton>
       </Line>
-      <RepeatPanel actionType={ActionType.ADMIN_WIDGET_GETPAGEASYNC} action={get}>
+      <RepeatPanel actionType={AsyncActions.ADMIN_WIDGET_GETPAGEASYNC} action={get}>
         {page && (
           <Table small>
             <THead>

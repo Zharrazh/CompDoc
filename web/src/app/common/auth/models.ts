@@ -5,6 +5,9 @@ export interface LoginModel {
 
 export interface AuthInfo {
   isAuth: boolean;
+  name: string;
+  login: string;
+  id: number;
   roles: string[];
   isAdmin: boolean;
 }
