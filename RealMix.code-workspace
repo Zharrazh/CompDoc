@@ -1,0 +1,28 @@
+{
+    "folders": [
+        {
+            "path": "RealMix.Web"
+        },
+        {
+            "path": "RealMix.Api"
+        },
+        {
+            "path": "RealMix.Common"
+        },
+        {
+            "path": "RealMix.Core"
+        },
+        {
+            "path": "RealMix.Db"
+        }
+    ],
+    "settings": {
+        "editor.detectIndentation": false,
+        "editor.tabSize": 4,
+        "editor.formatOnSave": true,
+        "files.exclude": {
+            "**/bin": true,
+            "**/obj": true
+        }
+    }
+}

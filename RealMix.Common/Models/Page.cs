@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace api.Models
+namespace RealMix.Common.Models
 {
     public class Page<T>
     {

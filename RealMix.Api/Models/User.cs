@@ -1,4 +1,4 @@
-namespace api.Models
+namespace RealMix.Api.Models
 {
     public class User
     {

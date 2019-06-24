@@ -1,6 +1,6 @@
-namespace api.Models
+namespace RealMix.Api.Models
 {
-    public class AuthInfo
+    public class LoginModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
