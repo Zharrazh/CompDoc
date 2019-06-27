@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using RealMix.Api.Models;
+using RealMix.Back.Models;
 using Microsoft.AspNetCore.Mvc;
 using RealMix.Common.Models;
 using MediatR;
 
-namespace RealMix.Api.Controllers.Admin
+namespace RealMix.Back.Controllers.Admin
 {
     [Route("api/admin/[controller]")]
     [ApiController]

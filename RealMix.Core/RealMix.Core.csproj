@@ -3,9 +3,12 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
     </PropertyGroup>
+
     <ItemGroup>
         <ProjectReference Include="..\RealMix.Common\RealMix.Common.csproj" />
+        <ProjectReference Include="..\RealMix.Db\RealMix.Db.csproj" />
     </ItemGroup>
+
     <ItemGroup>
         <PackageReference Include="Ben.Demystifier" Version="0.1.4" />
         <PackageReference Include="NLog" Version="4.6.5" />

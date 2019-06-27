@@ -1,4 +1,4 @@
-namespace RealMix.Api.Models
+namespace RealMix.Back.Models
 {
     public class LoginModel
     {

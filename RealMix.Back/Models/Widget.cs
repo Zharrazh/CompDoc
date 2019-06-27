@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace RealMix.Api.Models
+namespace RealMix.Back.Models
 {
     public class Widget
     {

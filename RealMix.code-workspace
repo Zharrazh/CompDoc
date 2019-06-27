@@ -1,28 +1,26 @@
 {
-    "folders": [
-        {
-            "path": "RealMix.Web"
-        },
-        {
-            "path": "RealMix.Api"
-        },
-        {
-            "path": "RealMix.Common"
-        },
-        {
-            "path": "RealMix.Core"
-        },
-        {
-            "path": "RealMix.Db"
-        }
-    ],
-    "settings": {
-        "editor.detectIndentation": false,
-        "editor.tabSize": 4,
-        "editor.formatOnSave": true,
-        "files.exclude": {
-            "**/bin": true,
-            "**/obj": true
-        }
+  "folders": [
+    {
+      "path": "RealMix.Common"
+    },
+    {
+      "path": "RealMix.Db"
+    },
+    {
+      "path": "RealMix.Core"
+    },
+    {
+      "path": "RealMix.Back"
+    },
+    {
+      "path": "RealMix.Front"
     }
+  ],
+  "settings": {
+    "editor.formatOnSave": true,
+    "files.exclude": {
+      "**/bin": true,
+      "**/obj": true
+    }
+  }
 }

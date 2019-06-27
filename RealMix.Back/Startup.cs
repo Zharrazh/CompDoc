@@ -11,8 +11,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using RealMix.Db;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 
-namespace RealMix.Api
+namespace RealMix.Back
 {
     public class Startup
     {
@@ -26,6 +29,10 @@ namespace RealMix.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<DatabaseContext>(options =>
+            {
+                options.UseSqlite("Data Source=data.db");
+            });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

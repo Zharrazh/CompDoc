@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace RealMix.Api.Controllers
+namespace RealMix.Back.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
