@@ -3,7 +3,7 @@ using System.Diagnostics;
 using NLog;
 using RealMix.Common.Services;
 
-namespace RealMix.Core.Infrastructure
+namespace RealMix.Core.Infrastructure.Services
 {
     public class LoggerService<T> : ILogger<T>
     {

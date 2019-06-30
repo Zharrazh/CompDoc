@@ -124,7 +124,7 @@ new Widget { Id = 100, Name = "Viva", Product = "Quiche Assorted", Amount = 24, 
         {
             var count = _widgets.Count;
             var items = _widgets.Skip(_pageSize * (page - 1)).Take(_pageSize).ToList();
-            return new Page<Widget>(page, _pageSize, count, items);
+            return new Page<Widget>(items, count, page, _pageSize);
         }
 
         // GET api/values/5

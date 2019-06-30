@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using RealMix.Common.Constants;
 
 namespace RealMix.Common.Models
 {
@@ -15,7 +16,7 @@ namespace RealMix.Common.Models
 
         public int PageSize { get; set; }
 
-        public Page(int currentPage, int pageSize, int totalItems, List<T> items)
+        public Page(List<T> items, int totalItems, int currentPage, int pageSize = CommonConstants.PageSize)
         {
             CurrentPage = currentPage;
             PageSize = pageSize;

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using RealMix.Back.Models;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using RealMix.Common.Models;
 using MediatR;
+using RealMix.Core.Modules.Auth.GetToken;
 
 namespace RealMix.Back.Controllers.Admin
 {
@@ -20,27 +16,10 @@ namespace RealMix.Back.Controllers.Admin
             _mediator = mediator;
         }
 
-        // GET api/values
         [HttpGet]
-        [Route(nameof(GetPage))]
-        public Page<Widget> GetPage(int page)
+        public Task<AuthInfoModel> Token(GetTokenQuery model)
         {
-            return null;
-        }
-
-        // GET api/values/5
-        [HttpGet("{id}")]
-        [Route(nameof(GetItem))]
-        public Widget GetItem(int id)
-        {
-            return null;
-        }
-
-        // POST api/values
-        [HttpPost]
-        [Route(nameof(Save))]
-        public void Save([FromBody] Widget model)
-        {
+            return _mediator.Send(model);
         }
     }
 }
