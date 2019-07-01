@@ -8,4 +8,8 @@ namespace RealMix.Core.Infrastructure.Models
         public string SortBy { get; set; }
         public string OrderBy { get; set; }
     }
+    public class ItemQuery<T> : Query<T>
+    {
+        public int Id { get; set; }
+    }
 }

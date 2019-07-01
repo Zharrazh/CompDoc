@@ -53,5 +53,9 @@ namespace RealMix.Core.Infrastructure.Models
         {
             throw new BadRequestException(message);
         }
+        protected void NotFound(string message = "Can't find entity")
+        {
+            throw new NotFoundException(message);
+        }
     }
 }

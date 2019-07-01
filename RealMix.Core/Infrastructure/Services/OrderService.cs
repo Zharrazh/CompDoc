@@ -5,30 +5,30 @@ using System.Linq.Expressions;
 
 namespace RealMix.Core.Infrastructure.Services
 {
-    public class OrderService<T>
+    public class OrderService<TEntity>
     {
         private interface IOrderPreset
         {
             string Field { get; }
-            IQueryable<T> Apply(IQueryable<T> query, bool ascSort);
+            IQueryable<TEntity> Apply(IQueryable<TEntity> query, bool ascSort);
         }
 
         private class OrderPreset<T1> : IOrderPreset
         {
             public string Field { get; }
 
-            private readonly Expression<Func<T, T1>> _expression;
+            private readonly Expression<Func<TEntity, T1>> _expression;
 
             private readonly IOrderPreset _parent;
 
-            public OrderPreset(string field, Expression<Func<T, T1>> expression, IOrderPreset parent = null)
+            public OrderPreset(string field, Expression<Func<TEntity, T1>> expression, IOrderPreset parent = null)
             {
                 Field = field;
                 _expression = expression;
                 _parent = parent;
             }
 
-            public IQueryable<T> Apply(IQueryable<T> query, bool ascSort)
+            public IQueryable<TEntity> Apply(IQueryable<TEntity> query, bool ascSort)
             {
                 if (_parent == null)
                     return Apply(query, ascSort, _expression, true);
@@ -36,35 +36,35 @@ namespace RealMix.Core.Infrastructure.Services
                 return Apply(query, ascSort, _expression, false);
             }
 
-            private IQueryable<T> Apply(IQueryable<T> query, bool ascSort, Expression<Func<T, T1>> expression, bool first)
+            private IQueryable<TEntity> Apply(IQueryable<TEntity> query, bool ascSort, Expression<Func<TEntity, T1>> expression, bool first)
             {
                 return first
                     ? (ascSort ? query.OrderBy(expression) : query.OrderByDescending(expression))
-                    : (ascSort ? ((IOrderedQueryable<T>)query).ThenBy(expression) : ((IOrderedQueryable<T>)query).ThenByDescending(expression));
+                    : (ascSort ? ((IOrderedQueryable<TEntity>)query).ThenBy(expression) : ((IOrderedQueryable<TEntity>)query).ThenByDescending(expression));
             }
         }
 
-        private readonly IQueryable<T> _query;
+        private readonly IQueryable<TEntity> _query;
         private readonly string _orderBy;
         private readonly string _sortBy;
 
         private IOrderPreset _default;
         private readonly List<IOrderPreset> _presets = new List<IOrderPreset>();
 
-        public OrderService(IQueryable<T> query, string orderBy, string sortBy)
+        public OrderService(IQueryable<TEntity> query, string orderBy, string sortBy)
         {
             _query = query;
             _orderBy = orderBy;
             _sortBy = sortBy;
         }
 
-        public OrderService<T> Field<T1>(string field, Expression<Func<T, T1>> expression)
+        public OrderService<TEntity> Field<T1>(string field, Expression<Func<TEntity, T1>> expression)
         {
             _presets.Add(new OrderPreset<T1>(field, expression));
             return this;
         }
 
-        public OrderService<T> Field<T1, T2>(string field, Expression<Func<T, T1>> expression1, Expression<Func<T, T2>> expression2)
+        public OrderService<TEntity> Field<T1, T2>(string field, Expression<Func<TEntity, T1>> expression1, Expression<Func<TEntity, T2>> expression2)
         {
             var preset1 = new OrderPreset<T1>(field, expression1);
             var preset2 = new OrderPreset<T2>(field, expression2, preset1);
@@ -72,7 +72,7 @@ namespace RealMix.Core.Infrastructure.Services
             return this;
         }
 
-        public OrderService<T> Field<T1, T2, T3>(string field, Expression<Func<T, T1>> expression1, Expression<Func<T, T2>> expression2, Expression<Func<T, T3>> expression3)
+        public OrderService<TEntity> Field<T1, T2, T3>(string field, Expression<Func<TEntity, T1>> expression1, Expression<Func<TEntity, T2>> expression2, Expression<Func<TEntity, T3>> expression3)
         {
             var preset1 = new OrderPreset<T1>(field, expression1);
             var preset2 = new OrderPreset<T2>(field, expression2, preset1);
@@ -81,7 +81,7 @@ namespace RealMix.Core.Infrastructure.Services
             return this;
         }
 
-        public OrderService<T> Field<T1, T2, T3, T4>(string field, Expression<Func<T, T1>> expression1, Expression<Func<T, T2>> expression2, Expression<Func<T, T3>> expression3, Expression<Func<T, T4>> expression4)
+        public OrderService<TEntity> Field<T1, T2, T3, T4>(string field, Expression<Func<TEntity, T1>> expression1, Expression<Func<TEntity, T2>> expression2, Expression<Func<TEntity, T3>> expression3, Expression<Func<TEntity, T4>> expression4)
         {
             var preset1 = new OrderPreset<T1>(field, expression1);
             var preset2 = new OrderPreset<T2>(field, expression2, preset1);
@@ -91,13 +91,13 @@ namespace RealMix.Core.Infrastructure.Services
             return this;
         }
 
-        public OrderService<T> Default<T1>(Expression<Func<T, T1>> expression)
+        public OrderService<TEntity> Default<T1>(Expression<Func<TEntity, T1>> expression)
         {
             _default = new OrderPreset<T1>(null, expression);
             return this;
         }
 
-        public OrderService<T> Default<T1, T2>(Expression<Func<T, T1>> expression1, Expression<Func<T, T2>> expression2)
+        public OrderService<TEntity> Default<T1, T2>(Expression<Func<TEntity, T1>> expression1, Expression<Func<TEntity, T2>> expression2)
         {
             var preset1 = new OrderPreset<T1>(null, expression1);
             var preset2 = new OrderPreset<T2>(null, expression2, preset1);
@@ -105,7 +105,7 @@ namespace RealMix.Core.Infrastructure.Services
             return this;
         }
 
-        public OrderService<T> Default<T1, T2, T3>(Expression<Func<T, T1>> expression1, Expression<Func<T, T2>> expression2, Expression<Func<T, T3>> expression3)
+        public OrderService<TEntity> Default<T1, T2, T3>(Expression<Func<TEntity, T1>> expression1, Expression<Func<TEntity, T2>> expression2, Expression<Func<TEntity, T3>> expression3)
         {
             var preset1 = new OrderPreset<T1>(null, expression1);
             var preset2 = new OrderPreset<T2>(null, expression2, preset1);
@@ -114,10 +114,11 @@ namespace RealMix.Core.Infrastructure.Services
             return this;
         }
 
-        public IQueryable<T> Apply()
+        public IQueryable<TEntity> Apply()
         {
             var preset = _presets.FirstOrDefault(x => x.Field == _orderBy) ?? _default;
-            return preset != null ? preset.Apply(_query, _sortBy != "desc") : _query;
+            var ascSort = !string.Equals(_sortBy, "desc", StringComparison.InvariantCultureIgnoreCase);
+            return preset != null ? preset.Apply(_query, ascSort) : _query;
         }
     }
 

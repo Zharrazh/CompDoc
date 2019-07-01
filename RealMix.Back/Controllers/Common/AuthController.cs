@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using RealMix.Core.Modules.Auth.GetToken;
+using RealMix.Core.Modules.Common.Auth.GetToken;
 
 namespace RealMix.Back.Controllers.Admin
 {
-    [Route("api/admin/[controller]")]
+    [Route("api/common/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {

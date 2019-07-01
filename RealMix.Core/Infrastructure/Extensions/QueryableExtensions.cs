@@ -6,6 +6,11 @@ namespace RealMix.Core.Infrastructure.Extensions
 {
     public static class QueryableExtensions
     {
+        public static FilterService<TModel> Filter<TModel>(this IQueryable<TModel> query)
+        {
+            return new FilterService<TModel>(query);
+        }
+
         public static OrderService<T> Order<T>(this IQueryable<T> query, string orderBy, string sortBy)
         {
             return new OrderService<T>(query, orderBy, sortBy);

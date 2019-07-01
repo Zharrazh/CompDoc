@@ -17,18 +17,16 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using RealMix.Core.Models.Config;
 
-namespace RealMix.Core.Modules.Auth.GetToken
+namespace RealMix.Core.Modules.Common.Auth.GetToken
 {
     public class GetTokenHandler : QueryHandler<GetTokenQuery, AuthInfoModel>
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly DatabaseContext _db;
         private readonly IHashService _hashService;
         private readonly IConfiguration _config;
 
-        public GetTokenHandler(IHttpContextAccessor httpContextAccessor, DatabaseContext db, IHashService hashService, IConfiguration config)
+        public GetTokenHandler(DatabaseContext db, IHashService hashService, IConfiguration config)
         {
-            _httpContextAccessor = httpContextAccessor;
             _db = db;
             _hashService = hashService;
             _config = config;

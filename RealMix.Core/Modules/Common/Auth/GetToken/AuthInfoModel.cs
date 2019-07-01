@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace RealMix.Core.Modules.Auth.GetToken
+namespace RealMix.Core.Modules.Common.Auth.GetToken
 {
     public class AuthInfoModel
     {

@@ -1,6 +1,6 @@
 using RealMix.Core.Infrastructure.Models;
 
-namespace RealMix.Core.Modules.Auth.GetToken
+namespace RealMix.Core.Modules.Common.Auth.GetToken
 {
     public class GetTokenQuery : Query<AuthInfoModel>
     {
