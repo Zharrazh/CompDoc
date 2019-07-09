@@ -1,9 +1,10 @@
 using System;
+using RealMix.Core.Infrastructure.Models;
 using RealMix.Db.Enums;
 
-namespace RealMix.Core.Modules.Admin.Widget.GetWidgetItem
+namespace RealMix.Core.Modules.Admin.Widget.SaveWidget
 {
-    public class WidgetModel
+    public class SaveWidgetCommand : Command
     {
         public int Id { get; set; }
         public string Name { get; set; }

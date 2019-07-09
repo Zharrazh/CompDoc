@@ -1,0 +1,21 @@
+{
+  "CSharp_Class": {
+    "prefix": "cs_class",
+    "scope": "csharp",
+    "body": [
+      "using System;",
+      "using System.Collections.Generic;",
+      "using System.Linq;",
+      "using System.Threading.Tasks;",
+      "",
+      "namespace ${TM_DIRECTORY/.*?RealMix([\\.\\\\](\\w+))?([\\.\\\\](\\w+))?([\\.\\\\](\\w+))?([\\.\\\\](\\w+))?([\\.\\\\](\\w+))?/RealMix.$2.$4.$6.$8.$10/g}$1",
+      "{",
+      "    public class ${TM_FILENAME_BASE}",
+      "    {",
+      "        $0",
+      "    }",
+      "}",
+    ],
+    "description": "csharp class snippet"
+  }
+}

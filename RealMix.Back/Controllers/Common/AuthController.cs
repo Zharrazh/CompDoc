@@ -16,7 +16,7 @@ namespace RealMix.Back.Controllers.Admin
             _mediator = mediator;
         }
 
-        [HttpGet]
+        [HttpPost]
         public Task<AuthInfoModel> Token(GetTokenQuery model)
         {
             return _mediator.Send(model);

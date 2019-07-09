@@ -16,7 +16,7 @@ namespace RealMix.Db.DbModels
 
         public void Configure(EntityTypeBuilder<UserWidgetDbModel> builder)
         {
-            builder.ToTable(DbConstants.WidgetTableName).HasKey(x => x.Id);
+            builder.ToTable(DbConstants.UserWidgetTableName).HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
             builder.HasOne(x => x.User).WithMany(x => x.UserWidget).HasForeignKey(x => x.UserId);
             builder.HasOne(x => x.Widget).WithMany(x => x.UserWidget).HasForeignKey(x => x.WidgetId);

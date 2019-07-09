@@ -16,6 +16,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using RealMix.Core.Models.Config;
+using RealMix.Common.Services;
 
 namespace RealMix.Core.Modules.Common.Auth.GetToken
 {
