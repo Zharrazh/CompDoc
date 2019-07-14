@@ -103,7 +103,7 @@ export const Sidebar: React.FC<Props> = ({ show, hide }) => {
             if (item.type === 'group')
               return (
                 <div key={itemKey}>
-                  <button className="btn btn-link sidebarItem sidebarGroup" onClick={() => setExpanded(item)}>
+                  <button className="btn btn-link sidebarItem sidebarGroup" onClick={() => setExpanded(item !== expanded ? item : undefined)}>
                     {item.icon && <span className="menuIcon"><FontAwesomeIcon icon={item.icon} /></span>}
                     <span className="groupTitle">{item.title}</span>
                     <span className="groupArrow"><FontAwesomeIcon icon={item === expanded ? 'angle-down' : 'angle-right'} /></span>
