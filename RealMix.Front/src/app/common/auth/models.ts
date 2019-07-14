@@ -4,10 +4,12 @@ export interface LoginModel {
 }
 
 export interface AuthInfo {
-  isAuth: boolean;
+  id: number;
   name: string;
   login: string;
-  id: number;
   roles: string[];
   isAdmin: boolean;
+  isAuth: boolean;
+  token: string | null;
+  expires: Date | null;
 }

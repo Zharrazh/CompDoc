@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using RealMix.Core.Infrastructure.Models;
@@ -27,8 +28,7 @@ namespace RealMix.Core.Modules.Admin.Widget.SaveWidget
                 item.Name = model.Name;
                 item.Type = model.Type;
                 item.Parameters = model.Parameters;
-                item.Created = model.Created;
-                item.Updated = model.Updated;
+                item.Updated = DateTime.UtcNow;
             }
             else
             {
@@ -37,8 +37,8 @@ namespace RealMix.Core.Modules.Admin.Widget.SaveWidget
                     Name = model.Name,
                     Type = model.Type,
                     Parameters = model.Parameters,
-                    Created = model.Created,
-                    Updated = model.Updated,
+                    Created = DateTime.UtcNow,
+                    Updated = DateTime.UtcNow,
                 });
             }
             await _db.SaveChangesAsync();

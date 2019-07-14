@@ -14,8 +14,8 @@ export function propsToSize(props: SizeProps) {
   delete props.vh;
 
   return {
-    [`w-${w}`]: w != null,
-    [`h-${h}`]: h != null,
+    [`w-md-${w}`]: w != null,
+    [`h-md-${h}`]: h != null,
     [`vw-100`]: vw,
     [`vh-100`]: vh,
   };

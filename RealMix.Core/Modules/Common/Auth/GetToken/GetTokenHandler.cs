@@ -57,6 +57,7 @@ namespace RealMix.Core.Modules.Common.Auth.GetToken
                 Roles = roles,
                 Expires = expires,
                 IsAdmin = roles.Contains(AuthConstants.AdminRoleName),
+                IsAuth = true,
                 Token = token
             };
         }

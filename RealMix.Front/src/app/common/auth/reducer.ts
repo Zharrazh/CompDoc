@@ -9,12 +9,14 @@ interface AuthInitialState {
 
 const initialState: () => AuthInitialState = () => ({
   authInfo: {
-    isAuth: false,
-    isAdmin: false,
-    roles: [],
     id: 0,
+    name: '',
     login: '',
-    name: ''
+    roles: [],
+    isAdmin: false,
+    isAuth: false,
+    token: null,
+    expires: null
   },
   form: {
     login: '',
@@ -24,5 +26,11 @@ const initialState: () => AuthInitialState = () => ({
 
 export const authReducer = createReducer(initialState, {
   [SyncActions.COMMON_AUTH_SETFORM]: "form",
-  [SyncActions.COMMON_AUTH_SETAUTHINFO]: "authInfo"
+  [SyncActions.COMMON_AUTH_SETAUTHINFO]: (state, action) => {
+    if (action.data == null)
+      sessionStorage.removeItem("authInfo");
+    else
+      sessionStorage.setItem("authInfo", JSON.stringify(action.data));
+    return { ...state, authInfo: action.data == null ? initialState().authInfo : action.data };
+  }
 });

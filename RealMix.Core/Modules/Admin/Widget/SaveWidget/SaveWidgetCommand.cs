@@ -1,4 +1,3 @@
-using System;
 using RealMix.Core.Infrastructure.Models;
 using RealMix.Db.Enums;
 
@@ -10,7 +9,5 @@ namespace RealMix.Core.Modules.Admin.Widget.SaveWidget
         public string Name { get; set; }
         public WidgetType Type { get; set; }
         public string Parameters { get; set; }
-        public DateTime Created { get; set; }
-        public DateTime Updated { get; set; }
     }
 }

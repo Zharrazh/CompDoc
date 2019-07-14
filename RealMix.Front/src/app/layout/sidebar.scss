@@ -1,53 +1,95 @@
-/*
- * Sidebar
- */
+$sidebar-background: #38474a;
+$sidebar-submenu-background: #3a4d56;
+$static-color: #74828d;
+$link-color: rgb(169, 192, 202);
+$hover-color: #efefef;
 
- .sidebar {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 100; /* Behind the navbar */
-  padding: 48px 0 0; /* Height of navbar */
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
-}
+div.app-sidebar {
+  margin-top: 3rem;
+  background: $sidebar-background;
 
-.sidebar-sticky {
-  position: relative;
-  top: 0;
-  height: calc(100vh - 48px);
-  padding-top: 0.5rem;
-  overflow-x: hidden;
-  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-}
-
-@supports ((position: -webkit-sticky) or (position: sticky)) {
-  .sidebar-sticky {
-    position: -webkit-sticky;
-    position: sticky;
+  @media (min-width: 768px) {
+    width: 15rem;
   }
-}
 
-.sidebar .nav-link {
-  font-weight: 500;
-  color: #333;
-}
+  .sidebar-body {
+    height: calc(100vh - 3rem);
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-y: auto;
+    width: 100%;
+    font-size: 0.875em;
 
-.sidebar .nav-link .feather {
-  margin-right: 4px;
-  color: #999;
-}
+    a,
+    button {
+      width: 100%;
+      text-decoration: none;
+      color: $link-color;
+      text-align: left;
+      font-size: 1em;
+      &:hover,
+      &.active {
+        color: $hover-color;
+      }
+    }
 
-.sidebar .nav-link.active {
-  color: #007bff;
-}
+    .sidebarItem {
+      width: 100%;
+      display: flex;
+      align-items: center;
 
-.sidebar .nav-link:hover .feather,
-.sidebar .nav-link.active .feather {
-  color: inherit;
-}
+      .menuIcon {
+        background-color: #3a4d56;
+        width: 35px;
+        height: 35px;
+        margin-right: 0.5em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
 
-.sidebar-heading {
-  font-size: 0.75rem;
-  text-transform: uppercase;
+      &.sidebarStatic {
+        padding: 15px 20px 5px 20px;
+        user-select: none;
+        color: $static-color;
+        font-weight: bold;
+      }
+
+      &.sidebarGroup {
+        padding: 8px 8px 8px 20px;
+        display: flex;
+
+        .groupTitle {
+          flex-grow: 1;
+        }
+      }
+
+      &.sidebarLink {
+        padding: 8px 30px 8px 20px;
+      }
+    }
+  }
+
+  .sidebarSubList {
+    width: 100%;
+    background-color: $sidebar-submenu-background;
+    max-height: 0;
+    transition: max-height 0.2s linear;
+    overflow: hidden;
+
+    a {
+      display: flex;
+      align-items: center;
+      padding-top: 0.5em;
+      padding-left: 3.5em;
+      &:last-child {
+        padding-bottom: 0.5em;
+      }
+      svg {
+        font-size: 0.5em;
+        margin-right: 1em;
+      }
+    }
+  }
 }

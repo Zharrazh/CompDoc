@@ -13,11 +13,11 @@ interface Props extends SpaceProps, SizeProps {
 }
 
 export const Line: React.FC<React.PropsWithChildren<Props>> =
-  ({ tag: Tag = 'div', className, vertical, justifyContent = 'start', alignItems = 'stretch', wrap, children, ...other }) => {
+  ({ tag: Tag = 'div', className, vertical, justifyContent, alignItems, wrap, children, ...other }) => {
     const classes = classNames('d-md-flex',
-      vertical ? 'flex-md-column' : 'flex-md-row',
-      `justify-content-md-${justifyContent}`,
-      `align-items-md-${alignItems}`, {
+      vertical ? 'flex-md-column' : 'flex-md-row', {
+        [`justify-content-md-${justifyContent}`]: justifyContent != null,
+        [`align-items-md-${alignItems}`]: alignItems != null,
         'flex-md-wrap': wrap
       }, propsToSpace(other), propsToSize(other), className);
     return <Tag className={classes} {...other}>{children}</Tag>

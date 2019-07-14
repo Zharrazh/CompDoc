@@ -1,53 +1,55 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Route, Switch } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { Header } from './layout/header';
 import { Sidebar } from './layout/sidebar';
-import { Container, Row, Block } from 'shared/base';
+import { Container, Row, Block, Col } from 'shared/base';
 
 import { Login } from './common/auth/login';
 import { NotFound } from './common/notFound';
 import { AdminIndex } from './admin';
 import { ClientIndex } from './client';
-import { AppDispatch } from 'core/reduxHelper';
-import { getAuthInfoAsync } from './common/auth/actions';
-import { RepeatPanel } from 'shared';
-import { AsyncActions } from './actionTypes';
 import { StoreType } from 'core/store';
+import { useHistory } from 'core/routerHooks';
+
+import './app.scss';
 
 
 const RenderLayout: React.FC = () => {
+  const history = useHistory();
+  const [show, setShow] = useState(false);
+  const toggle = useCallback(() => setShow(s => !s), []);
+  const hide = useCallback(() => setShow(false), []);
   const authInfo = useSelector((state: StoreType) => state.common.auth.authInfo);
-  return !authInfo.isAuth ? null : (
+  if (!authInfo.isAuth) {
+    history.push('/login');
+    return null;
+  }
+  return (
     <>
-      <Header></Header>
+      <Header toggle={toggle}></Header>
+      <Sidebar show={show} hide={hide}></Sidebar>
       <Container className="appBody" fluid>
         <Row>
-          <Sidebar></Sidebar>
-          <Block>
-            <Switch>
-              <Route path='/admin' component={AdminIndex} />
-              <Route component={ClientIndex} />
-            </Switch>
-          </Block>
+          <Col>
+            <Block p="3">
+              <Switch>
+                <Route path='/admin' component={AdminIndex} />
+                <Route path='/' component={ClientIndex} />
+              </Switch>
+            </Block>
+          </Col>
         </Row>
       </Container>
     </>
   );
 }
 
-export const App: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const get = useCallback(() => dispatch(getAuthInfoAsync()), [dispatch])
-  useEffect(() => { get(); }, [get]);
-  return (
-    <RepeatPanel actionType={AsyncActions.COMMON_AUTH_GETAUTHINFOASYNC} action={get}>
-      <Switch>
-        <Route path='/login' component={Login} />
-        <Route path='/notFound' component={NotFound} />
-        <Route component={RenderLayout} />
-      </Switch>
-    </RepeatPanel>
-  );
-}
+export const App: React.FC = () => (
+  <Switch>
+    <Route path='/login' component={Login} />
+    <Route path='/notFound' component={NotFound} />
+    <Route component={RenderLayout} />
+  </Switch>
+);

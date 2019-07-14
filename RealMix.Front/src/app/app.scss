@@ -1,0 +1,9 @@
+div.appBody {
+  margin-top: 3rem !important;
+  min-height: calc(100vh - 3rem);
+  background: #eeeeee;
+  @media (min-width: 768px) {
+    margin-left: 15rem !important;
+    width: calc(100% - 15rem);
+  }
+}

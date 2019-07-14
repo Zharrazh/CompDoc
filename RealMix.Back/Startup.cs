@@ -13,6 +13,11 @@ using RealMix.Common.Services;
 using RealMix.Core.Models.Config;
 using FluentMigrator.Runner;
 using RealMix.Back.Middleware;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Threading.Tasks;
 
 namespace RealMix.Back
 {
@@ -30,6 +35,25 @@ namespace RealMix.Back
         {
             var authConfig = Configuration.GetSection("Auth").Get<AuthConfigModel>();
             var connectionString = Configuration.GetSection("Connections").GetValue<string>("Default");
+
+            services
+                .AddAuthentication(o =>
+                {
+                    o.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authConfig.Key));
+                    options.TokenValidationParameters.ValidIssuer = authConfig.Issuer;
+                    options.TokenValidationParameters.ValidAudience = authConfig.Audience;
+                    options.TokenValidationParameters.IssuerSigningKey = key;
+                    options.TokenValidationParameters.ValidateIssuerSigningKey = true;
+                    options.TokenValidationParameters.ValidateLifetime = true;
+                    options.TokenValidationParameters.ClockSkew = TimeSpan.Zero;
+                });
+            services.AddAuthorization();
 
             services.AddFluentMigratorCore()
                 .ConfigureRunner(rb => rb
@@ -59,6 +83,10 @@ namespace RealMix.Back
         {
             runner.MigrateUp();
 
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader());
+
+            app.UseAuthentication();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -70,8 +98,6 @@ namespace RealMix.Back
             }
 
             app.UseCqrs();
-
-            app.UseCors(x => x.AllowAnyOrigin());
             app.UseHttpsRedirection();
             app.UseMvc();
         }

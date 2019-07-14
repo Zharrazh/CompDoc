@@ -1,16 +1,35 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from 'core/reduxHelper';
+import { setAuthInfo } from 'app/common/auth/actions';
+import { Button, Line } from 'shared/base';
 import './header.scss';
-export const Header: React.FC = () => {
+
+interface Props {
+  toggle: () => void
+}
+
+export const Header: React.FC<Props> = ({ toggle }) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const logout = (e: React.MouseEvent) => {
+    e.preventDefault();
+    dispatch(setAuthInfo());
+  };
+
   return (
-    <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-      <Link to="/" className="navbar-brand col-md-2 mr-0">App Name</Link>
-      <input className="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search" />
-      <ul className="navbar-nav px-3">
-        <li className="nav-item text-nowrap">
-          <Link className="nav-link" to='/login'>Sing out</Link>
-        </li>
-      </ul>
+    <nav className="app-header navbar navbar-expand-md navbar-dark fixed-top bg-dark py-1">
+      <Button className="navbar-toggler" onClick={toggle}>
+        <span className="navbar-toggler-icon"></span>
+      </Button>
+      <Link to="/" className="navbar-brand">RealMix</Link>
+      <Line justifyContent="end" w="100">
+        <ul className="navbar-nav">
+          <li className="nav-item">
+            <Button className="nav-link" link small onClick={logout}>Sing out</Button>
+          </li>
+        </ul>
+      </Line>
     </nav>
   );
 }

@@ -5,12 +5,20 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using RealMix.Core.Infrastructure.Models;
 using RealMix.Common.Extensions;
+using Newtonsoft.Json.Serialization;
 
 namespace RealMix.Back.Middleware
 {
     public class CqrsMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly JsonSerializerSettings _jsonSettings = new JsonSerializerSettings
+        {
+            ContractResolver = new DefaultContractResolver
+            {
+                NamingStrategy = new CamelCaseNamingStrategy()
+            }
+        };
 
         public CqrsMiddleware(RequestDelegate next)
         {
@@ -34,7 +42,7 @@ namespace RealMix.Back.Middleware
                     {
                         IsError = true,
                         Message = e.GetFullExceptionMessage()
-                    });
+                    }, _jsonSettings);
                     await context.Response.WriteAsync(jsonString, Encoding.UTF8);
                 }
                 else if (e is NotFoundException notFound)
