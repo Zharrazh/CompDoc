@@ -1,6 +1,6 @@
 using RealMix.Core.Infrastructure.Models;
 
-namespace RealMix.Core.Modules.Admin.Widget.DeleteWidget
+namespace RealMix.Core.Modules.Config.Widget.DeleteWidget
 {
     public class DeleteWidgetCommand : ItemCommand
     {

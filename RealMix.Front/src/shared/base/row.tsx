@@ -11,7 +11,7 @@ interface Props extends SpaceProps, SizeProps {
   alignItems?: 'start' | 'end' | 'center' | 'baseline' | 'stretch';
 }
 
-export const Row: React.FC<React.PropsWithChildren<Props>> =
+export const Row: React.FC<Props> =
   ({ tag: Tag = 'div', className, noGutters, justifyContent, alignItems, children, ...other }) => {
     const classes = classNames('row',
       {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, ButtonProps } from './base/button';
+import { Button, ButtonProps } from '../base/button';
 import { Link } from 'react-router-dom';
 import * as H from 'history';
 

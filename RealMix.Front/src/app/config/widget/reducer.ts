@@ -11,6 +11,6 @@ interface WidgetInitialState {
 const initialState: () => WidgetInitialState = () => ({});
 
 export const widgetReducer = createReducer(initialState, {
-  [SyncActions.ADMIN_WIDGET_SETPAGE]: "page",
-  [SyncActions.ADMIN_WIDGET_SETITEM]: "item"
+  [SyncActions.CONFIG_WIDGET_SETPAGE]: "page",
+  [SyncActions.CONFIG_WIDGET_SETITEM]: "item"
 });

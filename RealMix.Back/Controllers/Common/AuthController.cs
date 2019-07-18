@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using RealMix.Core.Modules.Common.Auth.GetToken;
 
-namespace RealMix.Back.Controllers.Admin
+namespace RealMix.Back.Controllers.Config
 {
     [Route("api/common/[controller]")]
     [ApiController]

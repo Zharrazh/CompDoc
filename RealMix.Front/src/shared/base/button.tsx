@@ -21,7 +21,7 @@ export interface ButtonProps extends SpaceProps {
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export const Button: React.FC<React.PropsWithChildren<ButtonProps>> =
+export const Button: React.FC<ButtonProps> =
   ({ tag: Tag = 'button', className, outline,
     primary, secondary, success, danger, warning, info, light, dark, link,
     large, small, block, children, onClick, ...other }) => {

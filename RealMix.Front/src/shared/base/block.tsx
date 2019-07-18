@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import classNames from 'classnames';
 import { SpaceProps, propsToSpace } from './utils/spaceUtil';
 import { ColorProps, propsToColor } from './utils/colorUtil';
@@ -9,10 +9,11 @@ interface Props extends SpaceProps, ColorProps, BorderProps, SizeProps {
   tag?: React.ElementType;
   className?: string;
   inline?: boolean;
+  style?: CSSProperties;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
-export const Block: React.FC<React.PropsWithChildren<Props>> =
+export const Block: React.FC<Props> =
   ({ tag: Tag = 'div', className, inline, onClick, children, ...other }) => {
     const classes = classNames(inline ? 'd-inline' : 'd-block',
       propsToSpace(other), propsToColor(other), propsToBorder(other), propsToSize(other), className);

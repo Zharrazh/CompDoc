@@ -4,11 +4,11 @@ import { useSelector } from 'react-redux';
 
 import { Header } from './layout/header';
 import { Sidebar } from './layout/sidebar';
-import { Container, Row, Block, Col } from 'shared/base';
+import { Block } from 'shared';
 
 import { Login } from './common/auth/login';
 import { NotFound } from './common/notFound';
-import { AdminIndex } from './admin';
+import { ConfigIndex } from './config';
 import { ClientIndex } from './client';
 import { StoreType } from 'core/store';
 import { useHistory } from 'core/routerHooks';
@@ -30,18 +30,12 @@ const RenderLayout: React.FC = () => {
     <>
       <Header toggle={toggle}></Header>
       <Sidebar show={show} hide={hide}></Sidebar>
-      <Container className="appBody" fluid>
-        <Row>
-          <Col>
-            <Block p="3">
-              <Switch>
-                <Route path='/admin' component={AdminIndex} />
-                <Route path='/' component={ClientIndex} />
-              </Switch>
-            </Block>
-          </Col>
-        </Row>
-      </Container>
+      <Block className="appBody" p="3">
+        <Switch>
+          <Route path='/config' component={ConfigIndex} />
+          <Route path='/' component={ClientIndex} />
+        </Switch>
+      </Block>
     </>
   );
 }

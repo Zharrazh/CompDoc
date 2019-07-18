@@ -12,7 +12,7 @@ interface Props extends SpaceProps {
   small?: boolean;
 }
 
-export const Table: React.FC<React.PropsWithChildren<Props>> =
+export const Table: React.FC<Props> =
   ({ className, striped, dark, bordered, borderless, hover, small, children, ...other }) => {
     const classes = classNames('table', {
       'table-striped': striped,

@@ -1,7 +1,7 @@
 using System;
 using RealMix.Db.Enums;
 
-namespace RealMix.Core.Modules.Admin.Widget.GetWidgetItem
+namespace RealMix.Core.Modules.Config.Widget.GetWidgetItem
 {
     public class WidgetModel
     {

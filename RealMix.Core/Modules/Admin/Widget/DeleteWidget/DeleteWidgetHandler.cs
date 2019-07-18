@@ -4,7 +4,7 @@ using RealMix.Core.Infrastructure.Models;
 using RealMix.Db;
 using RealMix.Db.DbModels;
 
-namespace RealMix.Core.Modules.Admin.Widget.DeleteWidget
+namespace RealMix.Core.Modules.Config.Widget.DeleteWidget
 {
     public class DeleteWidgetHandler : CommandHandler<DeleteWidgetCommand>
     {

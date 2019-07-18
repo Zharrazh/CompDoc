@@ -5,9 +5,7 @@ import { useHistory } from 'core/routerHooks';
 import { StoreType } from 'core/store';
 import { AppDispatch } from 'core/reduxHelper';
 import { parseError } from 'core/parseError';
-import { MessagesView, LoadingButton } from 'shared';
-import { Block, Line } from 'shared/base';
-import { TextBoxField } from 'shared/fields/textBoxField';
+import { Block, Line, MessagesView, LoadingButton, TextBoxField } from 'shared';
 import { setForm, loginAsync } from './actions';
 import { AsyncActions } from 'app/actionTypes';
 

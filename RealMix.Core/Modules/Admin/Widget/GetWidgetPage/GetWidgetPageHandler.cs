@@ -6,7 +6,7 @@ using RealMix.Core.Infrastructure.Extensions;
 using RealMix.Db;
 using RealMix.Common.Models;
 
-namespace RealMix.Core.Modules.Admin.Widget.GetWidgetPage
+namespace RealMix.Core.Modules.Config.Widget.GetWidgetPage
 {
     public class GetWidgetPageHandler : QueryHandler<GetWidgetPageQuery, Page<WidgetModel>>
     {

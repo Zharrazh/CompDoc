@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using RealMix.Core.Infrastructure.Models;
 using RealMix.Db;
 
-namespace RealMix.Core.Modules.Admin.Widget.GetWidgetItem
+namespace RealMix.Core.Modules.Config.Widget.GetWidgetItem
 {
     public class GetWidgetItemHandler : QueryHandler<GetWidgetItemQuery, WidgetModel>
     {

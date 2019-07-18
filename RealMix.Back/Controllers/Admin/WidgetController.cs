@@ -2,17 +2,17 @@
 using Microsoft.AspNetCore.Mvc;
 using RealMix.Common.Models;
 using MediatR;
-using RealMix.Core.Modules.Admin.Widget.SaveWidget;
-using RealMix.Core.Modules.Admin.Widget.GetWidgetPage;
-using RealMix.Core.Modules.Admin.Widget.GetWidgetItem;
+using RealMix.Core.Modules.Config.Widget.SaveWidget;
+using RealMix.Core.Modules.Config.Widget.GetWidgetPage;
+using RealMix.Core.Modules.Config.Widget.GetWidgetItem;
 using Microsoft.AspNetCore.Authorization;
 using RealMix.Common.Constants;
-using RealMix.Core.Modules.Admin.Widget.DeleteWidget;
+using RealMix.Core.Modules.Config.Widget.DeleteWidget;
 
-namespace RealMix.Back.Controllers.Admin
+namespace RealMix.Back.Controllers.Config
 {
     [Authorize(Roles = AuthConstants.AdminRoleName)]
-    [Route("api/admin/[controller]")]
+    [Route("api/config/[controller]")]
     [ApiController]
     public class WidgetController : ControllerBase
     {
@@ -24,13 +24,13 @@ namespace RealMix.Back.Controllers.Admin
         }
 
         [HttpGet]
-        public async Task<Page<Core.Modules.Admin.Widget.GetWidgetPage.WidgetModel>> GetPage([FromQuery]GetWidgetPageQuery model)
+        public async Task<Page<Core.Modules.Config.Widget.GetWidgetPage.WidgetModel>> GetPage([FromQuery]GetWidgetPageQuery model)
         {
             return await _mediator.Send(model);
         }
 
         [HttpGet("{id}")]
-        public async Task<Core.Modules.Admin.Widget.GetWidgetItem.WidgetModel> GetItem([FromRoute]GetWidgetItemQuery model)
+        public async Task<Core.Modules.Config.Widget.GetWidgetItem.WidgetModel> GetItem([FromRoute]GetWidgetItemQuery model)
         {
             return await _mediator.Send(model);
         }

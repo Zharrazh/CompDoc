@@ -6,12 +6,12 @@ import { SizeProps, propsToSize } from './utils/sizeUtil';
 interface Props extends SpaceProps, SizeProps {
   tag?: React.ElementType;
   className?: string;
-  fluid?: boolean;
+  nonFluid?: boolean;
 }
 
-export const Container: React.FC<React.PropsWithChildren<Props>> =
-  ({ tag: Tag = 'div', fluid, className, children, ...other }) => {
-    const classes = classNames(fluid ? 'container-fluid' : 'container',
+export const Container: React.FC<Props> =
+  ({ tag: Tag = 'div', nonFluid, className, children, ...other }) => {
+    const classes = classNames(nonFluid ? 'container' : 'container-fluid',
       propsToSpace(other), propsToSize(other), className);
     return <Tag className={classes} {...other}>{children}</Tag>
   };

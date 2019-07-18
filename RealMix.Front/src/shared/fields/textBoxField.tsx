@@ -13,7 +13,7 @@ interface Props {
   type?: string;
 }
 
-export const TextBoxField: React.FC<React.PropsWithChildren<Props>> =
+export const TextBoxField: React.FC<Props> =
   ({ type = 'text', data, field, onChange, placeholder, v, size, key, children }) => {
     const value = data[field] == null ? '' : data[field];
     const [message, setMessage] = useState(null);

@@ -1,6 +1,8 @@
 import React from 'react';
-import { Block } from 'shared/base';
+import { DefaultPage } from 'shared';
 
 export const SomeReport: React.FC = () => (
-  <Block>Some Report</Block>
+  <DefaultPage title="Some Report">
+    report here
+  </DefaultPage>
 );

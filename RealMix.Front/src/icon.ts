@@ -6,6 +6,7 @@ import { faTachometerAlt } from '@fortawesome/free-solid-svg-icons/faTachometerA
 import { faUsers } from '@fortawesome/free-solid-svg-icons/faUsers';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons/faCalculator';
 import { faClipboardCheck } from '@fortawesome/free-solid-svg-icons/faClipboardCheck';
+import { faCog } from '@fortawesome/free-solid-svg-icons/faCog';
 //regular
 import { faCircle } from '@fortawesome/free-regular-svg-icons/faCircle';
 
@@ -17,5 +18,6 @@ library.add(
   faUsers,
   faCalculator,
   faClipboardCheck,
+  faCog,
   //regular
   faCircle);

@@ -1,7 +1,7 @@
 using RealMix.Core.Infrastructure.Models;
 using RealMix.Db.Enums;
 
-namespace RealMix.Core.Modules.Admin.Widget.GetWidgetPage
+namespace RealMix.Core.Modules.Config.Widget.GetWidgetPage
 {
     public class GetWidgetPageQuery : PageQuery<WidgetModel>
     {

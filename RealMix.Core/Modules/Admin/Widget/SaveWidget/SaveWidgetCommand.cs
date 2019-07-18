@@ -1,7 +1,7 @@
 using RealMix.Core.Infrastructure.Models;
 using RealMix.Db.Enums;
 
-namespace RealMix.Core.Modules.Admin.Widget.SaveWidget
+namespace RealMix.Core.Modules.Config.Widget.SaveWidget
 {
     public class SaveWidgetCommand : Command
     {

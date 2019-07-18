@@ -12,7 +12,7 @@ interface Props extends SpaceProps, SizeProps {
   alignItems?: 'start' | 'end' | 'center' | 'baseline' | 'stretch';
 }
 
-export const Line: React.FC<React.PropsWithChildren<Props>> =
+export const Line: React.FC<Props> =
   ({ tag: Tag = 'div', className, vertical, justifyContent, alignItems, wrap, children, ...other }) => {
     const classes = classNames('d-md-flex',
       vertical ? 'flex-md-column' : 'flex-md-row', {

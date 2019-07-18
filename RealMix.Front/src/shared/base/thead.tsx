@@ -7,7 +7,7 @@ interface Props {
   dark?: boolean;
 }
 
-export const THead: React.FC<React.PropsWithChildren<Props>> =
+export const THead: React.FC<Props> =
   ({ className, light, dark, children }) => {
     const classes = classNames({
       'thead-dark': dark,

@@ -5,7 +5,7 @@ using RealMix.Core.Infrastructure.Models;
 using RealMix.Db;
 using RealMix.Db.DbModels;
 
-namespace RealMix.Core.Modules.Admin.Widget.SaveWidget
+namespace RealMix.Core.Modules.Config.Widget.SaveWidget
 {
     public class GetWidgetPageHandler : CommandHandler<SaveWidgetCommand>
     {

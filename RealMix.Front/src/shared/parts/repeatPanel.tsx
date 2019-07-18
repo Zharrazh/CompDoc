@@ -3,7 +3,7 @@ import { AsyncActions } from 'app/actionTypes';
 import { findLoaderItem } from 'core/reduxHelper';
 import { useSelector } from 'react-redux';
 
-import { Button, Line, Spinner, Block } from './base';
+import { Button, Line, Spinner, Block } from '../';
 import { StoreType } from 'core/store';
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
   mod?: string;
 }
 
-export const RepeatPanel: React.FC<React.PropsWithChildren<Props>> = ({ actionType, action, mod = undefined, children }) => {
+export const RepeatPanel: React.FC<Props> = ({ actionType, action, mod = undefined, children }) => {
   const item = useSelector((state: StoreType) => findLoaderItem(state.loader, actionType, mod));
   if (item && item.isWait)
     return (
