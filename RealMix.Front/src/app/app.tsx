@@ -8,10 +8,12 @@ import { Block } from 'shared';
 
 import { Login } from './common/auth/login';
 import { NotFound } from './common/notFound';
-import { ConfigIndex } from './config';
-import { ClientIndex } from './client';
 import { StoreType } from 'core/store';
 import { useHistory } from 'core/routerHooks';
+import { asyncComponentFactory } from 'core/asyncComponentFactory';
+
+const ConfigIndexAsync = asyncComponentFactory(() => (import('./config')));
+const ClientIndexAsync = asyncComponentFactory(() => (import('./client')));
 
 import './app.scss';
 
@@ -32,8 +34,8 @@ const RenderLayout: React.FC = () => {
       <Sidebar show={show} hide={hide}></Sidebar>
       <Block className="appBody" p="3">
         <Switch>
-          <Route path='/config' component={ConfigIndex} />
-          <Route path='/' component={ClientIndex} />
+          <Route path='/config' component={ConfigIndexAsync} />
+          <Route path='/' component={ClientIndexAsync} />
         </Switch>
       </Block>
     </>

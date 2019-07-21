@@ -5,7 +5,7 @@ interface PropertyMap {
 
 export class BaseEnum {
   private _map: PropertyMap = {};
-  private _list: { id: number; name: string; }[] = [];
+  private _list: { id: number; name: string }[] = [];
 
   protected init(self: BaseEnum) {
     const entries = Object.entries(self).filter(([name]) => !name.startsWith('_'));

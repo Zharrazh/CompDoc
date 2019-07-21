@@ -1,5 +1,10 @@
-import React from 'react';
-import { PagePanel, PageHeaderPanel, PageHeader, PageBodyPanel } from './pageComponents';
+import React from "react";
+import {
+  PagePanel,
+  PageHeaderPanel,
+  PageHeader,
+  PageBodyPanel
+} from "./pageComponents";
 
 interface Props {
   title: string;
@@ -10,8 +15,6 @@ export const DefaultPage: React.FC<Props> = ({ title, children }) => (
     <PageHeaderPanel>
       <PageHeader>{title}</PageHeader>
     </PageHeaderPanel>
-    <PageBodyPanel>
-      {children}
-    </PageBodyPanel>
+    <PageBodyPanel>{children}</PageBodyPanel>
   </PagePanel>
-)
+);

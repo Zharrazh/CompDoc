@@ -35,6 +35,7 @@ namespace RealMix.Back
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseWebRoot("wwwroot")
                 .ConfigureLogging(logging => logging.ClearProviders())
                 .UseNLog()
                 .UseStartup<Startup>();

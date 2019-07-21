@@ -17,5 +17,10 @@ export { MessagesView } from './parts/messagesView';
 
 export { TextBoxField } from './fields/textBoxField';
 
-export { PagePanel, PageHeaderPanel, PageHeader, PageBodyPanel } from './layout/pageComponents';
+export {
+  PagePanel,
+  PageHeaderPanel,
+  PageHeader,
+  PageBodyPanel
+} from './layout/pageComponents';
 export { DefaultPage } from './layout/defaultPage';

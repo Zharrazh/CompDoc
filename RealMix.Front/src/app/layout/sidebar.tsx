@@ -20,7 +20,7 @@ interface GroupItem {
   title: string;
   show?: () => boolean;
   icon?: IconName;
-  items: { title: string, to: string, show?: () => boolean }[]
+  items: { title: string; to: string; show?: () => boolean }[]
 }
 
 interface LinkItem {

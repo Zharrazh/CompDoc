@@ -17,7 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace RealMix.Back
 {
@@ -83,8 +83,6 @@ namespace RealMix.Back
         {
             runner.MigrateUp();
 
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader());
-
             app.UseAuthentication();
 
             if (env.IsDevelopment())
@@ -97,8 +95,17 @@ namespace RealMix.Back
                 //app.UseHsts();
             }
 
+            app.Use(async (context, next) =>
+            {
+                var path = context.Request.Path.Value;
+                if (!path.StartsWith("/api") && !Path.HasExtension(path))
+                    context.Request.Path = "/index.html";
+                await next();
+            });
+
             app.UseCqrs();
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseMvc();
         }
     }

@@ -9,7 +9,7 @@ import { Action } from "redux";
 
 interface ReducerDefinition<T extends BaseInitialState> {
   [index: string]: string | ((state: T, action: ActionDefinition<any>) => T);
-};
+}
 
 interface ActionDefinition<T> {
   type: SyncActions;
@@ -19,7 +19,7 @@ interface ActionDefinition<T> {
 
 interface BaseInitialState {
   [index: string]: any;
-};
+}
 
 interface LoaderData {
   id: AsyncActions;

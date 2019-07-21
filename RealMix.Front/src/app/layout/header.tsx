@@ -1,13 +1,13 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from 'core/reduxHelper';
-import { setAuthInfo } from 'app/common/auth/actions';
-import { Button, Line } from 'shared';
-import './header.scss';
+import React from "react";
+import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "core/reduxHelper";
+import { setAuthInfo } from "app/common/auth/actions";
+import { Button, Line } from "shared";
+import "./header.scss";
 
 interface Props {
-  toggle: () => void
+  toggle: () => void;
 }
 
 export const Header: React.FC<Props> = ({ toggle }) => {
@@ -22,14 +22,18 @@ export const Header: React.FC<Props> = ({ toggle }) => {
       <Button className="navbar-toggler" onClick={toggle}>
         <span className="navbar-toggler-icon"></span>
       </Button>
-      <Link to="/" className="navbar-brand">RealMix</Link>
+      <Link to="/" className="navbar-brand">
+        RealMix
+      </Link>
       <Line justifyContent="end" w="100">
         <ul className="navbar-nav">
           <li className="nav-item">
-            <Button className="nav-link" link small onClick={logout}>Sing out</Button>
+            <Button className="nav-link" link small onClick={logout}>
+              Sing out
+            </Button>
           </li>
         </ul>
       </Line>
     </nav>
   );
-}
+};

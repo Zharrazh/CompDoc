@@ -34,4 +34,4 @@ Import
 .vs
 Publish
 *lock.json
-Content
+wwwroot

@@ -1,2 +1,2 @@
 cd ./RealMix.Front
-npm run start
+npm run dev
