@@ -11,14 +11,29 @@ interface Props extends SpaceProps, SizeProps {
   alignItems?: 'start' | 'end' | 'center' | 'baseline' | 'stretch';
 }
 
-export const Row: React.FC<Props> =
-  ({ tag: Tag = 'div', className, noGutters, justifyContent, alignItems, children, ...other }) => {
-    const classes = classNames('row',
-      {
-        [`justify-content-md-${justifyContent}`]: justifyContent != null,
-        [`align-items-md-${alignItems}`]: alignItems != null,
-        'no-gutters': noGutters
-      },
-      propsToSpace(other), propsToSize(other), className);
-    return <Tag className={classes} {...other}>{children}</Tag>
-  };
+export const Row: React.FC<Props> = ({
+  tag: Tag = 'div',
+  className,
+  noGutters,
+  justifyContent,
+  alignItems,
+  children,
+  ...other
+}) => {
+  const classes = classNames(
+    'row',
+    {
+      [`justify-content-md-${justifyContent}`]: justifyContent != null,
+      [`align-items-md-${alignItems}`]: alignItems != null,
+      'no-gutters': noGutters
+    },
+    propsToSpace(other),
+    propsToSize(other),
+    className
+  );
+  return (
+    <Tag className={classes} {...other}>
+      {children}
+    </Tag>
+  );
+};

@@ -13,9 +13,18 @@ interface Props extends SpaceProps, ColorProps, BorderProps, SizeProps {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
-export const Block: React.FC<Props> =
-  ({ tag: Tag = 'div', className, inline, onClick, children, ...other }) => {
-    const classes = classNames(inline ? 'd-inline' : 'd-block',
-      propsToSpace(other), propsToColor(other), propsToBorder(other), propsToSize(other), className);
-    return <Tag className={classes} onClick={onClick} {...other}>{children}</Tag>
-  };
+export const Block: React.FC<Props> = ({ tag: Tag = 'div', className, inline, onClick, children, ...other }) => {
+  const classes = classNames(
+    inline ? 'd-inline' : 'd-block',
+    propsToSpace(other),
+    propsToColor(other),
+    propsToBorder(other),
+    propsToSize(other),
+    className
+  );
+  return (
+    <Tag className={classes} onClick={onClick} {...other}>
+      {children}
+    </Tag>
+  );
+};

@@ -1,10 +1,10 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "core/reduxHelper";
-import { setAuthInfo } from "app/common/auth/actions";
-import { Button, Line } from "shared";
-import "./header.scss";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from 'core/reduxHelper';
+import { setAuthInfo } from 'app/common/auth/actions';
+import { Button, Line } from 'shared';
+import './header.scss';
 
 interface Props {
   toggle: () => void;

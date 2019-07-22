@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 
 const TerserJSPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 const isDev = process.env.NODE_ENV !== 'production';
@@ -33,10 +34,10 @@ module.exports = {
   module: {
     rules: [
       {
-        enforce: "pre",
+        enforce: 'pre',
         test: /\.tsx?$/,
         exclude: /node_modules/,
-        loader: "eslint-loader"
+        loader: 'eslint-loader'
       },
       {
         test: /\.tsx?$/,
@@ -52,12 +53,10 @@ module.exports = {
             loader: 'postcss-loader',
             options: {
               ident: 'postcss',
-              plugins: [
-                require('autoprefixer')()
-              ]
+              plugins: [require('autoprefixer')()]
             }
           },
-          'sass-loader',
+          'sass-loader'
         ]
       },
       {
@@ -66,13 +65,14 @@ module.exports = {
         options: {
           name: '[name].[ext]?[hash]'
         }
-      }]
+      }
+    ]
   },
   plugins: [
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
-      filename: "[name].css?[hash]",
-      chunkFilename: "[id].css?[hash]"
+      filename: '[name].css?[hash]',
+      chunkFilename: '[id].css?[hash]'
     }),
     new HtmlWebpackPlugin({
       template: './public/index.html',
@@ -80,11 +80,10 @@ module.exports = {
     }),
     {
       apply(compiler) {
-        compiler.hooks.done.tap('CleanUpStatsPlugin', (stats) => {
+        compiler.hooks.done.tap('CleanUpStatsPlugin', stats => {
           const children = stats.compilation.children;
           if (Array.isArray(children))
-            stats.compilation.children = children
-              .filter(child => child.name.indexOf('mini-css-extract-plugin') !== 0);
+            stats.compilation.children = children.filter(child => child.name.indexOf('mini-css-extract-plugin') !== 0);
         });
       }
     },
@@ -93,11 +92,11 @@ module.exports = {
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
     alias: {
-      "root": path.resolve(__dirname, "./src"),
-      "app": "root/app",
-      "shared": "root/shared",
-      "core": "root/core",
-      "enums": "root/enums"
+      root: path.resolve(__dirname, './src'),
+      app: 'root/app',
+      shared: 'root/shared',
+      core: 'root/core',
+      enums: 'root/enums'
     }
   },
   devtool: isDev ? '#eval-source-map' : 'none',

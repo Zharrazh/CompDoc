@@ -12,15 +12,8 @@ interface Props {
   mod?: string;
 }
 
-export const RepeatPanel: React.FC<Props> = ({
-  actionType,
-  action,
-  mod = undefined,
-  children
-}) => {
-  const item = useSelector((state: StoreType) =>
-    findLoaderItem(state.loader, actionType, mod)
-  );
+export const RepeatPanel: React.FC<Props> = ({ actionType, action, mod = undefined, children }) => {
+  const item = useSelector((state: StoreType) => findLoaderItem(state.loader, actionType, mod));
   if (item && item.isWait)
     return (
       <Line justifyContent="center" alignItems="center">

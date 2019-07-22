@@ -17,6 +17,6 @@ export function propsToSize(props: SizeProps) {
     [`w-md-${w}`]: w != null,
     [`h-md-${h}`]: h != null,
     [`vw-100`]: vw,
-    [`vh-100`]: vh,
+    [`vh-100`]: vh
   };
 }

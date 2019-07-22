@@ -14,4 +14,4 @@ export const Spinner: React.FC<Props> = ({ className, small, ...other }) => {
       <span className="sr-only"></span>
     </div>
   );
-}
+};

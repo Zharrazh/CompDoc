@@ -30,8 +30,7 @@ export const Login = () => {
   const dispatch = useDispatch<AppDispatch>();
   const history = useHistory();
   const form = useSelector((state: StoreType) => state.common.auth.form);
-  const onChange = (field: string, value: string) =>
-    dispatch(setForm({ ...form, [field]: value }));
+  const onChange = (field: string, value: string) => dispatch(setForm({ ...form, [field]: value }));
   const [messages, setMessages] = useState();
   const login = async () => {
     try {
@@ -51,24 +50,9 @@ export const Login = () => {
           <h2>Login</h2>
         </Block>
         <MessagesView messages={messages} />
-        <TextBoxField
-          data={form}
-          field="login"
-          onChange={onChange}
-          placeholder="Login"
-        />
-        <TextBoxField
-          type="password"
-          data={form}
-          field="password"
-          onChange={onChange}
-          placeholder="Password"
-        />
-        <LoadingButton
-          primary
-          block
-          onClick={login}
-          actionType={AsyncActions.COMMON_AUTH_LOGINASYNC}>
+        <TextBoxField data={form} field="login" onChange={onChange} placeholder="Login" />
+        <TextBoxField type="password" data={form} field="password" onChange={onChange} placeholder="Password" />
+        <LoadingButton primary block onClick={login} actionType={AsyncActions.COMMON_AUTH_LOGINASYNC}>
           Login
         </LoadingButton>
       </Block>

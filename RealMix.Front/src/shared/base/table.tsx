@@ -12,15 +12,33 @@ interface Props extends SpaceProps {
   small?: boolean;
 }
 
-export const Table: React.FC<Props> =
-  ({ className, striped, dark, bordered, borderless, hover, small, children, ...other }) => {
-    const classes = classNames('table', {
+export const Table: React.FC<Props> = ({
+  className,
+  striped,
+  dark,
+  bordered,
+  borderless,
+  hover,
+  small,
+  children,
+  ...other
+}) => {
+  const classes = classNames(
+    'table',
+    {
       'table-striped': striped,
       'table-dark': dark,
       'table-bordered': bordered,
       'table-borderless': borderless,
       'table-hover': hover,
-      'table-sm': small,
-    }, propsToSpace(other), className);
-    return <div className="table-responsive" {...other}><table className={classes}>{children}</table></div>
-  };
+      'table-sm': small
+    },
+    propsToSpace(other),
+    className
+  );
+  return (
+    <div className="table-responsive" {...other}>
+      <table className={classes}>{children}</table>
+    </div>
+  );
+};

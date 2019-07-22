@@ -21,11 +21,29 @@ export interface ButtonProps extends SpaceProps {
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export const Button: React.FC<ButtonProps> =
-  ({ tag: Tag = 'button', className, outline,
-    primary, secondary, success, danger, warning, info, light, dark, link,
-    large, small, block, children, onClick, ...other }) => {
-    const classes = classNames('btn', {
+export const Button: React.FC<ButtonProps> = ({
+  tag: Tag = 'button',
+  className,
+  outline,
+  primary,
+  secondary,
+  success,
+  danger,
+  warning,
+  info,
+  light,
+  dark,
+  link,
+  large,
+  small,
+  block,
+  children,
+  onClick,
+  ...other
+}) => {
+  const classes = classNames(
+    'btn',
+    {
       'btn-primary': !outline && primary,
       'btn-secondary': !outline && secondary,
       'btn-success': !outline && success,
@@ -47,6 +65,13 @@ export const Button: React.FC<ButtonProps> =
       'btn-lg': large,
       'btn-sm': small,
       'btn-block': block
-    }, propsToSpace(other), className);
-    return <Tag type={Tag === 'button' ? 'button' : undefined} className={classes} onClick={onClick} {...other}>{children}</Tag>
-  };
+    },
+    propsToSpace(other),
+    className
+  );
+  return (
+    <Tag type={Tag === 'button' ? 'button' : undefined} className={classes} onClick={onClick} {...other}>
+      {children}
+    </Tag>
+  );
+};

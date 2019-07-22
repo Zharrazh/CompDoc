@@ -7,18 +7,7 @@ import { AppDispatch } from 'core/reduxHelper';
 import { getPageAsync } from './actions';
 import { useMatch } from 'core/routerHooks'; //, useLocation
 
-import {
-  Table,
-  THead,
-  TBody,
-  Tr,
-  Th,
-  Td,
-  Line,
-  RepeatPanel,
-  LinkButton,
-  DefaultPage
-} from 'shared';
+import { Table, THead, TBody, Tr, Th, Td, Line, RepeatPanel, LinkButton, DefaultPage } from 'shared';
 
 //import { parse } from 'query-string';
 
@@ -28,13 +17,13 @@ export const WidgetList: React.FC = () => {
   //const parsedQuery = location.search;
   //console.log(match, location);
   const dispatch = useDispatch<AppDispatch>();
-  const get = useCallback(
-    () => dispatch(getPageAsync({ page: +match.params.page || 1 })),
-    [dispatch, match.params.page]
-  );
+  const get = useCallback(() => dispatch(getPageAsync({ page: +match.params.page || 1 })), [
+    dispatch,
+    match.params.page
+  ]);
   useEffect(() => {
     get();
-  });
+  }, [get]);
   const page = useSelector((state: StoreType) => state.config.widget.page);
   return (
     <DefaultPage title="Widget List">
@@ -44,10 +33,7 @@ export const WidgetList: React.FC = () => {
         </LinkButton>
         {/* <LinkButton primary to={`${match.url}/asdasd/as`}>Go to not found</LinkButton> */}
       </Line>
-      <RepeatPanel
-        actionType={AsyncActions.CONFIG_WIDGET_GETPAGEASYNC}
-        action={get}
-      >
+      <RepeatPanel actionType={AsyncActions.CONFIG_WIDGET_GETPAGEASYNC} action={get}>
         {page && (
           <Table small>
             <THead>

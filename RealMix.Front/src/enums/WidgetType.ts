@@ -1,11 +1,11 @@
-import { BaseEnum } from "./BaseEnum";
+import { BaseEnum } from './BaseEnum';
 
 class Type extends BaseEnum {
-  Text = 0;
-  Chart = 1;
-  Html = 2;
+  public Text = 0;
+  public Chart = 1;
+  public Html = 2;
 
-  constructor() {
+  public constructor() {
     super();
     this.init(this);
   }

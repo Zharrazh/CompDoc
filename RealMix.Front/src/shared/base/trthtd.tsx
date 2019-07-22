@@ -29,20 +29,29 @@ function propsToColors({ active, primary, secondary, success, danger, warning, i
   };
 }
 
-export const Tr: React.FC<Props> =
-  ({ className, children, ...other }) => {
-    const classes = classNames(propsToColors(other), propsToSpace(other), className);
-    return <tr className={classes} {...other}>{children}</tr>
-  };
+export const Tr: React.FC<Props> = ({ className, children, ...other }) => {
+  const classes = classNames(propsToColors(other), propsToSpace(other), className);
+  return (
+    <tr className={classes} {...other}>
+      {children}
+    </tr>
+  );
+};
 
-export const Th: React.FC<Props> =
-  ({ className, children, ...other }) => {
-    const classes = classNames(propsToColors(other), propsToSpace(other), className);
-    return <th className={classes} {...other}>{children}</th>
-  };
+export const Th: React.FC<Props> = ({ className, children, ...other }) => {
+  const classes = classNames(propsToColors(other), propsToSpace(other), className);
+  return (
+    <th className={classes} {...other}>
+      {children}
+    </th>
+  );
+};
 
-export const Td: React.FC<Props> =
-  ({ className, children, ...other }) => {
-    const classes = classNames(propsToColors(other), propsToSpace(other), className);
-    return <td className={classes} {...other}>{children}</td>
-  };
+export const Td: React.FC<Props> = ({ className, children, ...other }) => {
+  const classes = classNames(propsToColors(other), propsToSpace(other), className);
+  return (
+    <td className={classes} {...other}>
+      {children}
+    </td>
+  );
+};

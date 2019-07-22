@@ -1,10 +1,5 @@
-import React from "react";
-import {
-  PagePanel,
-  PageHeaderPanel,
-  PageHeader,
-  PageBodyPanel
-} from "./pageComponents";
+import React from 'react';
+import { PagePanel, PageHeaderPanel, PageHeader, PageBodyPanel } from './pageComponents';
 
 interface Props {
   title: string;

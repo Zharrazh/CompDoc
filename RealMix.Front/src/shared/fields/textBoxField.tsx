@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import classNames from "classnames";
-import { ObjectSchema, reach } from "yup";
+import React, { useState, useEffect } from 'react';
+import classNames from 'classnames';
+import { ObjectSchema, reach } from 'yup';
 
 interface Props {
   data: { [key: string]: any };
@@ -8,13 +8,13 @@ interface Props {
   onChange: (field: string, value: string) => void;
   placeholder?: string;
   v?: ObjectSchema<any>;
-  size?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | "auto";
+  size?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 'auto';
   key?: number | string;
   type?: string;
 }
 
 export const TextBoxField: React.FC<Props> = ({
-  type = "text",
+  type = 'text',
   data,
   field,
   onChange,
@@ -24,7 +24,7 @@ export const TextBoxField: React.FC<Props> = ({
   key,
   children
 }) => {
-  const value = data[field] == null ? "" : data[field];
+  const value = data[field] == null ? '' : data[field];
   const [message, setMessage] = useState(null);
   useEffect(() => {
     if (v)
@@ -38,7 +38,7 @@ export const TextBoxField: React.FC<Props> = ({
       {children && <label htmlFor={`${field}${key}`}>{children}</label>}
       <input
         type={type}
-        className={classNames("form-control", { "is-invalid": message })}
+        className={classNames('form-control', { 'is-invalid': message })}
         id={`${field}${key}`}
         placeholder={placeholder}
         onChange={e => onChange(field, e.target.value)}

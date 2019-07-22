@@ -1,4 +1,4 @@
-import { library } from '@fortawesome/fontawesome-svg-core'
+import { library } from '@fortawesome/fontawesome-svg-core';
 //solid
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons/faAngleRight';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons/faAngleDown';
@@ -20,4 +20,5 @@ library.add(
   faClipboardCheck,
   faCog,
   //regular
-  faCircle);
+  faCircle
+);

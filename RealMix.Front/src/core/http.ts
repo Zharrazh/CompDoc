@@ -11,20 +11,16 @@ export const http = axios.create({
 
 http.interceptors.request.use(config => {
   const authInfo = store.getState().common.auth.authInfo;
-  if (authInfo.isAuth)
-    config.headers.common['Authorization'] = 'Bearer ' + authInfo.token;
+  if (authInfo.isAuth) config.headers.common['Authorization'] = 'Bearer ' + authInfo.token;
   return config;
 });
 
-http.interceptors.response.use(response => response, error => {
-  if (error.response && error.response.status === 401) {
-    history.push('/login');
+http.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response && error.response.status === 401) history.push('/login');
+    if (error.response && error.response.status === 403) history.push('/accessdenied');
+    if (error.response && error.response.status === 404) history.push('/notfound');
+    return Promise.reject(error);
   }
-  if (error.response && error.response.status === 403) {
-    history.push('/accessdenied');
-  }
-  if (error.response && error.response.status === 404) {
-    history.push('/notfound');
-  }
-  return Promise.reject(error);
-});
+);

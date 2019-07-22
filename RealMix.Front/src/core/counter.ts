@@ -1,8 +1,8 @@
 class Counter {
-  value: number = 0;
+  private _value: number = 0;
 
-  get next() {
-    return ++this.value;
+  public get next() {
+    return ++this._value;
   }
 }
 

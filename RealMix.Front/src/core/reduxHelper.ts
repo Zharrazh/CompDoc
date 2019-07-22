@@ -1,11 +1,11 @@
-import { SyncActions, AsyncActions } from "app/actionTypes";
+import { SyncActions, AsyncActions } from 'app/actionTypes';
 import { history } from './history';
-import { counter } from "./counter";
-import { parseError } from "./parseError";
-import { NotFoundError } from "./notFoundError";
-import { ThunkAction, ThunkDispatch } from "redux-thunk";
-import { StoreType } from "./store";
-import { Action } from "redux";
+import { counter } from './counter';
+import { parseError } from './parseError';
+import { NotFoundError } from './notFoundError';
+import { ThunkAction, ThunkDispatch } from 'redux-thunk';
+import { StoreType } from './store';
+import { Action } from 'redux';
 
 interface ReducerDefinition<T extends BaseInitialState> {
   [index: string]: string | ((state: T, action: ActionDefinition<any>) => T);
@@ -37,10 +37,13 @@ interface LoaderState extends BaseInitialState {
   [actionType: string]: LoaderData | { [mod: string]: LoaderData };
 }
 
-type ActionBody<T> = (funcs: { dispatch: AppDispatch, isLast: () => void, getState: () => StoreType }, data: T) => Promise<any>;
+type ActionBody<T> = (
+  funcs: { dispatch: AppDispatch; isLast: () => void; getState: () => StoreType },
+  data: T
+) => Promise<any>;
 
 class ActionCancelledError extends Error {
-  constructor(message?: string) {
+  public constructor(message?: string) {
     super(message);
     Object.setPrototypeOf(this, new.target.prototype);
     this.name = ActionCancelledError.name;
@@ -54,22 +57,30 @@ const wait = (id: AsyncActions, number: number, mod?: string) =>
   createAction<LoaderData>(SyncActions.CORE_LOADER)({ id, number, mod, isOk: false, isWait: true, isError: false });
 
 const error = (id: AsyncActions, number: number, error: string | string[], mod?: string) =>
-  createAction<LoaderData>(SyncActions.CORE_LOADER)({ id, number, mod, isOk: false, isWait: false, isError: true, error });
+  createAction<LoaderData>(SyncActions.CORE_LOADER)({
+    id,
+    number,
+    mod,
+    isOk: false,
+    isWait: false,
+    isError: true,
+    error
+  });
 
-export function createReducer<T extends BaseInitialState>(initialState: () => T, info: ReducerDefinition<T>, supportReset: boolean = true) {
+export function createReducer<T extends BaseInitialState>(
+  initialState: () => T,
+  info: ReducerDefinition<T>,
+  supportReset: boolean = true
+) {
   return (state: T = initialState(), action: ActionDefinition<any>): T => {
-    if (supportReset && action.type === SyncActions.CORE_RESET_STATE)
-      return initialState();
+    if (supportReset && action.type === SyncActions.CORE_RESET_STATE) return initialState();
     const actionInfo = info[action.type];
-    if (actionInfo == null)
-      return state;
-    if (typeof actionInfo === "function")
-      return actionInfo(state, action);
+    if (actionInfo == null) return state;
+    if (typeof actionInfo === 'function') return actionInfo(state, action);
     const data = action.data === undefined ? initialState()[actionInfo] : action.data;
-    if (action.mod != null)
-      return { ...state, [actionInfo]: { ...state[actionInfo], [action.mod]: data } }
+    if (action.mod != null) return { ...state, [actionInfo]: { ...state[actionInfo], [action.mod]: data } };
     return { ...state, [actionInfo]: data };
-  }
+  };
 }
 
 export function createAction<T>(type: SyncActions): (data?: T, mod?: string) => ActionDefinition<T> {
@@ -91,8 +102,7 @@ export function createAsyncAction<T>(type: AsyncActions, actionBody: ActionBody<
     const number = counter.next;
     const isLast = () => {
       const item = findLoaderItem(getState().loader, type, mod);
-      if (!item || number >= item.number)
-        return;
+      if (!item || number >= item.number) return;
       throw new ActionCancelledError();
     };
     try {
@@ -100,10 +110,9 @@ export function createAsyncAction<T>(type: AsyncActions, actionBody: ActionBody<
       await actionBody({ dispatch, isLast, getState }, parameters);
       dispatch(ok(type, number, mod));
     } catch (exc) {
-      if (exc instanceof ActionCancelledError) { }
-      else {
-        if (exc instanceof NotFoundError)
-          history.push('/notfound');
+      if (exc instanceof ActionCancelledError) {
+      } else {
+        if (exc instanceof NotFoundError) history.push('/notfound');
         dispatch(error(type, number, parseError(exc), mod));
       }
     }
@@ -114,8 +123,7 @@ export function createAsyncAction<T>(type: AsyncActions, actionBody: ActionBody<
 export const loaderReducer = createReducer<LoaderState>(() => ({}), {
   [SyncActions.CORE_LOADER]: (state, action: ActionDefinition<LoaderData>) => {
     const item = findLoaderItem(state, action.data.id, action.data.mod);
-    if (item && item.number > action.data.number)
-      return state;
+    if (item && item.number > action.data.number) return state;
     if (action.data.mod != null)
       return {
         ...state,

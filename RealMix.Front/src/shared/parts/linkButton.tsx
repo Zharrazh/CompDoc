@@ -7,6 +7,6 @@ interface LinkButtonProps extends ButtonProps {
   to: H.LocationDescriptor;
 }
 
-export const LinkButton: React.FC<LinkButtonProps> = (props) => {
-  return <Button tag={Link} {...props} />
-}
+export const LinkButton: React.FC<LinkButtonProps> = props => {
+  return <Button tag={Link} {...props} />;
+};

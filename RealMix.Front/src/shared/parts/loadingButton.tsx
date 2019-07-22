@@ -14,5 +14,5 @@ interface Props extends ButtonProps {
 export const LoadingButton: React.FC<Props> = ({ actionType, mod = undefined, children, ...other }) => {
   const item = useSelector((state: StoreType) => findLoaderItem(state.loader, actionType, mod));
   const content = item && item.isWait ? <Spinner small /> : children;
-  return <Button {...other}>{content}</Button>
-}
+  return <Button {...other}>{content}</Button>;
+};

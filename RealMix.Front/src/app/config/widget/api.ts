@@ -12,8 +12,7 @@ export async function getPage(page: number) {
 
 export async function getItem(id: number) {
   const response = await http.get<WidgetModel>(`${baseUrl}/${id}`);
-  if (response.data === null)
-    throw new NotFoundError();
+  if (response.data === null) throw new NotFoundError();
   return response.data;
 }
 

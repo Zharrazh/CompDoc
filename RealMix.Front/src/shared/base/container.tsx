@@ -9,9 +9,16 @@ interface Props extends SpaceProps, SizeProps {
   nonFluid?: boolean;
 }
 
-export const Container: React.FC<Props> =
-  ({ tag: Tag = 'div', nonFluid, className, children, ...other }) => {
-    const classes = classNames(nonFluid ? 'container' : 'container-fluid',
-      propsToSpace(other), propsToSize(other), className);
-    return <Tag className={classes} {...other}>{children}</Tag>
-  };
+export const Container: React.FC<Props> = ({ tag: Tag = 'div', nonFluid, className, children, ...other }) => {
+  const classes = classNames(
+    nonFluid ? 'container' : 'container-fluid',
+    propsToSpace(other),
+    propsToSize(other),
+    className
+  );
+  return (
+    <Tag className={classes} {...other}>
+      {children}
+    </Tag>
+  );
+};
