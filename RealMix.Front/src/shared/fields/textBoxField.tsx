@@ -20,7 +20,7 @@ export const TextBoxField: React.FC<Props> = ({
   onChange,
   placeholder,
   v,
-  size,
+  //size,
   key,
   children
 }) => {
@@ -30,7 +30,7 @@ export const TextBoxField: React.FC<Props> = ({
     if (v)
       reach(v, field)
         .validate(value)
-        .then(x => setMessage(null))
+        .then(() => setMessage(null))
         .catch(x => setMessage(x.message));
   });
   return (

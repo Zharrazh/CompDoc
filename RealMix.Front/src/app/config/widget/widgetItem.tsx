@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { DefaultPage, Button } from 'shared';
 import { useHistory } from 'core/routerHooks';
 import { WidgetType } from 'enums/WidgetType';

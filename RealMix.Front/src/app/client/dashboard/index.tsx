@@ -1,5 +1,6 @@
 import React from 'react';
 import { Switch, Route, RouteComponentProps, Redirect } from 'react-router-dom';
+
 import { Dashboard } from './dashboard';
 
 export const DashboardIndex = ({ match }: RouteComponentProps) => (

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Switch, Route, RouteComponentProps, Redirect } from 'react-router-dom';
+
 import { WidgetIndex } from './widget';
 import { Dashboard } from './dashboard/dashboard';
 

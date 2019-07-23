@@ -1,5 +1,6 @@
 import React from 'react';
-import { Block } from '../';
+
+import { Block } from 'shared';
 
 interface Props {
   messages?: string | string[];

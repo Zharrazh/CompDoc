@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
+
 import { useHistory } from 'core/routerHooks';
 import { StoreType } from 'core/store';
 import { AppDispatch } from 'core/reduxHelper';
 import { parseError } from 'core/parseError';
 import { Block, Line, MessagesView, LoadingButton, TextBoxField } from 'shared';
-import { setForm, loginAsync } from './actions';
 import { AsyncActions } from 'app/actionTypes';
+
+import { setForm, loginAsync } from './actions';
 
 const schema = yup.object().shape({
   login: yup

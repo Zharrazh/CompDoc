@@ -1,7 +1,8 @@
 import { http } from 'core/http';
 import { NotFoundError } from 'core/notFoundError';
-import { WidgetModel } from './models';
 import { Page } from 'core/page';
+
+import { WidgetModel } from './models';
 
 const baseUrl = 'config/widget/';
 

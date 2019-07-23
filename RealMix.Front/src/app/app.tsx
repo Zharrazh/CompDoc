@@ -2,20 +2,20 @@ import React, { useState, useCallback } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-import { Header } from './layout/header';
-import { Sidebar } from './layout/sidebar';
 import { Block } from 'shared';
-
-import { Login } from './common/auth/login';
-import { NotFound } from './common/notFound';
 import { StoreType } from 'core/store';
 import { useHistory } from 'core/routerHooks';
 import { asyncComponentFactory } from 'core/asyncComponentFactory';
 
+import { Header } from './layout/header';
+import { Sidebar } from './layout/sidebar';
+import { Login } from './common/auth/login';
+import { NotFound } from './common/notFound';
+
 import './app.scss';
 
-const ConfigIndexAsync = asyncComponentFactory(() => import('./config'));
-const ClientIndexAsync = asyncComponentFactory(() => import('./client'));
+const ConfigIndexAsync = asyncComponentFactory(() => import('./config'), 'ConfigIndex');
+const ClientIndexAsync = asyncComponentFactory(() => import('./client'), 'ClientIndex');
 
 const RenderLayout: React.FC = () => {
   const history = useHistory();

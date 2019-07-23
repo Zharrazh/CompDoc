@@ -1,44 +1,55 @@
 {
   "extends": [
-    "airbnb",
+    //base
+    "eslint:recommended",
+    //ts
     "plugin:@typescript-eslint/recommended",
-    "plugin:import/typescript",
+    //react
+    "plugin:react/recommended",
+    //prettier
     "plugin:prettier/recommended",
-    "prettier/@typescript-eslint"
+    "prettier/@typescript-eslint",
+    //promise
+    "plugin:promise/recommended",
+    //jsx
+    "plugin:jsx-a11y/recommended"
   ],
-  "plugins": ["@typescript-eslint", "react-hooks", "prettier"],
+  "plugins": ["@typescript-eslint", "prettier", "import", "jsx-a11y", "react", "react-hooks"],
   "env": {
     "browser": true,
     "es6": true
   },
   "rules": {
-    "react/jsx-filename-extension": [
-      "warn",
-      {
-        "extensions": [".jsx", ".tsx"]
-      }
-    ], // also want to use with ".tsx"
+    //core
+    "no-restricted-imports": ["error", { "patterns": ["../*"] }],
+    //react
+    "react/prop-types": "off",
+    "react/display-name": "off",
+    "react/jsx-filename-extension": ["warn", { "extensions": [".tsx"] }],
     "react-hooks/rules-of-hooks": "error",
-
-    "prettier/prettier": [
-      "error",
-      {
-        "singleQuote": true,
-        "jsxBracketSameLine": true,
-        "printWidth": 120
-      }
-    ],
-    "@typescript-eslint/member-naming": [
-      "error",
-      {
-        "private": "^_"
-      }
-    ],
+    "react-hooks/exhaustive-deps": "warn",
+    //prettier
+    "prettier/prettier": ["error", { "singleQuote": true, "jsxBracketSameLine": true, "printWidth": 120 }],
+    //typescript
+    "@typescript-eslint/member-naming": ["error", { "private": "^_" }],
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-use-before-define": "off"
+    "@typescript-eslint/no-use-before-define": "off",
+    //import
+    "import/first": "error",
+    "import/order": [
+      "error",
+      {
+        "newlines-between": "always",
+        "groups": ["builtin", "external", "internal", "unknown", "parent", "sibling", "index"]
+      }
+    ],
+    "import/no-default-export": "error",
+    "import/no-useless-path-segments": "error",
+    "import/newline-after-import": "error"
   },
   "settings": {
+    "import/resolver": "webpack",
     "react": {
       "pragma": "React",
       "version": "detect"

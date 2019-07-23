@@ -1,7 +1,7 @@
 import { createAction, createAsyncAction } from 'core/reduxHelper';
 import { AsyncActions, SyncActions } from 'app/actionTypes';
-import { AuthInfo, LoginModel } from './models';
 
+import { AuthInfo, LoginModel } from './models';
 import * as api from './api';
 
 export const setAuthInfo = createAction<AuthInfo>(SyncActions.COMMON_AUTH_SETAUTHINFO);

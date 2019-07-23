@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+
 import { SpaceProps, propsToSpace } from './utils/spaceUtil';
 
 export interface ButtonProps extends SpaceProps {

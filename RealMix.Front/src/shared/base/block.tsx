@@ -1,5 +1,6 @@
 import React, { CSSProperties } from 'react';
 import classNames from 'classnames';
+
 import { SpaceProps, propsToSpace } from './utils/spaceUtil';
 import { ColorProps, propsToColor } from './utils/colorUtil';
 import { BorderProps, propsToBorder } from './utils/borderUtil';

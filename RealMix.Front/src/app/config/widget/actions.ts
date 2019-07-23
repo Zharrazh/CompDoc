@@ -1,8 +1,9 @@
 import { createAction, createAsyncAction } from 'core/reduxHelper';
+import { Page } from 'core/page';
 import { AsyncActions, SyncActions } from 'app/actionTypes';
+
 import { getPage, getItem, save } from './api';
 import { WidgetModel } from './models';
-import { Page } from 'core/page';
 
 export const setPage = createAction<Page<WidgetModel>>(SyncActions.CONFIG_WIDGET_SETPAGE);
 export const setItem = createAction<WidgetModel>(SyncActions.CONFIG_WIDGET_SETITEM);

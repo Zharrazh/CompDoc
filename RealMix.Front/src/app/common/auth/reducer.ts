@@ -1,5 +1,6 @@
 import { createReducer } from 'core/reduxHelper';
 import { SyncActions } from 'app/actionTypes';
+
 import { LoginModel, AuthInfo } from './models';
 
 interface AuthInitialState {

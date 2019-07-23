@@ -1,6 +1,7 @@
 import { createReducer } from 'core/reduxHelper';
 import { Page } from 'core/page';
 import { SyncActions } from 'app/actionTypes';
+
 import { WidgetModel } from './models';
 
 interface WidgetInitialState {

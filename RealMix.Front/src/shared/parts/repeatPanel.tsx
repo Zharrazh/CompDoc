@@ -1,9 +1,9 @@
 import React from 'react';
-import { AsyncActions } from 'app/actionTypes';
-import { findLoaderItem } from 'core/reduxHelper';
 import { useSelector } from 'react-redux';
 
-import { Button, Line, Spinner, Block } from '../';
+import { Button, Line, Spinner, Block } from 'shared';
+import { AsyncActions } from 'app/actionTypes';
+import { findLoaderItem } from 'core/reduxHelper';
 import { StoreType } from 'core/store';
 
 interface Props {

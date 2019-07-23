@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Row, DefaultPage, Col, Block } from 'shared';
 
 export const Dashboard: React.FC = () => {

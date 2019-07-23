@@ -1,11 +1,13 @@
+import { Action } from 'redux';
+import { ThunkAction, ThunkDispatch } from 'redux-thunk';
+
 import { SyncActions, AsyncActions } from 'app/actionTypes';
+
 import { history } from './history';
 import { counter } from './counter';
 import { parseError } from './parseError';
 import { NotFoundError } from './notFoundError';
-import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { StoreType } from './store';
-import { Action } from 'redux';
 
 interface ReducerDefinition<T extends BaseInitialState> {
   [index: string]: string | ((state: T, action: ActionDefinition<any>) => T);
@@ -111,6 +113,7 @@ export function createAsyncAction<T>(type: AsyncActions, actionBody: ActionBody<
       dispatch(ok(type, number, mod));
     } catch (exc) {
       if (exc instanceof ActionCancelledError) {
+        //skip
       } else {
         if (exc instanceof NotFoundError) history.push('/notfound');
         dispatch(error(type, number, parseError(exc), mod));

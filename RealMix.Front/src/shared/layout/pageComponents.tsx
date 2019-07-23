@@ -1,5 +1,5 @@
 import { componentFactory } from 'core/componentFactory';
-import { Container } from '../';
+import { Container } from 'shared';
 
 import './page.scss';
 

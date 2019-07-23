@@ -1,9 +1,10 @@
 import React from 'react';
-import { AsyncActions } from 'app/actionTypes';
-import { Button, ButtonProps } from '../base/button';
-import { Spinner } from '../';
-import { findLoaderItem } from 'core/reduxHelper';
 import { useSelector } from 'react-redux';
+
+import { AsyncActions } from 'app/actionTypes';
+import { Spinner } from 'shared';
+import { Button, ButtonProps } from 'shared/base/button';
+import { findLoaderItem } from 'core/reduxHelper';
 import { StoreType } from 'core/store';
 
 interface Props extends ButtonProps {

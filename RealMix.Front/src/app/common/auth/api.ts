@@ -1,4 +1,5 @@
 import { http } from 'core/http';
+
 import { LoginModel, AuthInfo } from './models';
 
 const baseUrl = 'common/auth';

@@ -1,5 +1,6 @@
 import { createStore, compose, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
+
 import { appReducer } from 'app/appReducer';
 import { setAuthInfo } from 'app/common/auth/actions';
 

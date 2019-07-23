@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
+
 import { useLocation } from 'core/routerHooks';
-import { useSelector } from 'react-redux';
 import { StoreType } from 'core/store';
 
 import './sidebar.scss';
