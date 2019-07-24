@@ -9,6 +9,7 @@
     "analyze": "cross-env NODE_ENV=production analyze=yes webpack --progress --hide-modules"
   },
   "dependencies": {
+    "core-js": "3.1.4",
     "react": "16.8.6",
     "react-dom": "16.8.6",
     "react-router-dom": "5.0.1",

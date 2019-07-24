@@ -101,7 +101,7 @@ module.exports = {
   },
   devtool: isDev ? '#eval-source-map' : 'none',
   performance: {
-    maxEntrypointSize: 500000,
-    maxAssetSize: 500000
+    maxEntrypointSize: 750000,
+    maxAssetSize: 750000
   }
 };

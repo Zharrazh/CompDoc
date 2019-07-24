@@ -13,9 +13,6 @@ import { getPageAsync } from './actions';
 
 export const WidgetList: React.FC = () => {
   const match = useMatch<{ page: number }>();
-  //const location = useLocation();
-  //const parsedQuery = location.search;
-  //console.log(match, location);
   const dispatch = useDispatch<AppDispatch>();
   const get = useCallback(() => dispatch(getPageAsync({ page: +match.params.page || 1 })), [
     dispatch,

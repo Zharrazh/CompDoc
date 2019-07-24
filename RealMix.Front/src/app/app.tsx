@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { Block } from 'shared';
 import { StoreType } from 'core/store';
 import { useHistory } from 'core/routerHooks';
-import { AsyncComponent } from 'core/AsyncComponent';
+import { asyncComponent } from 'core/asyncComponent';
 
 import { Header } from './layout/header';
 import { Sidebar } from './layout/sidebar';
@@ -14,12 +14,8 @@ import { NotFound } from './common/notFound';
 
 import './app.scss';
 
-const ConfigIndexAsync = (props: any) => (
-  <AsyncComponent get={() => import('./config')} name="ConfigIndex" {...props}></AsyncComponent>
-);
-const ClientIndexAsync = (props: any) => (
-  <AsyncComponent get={() => import('./client')} name="ClientIndex" {...props}></AsyncComponent>
-);
+const ConfigIndexAsync: React.FC = asyncComponent(() => import('./config').then(x => x.ConfigIndex));
+const ClientIndexAsync: React.FC = asyncComponent(() => import('./client').then(x => x.ClientIndex));
 
 const RenderLayout: React.FC = () => {
   const history = useHistory();
@@ -37,8 +33,8 @@ const RenderLayout: React.FC = () => {
       <Sidebar show={show} hide={hide}></Sidebar>
       <Block className="appBody" p="3">
         <Switch>
-          <Route path="/config" render={ConfigIndexAsync} />
-          <Route path="/" render={ClientIndexAsync} />
+          <Route path="/config" component={ConfigIndexAsync} />
+          <Route path="/" component={ClientIndexAsync} />
         </Switch>
       </Block>
     </>
