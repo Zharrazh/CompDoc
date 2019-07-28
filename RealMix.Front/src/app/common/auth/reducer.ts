@@ -28,8 +28,8 @@ const initialState: () => AuthInitialState = () => ({
 export const authReducer = createReducer(initialState, {
   [SyncActions.COMMON_AUTH_SETFORM]: 'form',
   [SyncActions.COMMON_AUTH_SETAUTHINFO]: (state, action) => {
-    if (action.data == null) sessionStorage.removeItem('authInfo');
-    else sessionStorage.setItem('authInfo', JSON.stringify(action.data));
+    if (action.data == null) localStorage.removeItem('authInfo');
+    else localStorage.setItem('authInfo', JSON.stringify(action.data));
     return {
       ...state,
       authInfo: action.data == null ? initialState().authInfo : action.data

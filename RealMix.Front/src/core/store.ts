@@ -8,6 +8,6 @@ const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ||
 
 export const store = createStore(appReducer, composeEnhancers(applyMiddleware(thunk)));
 
-const authInfo = sessionStorage.getItem('authInfo');
+const authInfo = localStorage.getItem('authInfo');
 if (authInfo != null) store.dispatch(setAuthInfo(JSON.parse(authInfo)));
-export type StoreType = ReturnType<typeof appReducer>;
+export interface StoreType extends ReturnType<typeof appReducer> {} // eslint-disable-line @typescript-eslint/no-empty-interface

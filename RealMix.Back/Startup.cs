@@ -65,6 +65,7 @@ namespace RealMix.Back
             services.AddMediatR(typeof(Anchor).Assembly);
             services.AddDbContext<DatabaseContext>(options => options.UseSqlite(connectionString));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddResponseCompression();
 
             services
                 .AddSingleton(typeof(ILogger<>), typeof(LoggerService<>))
@@ -82,6 +83,8 @@ namespace RealMix.Back
         public void Configure(IMigrationRunner runner, IApplicationBuilder app, IHostingEnvironment env)
         {
             runner.MigrateUp();
+
+            app.UseResponseCompression();
 
             app.UseAuthentication();
 

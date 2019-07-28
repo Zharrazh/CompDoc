@@ -2,11 +2,11 @@ import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IconName } from '@fortawesome/fontawesome-svg-core';
 
 import { useLocation } from 'core/routerHooks';
 import { StoreType } from 'core/store';
+import { ImportedIcon } from 'shared/base/icon';
+import { Icon } from 'shared';
 
 import './sidebar.scss';
 
@@ -20,7 +20,7 @@ interface GroupItem {
   type: 'group';
   title: string;
   show?: () => boolean;
-  icon?: IconName;
+  icon?: ImportedIcon;
   items: { title: string; to: string; show?: () => boolean }[];
 }
 
@@ -28,7 +28,7 @@ interface LinkItem {
   type: 'link';
   title: string;
   show?: () => boolean;
-  icon?: IconName;
+  icon?: ImportedIcon;
   to: string;
 }
 
@@ -145,12 +145,12 @@ export const Sidebar: React.FC<Props> = ({ show, hide }) => {
                     onClick={() => setExpanded(item !== expanded ? item : undefined)}>
                     {item.icon && (
                       <span className="menuIcon">
-                        <FontAwesomeIcon icon={item.icon} />
+                        <Icon name={item.icon} />
                       </span>
                     )}
                     <span className="groupTitle">{item.title}</span>
                     <span className="groupArrow">
-                      <FontAwesomeIcon icon={item === expanded ? 'angle-down' : 'angle-right'} />
+                      <Icon name={item === expanded ? 'angle-down' : 'angle-right'} />
                     </span>
                   </button>
                   <div className="sidebarSubList" style={item === expanded ? { maxHeight: maxHeight } : undefined}>
@@ -161,7 +161,7 @@ export const Sidebar: React.FC<Props> = ({ show, hide }) => {
                             key={subItemKey}
                             to={subItem.to}
                             className={subItem === activeItem ? 'active' : undefined}>
-                            <FontAwesomeIcon icon={['far', 'circle']} />
+                            <Icon name="circle" prefix="far" />
                             {subItem.title}
                           </Link>
                         )
@@ -180,7 +180,7 @@ export const Sidebar: React.FC<Props> = ({ show, hide }) => {
                   })}>
                   {item.icon && (
                     <span className="menuIcon">
-                      <FontAwesomeIcon icon={item.icon} />
+                      <Icon name={item.icon} />
                     </span>
                   )}
                   {item.title}

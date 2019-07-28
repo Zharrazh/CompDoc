@@ -96,7 +96,8 @@ module.exports = {
       app: 'root/app',
       shared: 'root/shared',
       core: 'root/core',
-      enums: 'root/enums'
+      enums: 'root/enums',
+      utils: 'root/utils'
     }
   },
   devtool: isDev ? '#eval-source-map' : 'none',

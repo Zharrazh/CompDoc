@@ -1,4 +1,5 @@
 export { Button } from './base/button';
+export { ButtonGroup } from './base/buttonGroup';
 export { Line } from './base/line';
 export { Spinner } from './base/spinner';
 export { Container } from './base/container';
@@ -9,8 +10,11 @@ export { Table } from './base/table';
 export { THead } from './base/thead';
 export { TBody } from './base/tbody';
 export { Tr, Th, Td } from './base/trthtd';
+export { Icon } from './base/icon';
 
 export { LinkButton } from './parts/linkButton';
+export { CancelButton } from './parts/cancelButton';
+export { DropdownButton } from './parts/dropdownButton';
 export { LoadingButton } from './parts/loadingButton';
 export { RepeatPanel } from './parts/repeatPanel';
 export { MessagesView } from './parts/messagesView';

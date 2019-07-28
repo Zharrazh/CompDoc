@@ -9,7 +9,6 @@ import { store } from 'core/store';
 import { history } from 'core/history';
 import { App } from 'app/app';
 
-import './icon';
 import './styles.scss';
 
 const root = (

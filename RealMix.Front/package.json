@@ -9,22 +9,23 @@
     "analyze": "cross-env NODE_ENV=production analyze=yes webpack --progress --hide-modules"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "1.2.19",
+    "@fortawesome/free-regular-svg-icons": "5.9.0",
+    "@fortawesome/free-solid-svg-icons": "5.9.0",
+    "@fortawesome/react-fontawesome": "0.1.4",
+    "axios": "0.19.0",
+    "bootstrap": "4.3.1",
+    "classnames": "2.2.6",
     "core-js": "3.1.4",
+    "date-fns": "2.0.0-beta.3",
+    "query-string": "6.8.1",
     "react": "16.8.6",
     "react-dom": "16.8.6",
+    "react-redux": "7.1.0",
     "react-router-dom": "5.0.1",
     "redux": "4.0.4",
-    "react-redux": "7.1.0",
     "redux-thunk": "2.3.0",
-    "classnames": "2.2.6",
-    "query-string": "6.8.1",
-    "axios": "0.19.0",
-    "yup": "0.27.0",
-    "bootstrap": "4.3.1",
-    "@fortawesome/fontawesome-svg-core": "1.2.19",
-    "@fortawesome/free-solid-svg-icons": "5.9.0",
-    "@fortawesome/free-regular-svg-icons": "5.9.0",
-    "@fortawesome/react-fontawesome": "0.1.4"
+    "yup": "0.27.0"
   },
   "devDependencies": {
     "@types/jest": "24.0.15",

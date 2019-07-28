@@ -39,10 +39,9 @@ interface LoaderState extends BaseInitialState {
   [actionType: string]: LoaderData | { [mod: string]: LoaderData };
 }
 
-type ActionBody<T> = (
-  funcs: { dispatch: AppDispatch; isLast: () => void; getState: () => StoreType },
-  data: T
-) => Promise<any>;
+interface ActionBody<T> {
+  (funcs: { dispatch: AppDispatch; isLast: () => void; getState: () => StoreType }, data: T): Promise<any>;
+}
 
 class ActionCancelledError extends Error {
   public constructor(message?: string) {
@@ -96,8 +95,9 @@ export function findLoaderItem(loaderState: LoaderState, type: AsyncActions, mod
   }
   return loaderState[type] as LoaderData;
 }
-export type AppDispatch = ThunkDispatch<StoreType, null, Action<string>>;
-export type AppAction = ThunkAction<Promise<LoaderData>, StoreType, null, Action<string>>;
+export interface AppDispatch extends ThunkDispatch<StoreType, null, Action<string>> {} // eslint-disable-line @typescript-eslint/no-empty-interface
+
+export interface AppAction extends ThunkAction<Promise<LoaderData>, StoreType, null, Action<string>> {} // eslint-disable-line @typescript-eslint/no-empty-interface
 
 export function createAsyncAction<T>(type: AsyncActions, actionBody: ActionBody<T>, mod?: string) {
   return (parameters: T): AppAction => async (dispatch, getState) => {

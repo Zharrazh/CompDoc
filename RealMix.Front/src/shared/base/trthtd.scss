@@ -1,0 +1,11 @@
+th,
+td {
+  &.table-column-narrow {
+    width: 1%;
+  }
+  &.table-column-addSpace {
+    & > :not(:first-child) {
+      margin-left: 0.5em;
+    }
+  }
+}
