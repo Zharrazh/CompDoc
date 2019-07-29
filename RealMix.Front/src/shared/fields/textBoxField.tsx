@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { ObjectSchema, reach } from 'yup';
 
 interface Props {
-  data: { [key: string]: any };
+  data: any;
   field: string;
   onChange: (field: string, value: string) => void;
   placeholder?: string;
@@ -20,7 +20,7 @@ export const TextBoxField: React.FC<Props> = ({
   onChange,
   placeholder,
   v,
-  //size,
+  size,
   key,
   children
 }) => {
@@ -34,7 +34,7 @@ export const TextBoxField: React.FC<Props> = ({
         .catch(x => setMessage(x.message));
   });
   return (
-    <div className="form-group">
+    <div className={classNames('form-group', { [`col-md-${size}`]: size != null })}>
       {children && <label htmlFor={`${field}${key}`}>{children}</label>}
       <input
         type={type}

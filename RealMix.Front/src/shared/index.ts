@@ -11,6 +11,7 @@ export { THead } from './base/thead';
 export { TBody } from './base/tbody';
 export { Tr, Th, Td } from './base/trthtd';
 export { Icon } from './base/icon';
+export { DropdownItem } from './base/dropdownItem';
 
 export { LinkButton } from './parts/linkButton';
 export { CancelButton } from './parts/cancelButton';

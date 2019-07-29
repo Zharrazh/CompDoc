@@ -3,6 +3,8 @@ import classNames from 'classnames';
 
 import { SpaceProps, propsToSpace } from './utils/spaceUtil';
 
+import './table.scss';
+
 interface Props extends SpaceProps {
   className?: string;
   striped?: boolean;
@@ -11,6 +13,7 @@ interface Props extends SpaceProps {
   borderless?: boolean;
   hover?: boolean;
   small?: boolean;
+  minHeight?: boolean;
 }
 
 export const Table: React.FC<Props> = ({
@@ -22,6 +25,7 @@ export const Table: React.FC<Props> = ({
   hover,
   small,
   children,
+  minHeight,
   ...other
 }) => {
   const classes = classNames(
@@ -37,8 +41,9 @@ export const Table: React.FC<Props> = ({
     propsToSpace(other),
     className
   );
+
   return (
-    <div className="table-responsive" {...other}>
+    <div className={classNames('table-responsive', { minHeight })} {...other}>
       <table className={classes}>{children}</table>
     </div>
   );

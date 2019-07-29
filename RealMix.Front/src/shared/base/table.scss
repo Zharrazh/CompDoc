@@ -1,0 +1,5 @@
+.table-responsive {
+  &.minHeight {
+    min-height: calc(100vh - 15rem);
+  }
+}

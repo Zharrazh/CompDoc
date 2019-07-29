@@ -1,5 +1,6 @@
 import React, { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { AsyncActions } from 'app/actionTypes';
 import { StoreType } from 'core/store';
@@ -19,7 +20,8 @@ import {
   Button,
   Icon,
   ButtonGroup,
-  DropdownButton
+  DropdownButton,
+  DropdownItem
 } from 'shared';
 import { WidgetType } from 'enums/WidgetType';
 import { DateTime } from 'utils/dateTime';
@@ -47,7 +49,7 @@ export const WidgetList: React.FC = () => {
       </Line>
       <RepeatPanel actionType={AsyncActions.CONFIG_WIDGET_GETPAGEASYNC} action={get}>
         {page && (
-          <Table small>
+          <Table small minHeight>
             <THead>
               <Tr>
                 <Th>Id</Th>
@@ -74,13 +76,12 @@ export const WidgetList: React.FC = () => {
                       <Button small danger>
                         <Icon name="trash-alt" />
                       </Button>
-                      <DropdownButton secondary small>
-                        <a className="dropdown-item" href="\">
-                          Dropdown link
-                        </a>
-                        <a className="dropdown-item" href="\">
-                          Dropdown link
-                        </a>
+                      <DropdownButton secondary small rightAlignment>
+                        <DropdownItem tag={Link} to={`${match.url}/settings`}>
+                          Test link 1
+                        </DropdownItem>
+                        <DropdownItem>Dropdown link</DropdownItem>
+                        <DropdownItem>Dropdown link</DropdownItem>
                       </DropdownButton>
                     </ButtonGroup>
                   </Td>
