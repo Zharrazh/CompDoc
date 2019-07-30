@@ -3,10 +3,10 @@ import { Page } from 'core/page';
 import { AsyncActions, SyncActions } from 'app/actionTypes';
 
 import { getPage, getItem, save } from './api';
-import { WidgetModel } from './models';
+import { WidgetModel, WidgetModelEdit } from './models';
 
 export const setPage = createAction<Page<WidgetModel>>(SyncActions.CONFIG_WIDGET_SETPAGE);
-export const setItem = createAction<WidgetModel>(SyncActions.CONFIG_WIDGET_SETITEM);
+export const setItem = createAction<WidgetModelEdit>(SyncActions.CONFIG_WIDGET_SETITEM);
 
 export const getPageAsync = createAsyncAction(
   AsyncActions.CONFIG_WIDGET_GETPAGEASYNC,
@@ -28,7 +28,7 @@ export const getItemAsync = createAsyncAction(
 
 export const saveAsync = createAsyncAction(
   AsyncActions.CONFIG_WIDGET_SAVEASYNC,
-  async ({ dispatch }, model: WidgetModel) => {
+  async ({ dispatch }, model: WidgetModelEdit) => {
     await save(model);
     dispatch(setItem());
   }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import { ObjectSchema, reach } from 'yup';
+import has from 'lodash/has';
 
 interface Props {
   data: any;
@@ -27,7 +28,7 @@ export const TextBoxField: React.FC<Props> = ({
   const value = data[field] == null ? '' : data[field];
   const [message, setMessage] = useState(null);
   useEffect(() => {
-    if (v)
+    if (v != null && has(v, 'fields') && has(v, 'fields.' + field))
       reach(v, field)
         .validate(value)
         .then(() => setMessage(null))

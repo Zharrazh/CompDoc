@@ -12,10 +12,10 @@ export class BaseEnum {
       p[id] = this.nameConverter(id, name);
       return p;
     }, {});
-    this._list = entries.map(([, id]) => ({ id, name: this.name(+id) }));
+    this._list = entries.map(([, id]) => ({ id, name: this.getName(+id) }));
   }
 
-  public name(id: number) {
+  public getName(id: number) {
     return this._map[id] != null ? this._map[id] : '???';
   }
 

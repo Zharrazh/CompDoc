@@ -47,7 +47,9 @@
     "import/no-default-export": "error",
     "import/no-useless-path-segments": "error",
     "import/newline-after-import": "error",
-    "import/no-duplicates": "error"
+    "import/no-duplicates": "error",
+    //jsx
+    "jsx-a11y/no-onchange": "off"
   },
   "settings": {
     "import/resolver": "webpack",

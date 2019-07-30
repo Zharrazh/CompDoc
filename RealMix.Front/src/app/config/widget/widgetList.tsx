@@ -65,7 +65,7 @@ export const WidgetList: React.FC = () => {
                 <Tr key={item.id}>
                   <Td>{item.id}</Td>
                   <Td>{item.name}</Td>
-                  <Td>{WidgetType.name(item.type)}</Td>
+                  <Td>{WidgetType.getName(item.type)}</Td>
                   <Td>{DateTime.format(item.created)}</Td>
                   <Td>{DateTime.format(item.updated)}</Td>
                   <Td narrow>

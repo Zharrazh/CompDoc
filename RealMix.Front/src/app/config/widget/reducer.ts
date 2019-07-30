@@ -1,15 +1,23 @@
 import { createReducer } from 'core/reduxHelper';
 import { Page } from 'core/page';
 import { SyncActions } from 'app/actionTypes';
+import { WidgetType } from 'enums/WidgetType';
 
-import { WidgetModel } from './models';
+import { WidgetModel, WidgetModelEdit } from './models';
 
 interface WidgetInitialState {
   page?: Page<WidgetModel>;
-  item?: WidgetModel;
+  item: WidgetModelEdit;
 }
 
-const initialState: () => WidgetInitialState = () => ({});
+const initialState: () => WidgetInitialState = () => ({
+  item: {
+    id: 0,
+    name: '',
+    parameters: '',
+    type: WidgetType.Text
+  }
+});
 
 export const widgetReducer = createReducer(initialState, {
   [SyncActions.CONFIG_WIDGET_SETPAGE]: 'page',

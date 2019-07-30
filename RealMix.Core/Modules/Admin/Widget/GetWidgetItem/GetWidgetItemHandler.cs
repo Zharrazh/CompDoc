@@ -27,9 +27,7 @@ namespace RealMix.Core.Modules.Config.Widget.GetWidgetItem
                 Id = item.Id,
                 Name = item.Name,
                 Type = item.Type,
-                Parameters = item.Parameters,
-                Created = item.Created,
-                Updated = item.Updated
+                Parameters = item.Parameters
             };
         }
     }

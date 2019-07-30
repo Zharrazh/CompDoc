@@ -24,7 +24,6 @@ export const CancelButton: React.FC<CancelButtonProps> = ({ to, toParent, childr
     }
     history.goBack();
   };
-  console.log('children', children, children != null);
   return (
     <Button secondary outline onClick={go} {...other}>
       {children == null ? 'Cancel' : children}

@@ -9,7 +9,5 @@ namespace RealMix.Core.Modules.Config.Widget.GetWidgetItem
         public string Name { get; set; }
         public WidgetType Type { get; set; }
         public string Parameters { get; set; }
-        public DateTime Created { get; set; }
-        public DateTime Updated { get; set; }
     }
 }
