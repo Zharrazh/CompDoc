@@ -28,11 +28,23 @@ export const TextBoxField: React.FC<Props> = ({
   const value = data[field] == null ? '' : data[field];
   const [message, setMessage] = useState(null);
   useEffect(() => {
+    let canceled = false;
+    console.log('*** EFFECT');
     if (v != null && has(v, 'fields') && has(v, 'fields.' + field))
       reach(v, field)
         .validate(value)
-        .then(() => setMessage(null))
-        .catch(x => setMessage(x.message));
+        .then(() => {
+          if (!canceled) setMessage(null);
+          return null;
+        })
+        .catch(x => {
+          if (!canceled) setMessage(x.message);
+          return null;
+        });
+    return () => {
+      console.log('*** cancelation');
+      canceled = true;
+    };
   });
   return (
     <div className={classNames('form-group', { [`col-md-${size}`]: size != null })}>
