@@ -2,7 +2,17 @@ import React, { useCallback, useEffect, useState } from 'react';
 import * as yup from 'yup';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { DefaultPage, CancelButton, Button, TextBoxField, SelectField, Row, MessagesView, RepeatPanel } from 'shared';
+import {
+  DefaultPage,
+  CancelButton,
+  Button,
+  TextBoxField,
+  SelectField,
+  Row,
+  MessagesView,
+  RepeatPanel,
+  LoadingButton
+} from 'shared';
 import { WidgetType } from 'enums/WidgetType';
 import { useMatch, useHistory } from 'core/routerHooks';
 import { AppDispatch } from 'core/reduxHelper';
@@ -26,11 +36,7 @@ export const WidgetItem: React.FC = () => {
   const history = useHistory();
   const match = useMatch<{ id: number }>();
   const dispatch = useDispatch<AppDispatch>();
-  const mounted = useMounted(
-    useCallback(() => {
-      dispatch(setItem());
-    }, [dispatch])
-  );
+  const mounted = useMounted(useCallback(() => dispatch(setItem()), [dispatch]));
   const item = useSelector((state: StoreType) => state.config.widget.item);
   const [messages, setMessages] = useState<string | string[]>();
   const get = useCallback(() => dispatch(getItemAsync(match.params)), [dispatch, match.params]);
@@ -38,11 +44,8 @@ export const WidgetItem: React.FC = () => {
     setMessages(undefined);
     const result = await dispatch(saveAsync(item));
     if (mounted.current) {
-      if (result.isError) {
-        setMessages(result.error);
-      } else {
-        history.goBack();
-      }
+      if (result.isError) setMessages(result.error);
+      else history.goBack();
     }
   }, [dispatch, history, item, mounted]);
   useEffect(() => {
@@ -54,9 +57,7 @@ export const WidgetItem: React.FC = () => {
   return (
     <DefaultPage title="Widget Item Test">
       <RepeatPanel actionType={AsyncActions.CONFIG_WIDGET_GETITEMASYNC} action={get}>
-        <Row>
-          <MessagesView messages={messages}></MessagesView>
-        </Row>
+        <MessagesView messages={messages}></MessagesView>
         <Row>
           <TextBoxField data={item} field="name" size={6} onChange={change} v={schema}>
             Name
@@ -69,9 +70,9 @@ export const WidgetItem: React.FC = () => {
           </TextBoxField>
         </Row>
         <div></div>
-        <Button primary onClick={save}>
+        <LoadingButton actionType={AsyncActions.CONFIG_WIDGET_SAVEASYNC} primary onClick={save}>
           Save
-        </Button>
+        </LoadingButton>
         <CancelButton ml="3" />
       </RepeatPanel>
     </DefaultPage>

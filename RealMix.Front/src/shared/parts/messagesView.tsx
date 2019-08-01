@@ -18,8 +18,8 @@ export const MessagesView: React.FC<Props> = ({ messages }) => {
       </ul>
     );
     return (
-      <Block text="danger">
-        <small>{result}</small>
+      <Block text="danger" p="3">
+        {result}
       </Block>
     );
   }

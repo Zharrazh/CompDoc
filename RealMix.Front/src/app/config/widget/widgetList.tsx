@@ -32,18 +32,11 @@ import { getPageAsync, setPage } from './actions';
 export const WidgetList: React.FC = () => {
   const match = useMatch<{ page: number }>();
   const dispatch = useDispatch<AppDispatch>();
-  const get = useCallback(() => dispatch(getPageAsync({ page: +match.params.page || 1 })), [
-    dispatch,
-    match.params.page
-  ]);
-  useEffect(() => {
-    get();
-  }, [get]);
-  useMounted(
-    useCallback(() => {
-      dispatch(setPage());
-    }, [dispatch])
-  );
+  const get = useCallback(() => {
+    dispatch(getPageAsync({ page: +match.params.page || 1 }));
+  }, [dispatch, match.params.page]);
+  useEffect(() => get(), [get]);
+  useMounted(useCallback(() => dispatch(setPage()), [dispatch]));
   const page = useSelector((state: StoreType) => state.config.widget.page);
   return (
     <DefaultPage title="Widget List">
