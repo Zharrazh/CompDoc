@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { AsyncActions } from 'app/actionTypes';
 import { StoreType } from 'core/store';
 import { AppDispatch } from 'core/reduxHelper';
-import { useMatch } from 'core/routerHooks'; //, useLocation
+import { useMatch } from 'core/routerHooks';
 import {
   Table,
   THead,
@@ -25,8 +25,9 @@ import {
 } from 'shared';
 import { WidgetType } from 'enums/WidgetType';
 import { DateTime } from 'utils/dateTime';
+import { useMounted } from 'core/useMounted';
 
-import { getPageAsync } from './actions';
+import { getPageAsync, setPage } from './actions';
 
 export const WidgetList: React.FC = () => {
   const match = useMatch<{ page: number }>();
@@ -38,6 +39,11 @@ export const WidgetList: React.FC = () => {
   useEffect(() => {
     get();
   }, [get]);
+  useMounted(
+    useCallback(() => {
+      dispatch(setPage());
+    }, [dispatch])
+  );
   const page = useSelector((state: StoreType) => state.config.widget.page);
   return (
     <DefaultPage title="Widget List">

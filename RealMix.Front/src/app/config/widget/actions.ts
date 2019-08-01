@@ -26,10 +26,6 @@ export const getItemAsync = createAsyncAction(
   }
 );
 
-export const saveAsync = createAsyncAction(
-  AsyncActions.CONFIG_WIDGET_SAVEASYNC,
-  async ({ dispatch }, model: WidgetModelEdit) => {
-    await save(model);
-    dispatch(setItem());
-  }
-);
+export const saveAsync = createAsyncAction(AsyncActions.CONFIG_WIDGET_SAVEASYNC, async (_, model: WidgetModelEdit) => {
+  await save(model);
+});

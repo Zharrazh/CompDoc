@@ -29,7 +29,6 @@ export const TextBoxField: React.FC<Props> = ({
   const [message, setMessage] = useState(null);
   useEffect(() => {
     let canceled = false;
-    console.log('*** EFFECT');
     if (v != null && has(v, 'fields') && has(v, 'fields.' + field))
       reach(v, field)
         .validate(value)
@@ -42,7 +41,6 @@ export const TextBoxField: React.FC<Props> = ({
           return null;
         });
     return () => {
-      console.log('*** cancelation');
       canceled = true;
     };
   });

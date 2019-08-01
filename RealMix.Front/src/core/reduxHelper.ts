@@ -13,7 +13,7 @@ interface ReducerDefinition<T extends BaseInitialState> {
   [index: string]: string | ((state: T, action: ActionDefinition<any>) => T);
 }
 
-interface ActionDefinition<T> {
+export interface ActionDefinition<T> {
   type: SyncActions;
   data: T;
   mod?: string;
