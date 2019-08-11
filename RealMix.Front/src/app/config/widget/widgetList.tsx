@@ -2,10 +2,10 @@ import React, { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { AsyncActions } from 'app/actionTypes';
+import { ActionType } from 'app/actionTypes';
 import { StoreType } from 'core/store';
-import { AppDispatch } from 'core/reduxHelper';
-import { useMatch } from 'core/routerHooks';
+import { useMatch } from 'core/router';
+import { useCancellation } from 'core/useCancellation';
 import {
   Table,
   THead,
@@ -27,11 +27,12 @@ import { WidgetType } from 'enums/WidgetType';
 import { DateTime } from 'utils/dateTime';
 import { useMounted } from 'core/useMounted';
 
-import { getPageAsync, setPage } from './actions';
+import { setPage, getPageAsync } from './actions';
 
 export const WidgetList: React.FC = () => {
+  useCancellation(ActionType.CONFIG_WIDGET_GETPAGEASYNC);
   const match = useMatch<{ page: number }>();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch();
   const get = useCallback(() => {
     dispatch(getPageAsync({ page: +match.params.page || 1 }));
   }, [dispatch, match.params.page]);
@@ -46,7 +47,7 @@ export const WidgetList: React.FC = () => {
         </LinkButton>
         {/* <LinkButton primary to={`${match.url}/asdasd/as`}>Go to not found</LinkButton> */}
       </Line>
-      <RepeatPanel actionType={AsyncActions.CONFIG_WIDGET_GETPAGEASYNC} action={get}>
+      <RepeatPanel actionType={ActionType.CONFIG_WIDGET_GETPAGEASYNC} action={get}>
         {page && (
           <Table small minHeight>
             <THead>

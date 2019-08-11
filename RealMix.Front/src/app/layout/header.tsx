@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
-import { AppDispatch } from 'core/reduxHelper';
 import { setAuthInfo } from 'app/common/auth/actions';
 import { Button, Line } from 'shared';
 
@@ -13,7 +12,7 @@ interface Props {
 }
 
 export const Header: React.FC<Props> = ({ toggle }) => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch();
   const logout = (e: React.MouseEvent) => {
     e.preventDefault();
     dispatch(setAuthInfo());

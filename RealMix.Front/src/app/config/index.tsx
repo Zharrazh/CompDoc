@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
-import { useMatch } from 'core/routerHooks';
+import { useMatch } from 'core/router';
 
 import { WidgetIndex } from './widget';
 import { Dashboard } from './dashboard/dashboard';

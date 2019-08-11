@@ -1,19 +1,17 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 
 import { Button, Line, Spinner, Block } from 'shared';
-import { AsyncActions } from 'app/actionTypes';
-import { findLoaderItem } from 'core/reduxHelper';
-import { StoreType } from 'core/store';
+import { ActionType } from 'app/actionTypes';
+import { useLoader } from 'core/useLoader';
 
 interface Props {
-  actionType: AsyncActions;
+  actionType: ActionType;
   action: () => any;
   mod?: string;
 }
 
 export const RepeatPanel: React.FC<Props> = ({ actionType, action, mod = undefined, children }) => {
-  const item = useSelector((state: StoreType) => findLoaderItem(state.loader, actionType, mod));
+  const item = useLoader(actionType, mod);
   if (item && item.isWait)
     return (
       <Line justifyContent="center" alignItems="center">

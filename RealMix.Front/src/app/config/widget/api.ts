@@ -1,3 +1,5 @@
+import { map } from 'rxjs/operators';
+
 import { http } from 'core/http';
 import { NotFoundError } from 'core/notFoundError';
 import { Page } from 'core/page';
@@ -7,21 +9,24 @@ import { WidgetModel, WidgetModelEdit } from './models';
 
 const baseUrl = 'config/widget';
 
-export async function getPage(page: number) {
-  const response = await http.get<Page<WidgetModel>>(baseUrl, { params: { page } });
-  response.data.items.forEach(x => {
-    x.created = DateTime.parse(x.created as any);
-    x.updated = DateTime.parse(x.updated as any);
-  });
-  return response.data;
+export function getPage(page: number) {
+  return http.get<Page<WidgetModel>>(baseUrl, { page }).pipe(
+    map(x => {
+      x.items.forEach(x => {
+        x.created = DateTime.parse(x.created as any);
+        x.updated = DateTime.parse(x.updated as any);
+      });
+      return x;
+    })
+  );
 }
 
-export async function getItem(id: number) {
-  const response = await http.get<WidgetModelEdit>(`${baseUrl}/${id}`);
-  if (response.data === null) throw new NotFoundError();
-  return response.data;
+export function getItem(id: number) {
+  const response = http.get<WidgetModelEdit>(`${baseUrl}/${id}`);
+  if (response === null) throw new NotFoundError();
+  return response;
 }
 
-export async function save(model: WidgetModelEdit) {
-  await http.post(baseUrl, model);
+export function save(model: WidgetModelEdit) {
+  return http.post(baseUrl, model);
 }

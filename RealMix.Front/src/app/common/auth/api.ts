@@ -1,10 +1,13 @@
+import { map } from 'rxjs/operators';
+
 import { http } from 'core/http';
 
 import { LoginModel, AuthInfo } from './models';
 
 const baseUrl = 'common/auth';
 
-export async function login(model: LoginModel) {
-  const response = await http.post<AuthInfo>(baseUrl, model);
-  return { ...response.data, expires: response.data.expires != null ? new Date(response.data.expires) : null };
+export function login(model: LoginModel) {
+  return http
+    .post<AuthInfo>(baseUrl, model)
+    .pipe(map<AuthInfo, AuthInfo>(x => ({ ...x, expires: x.expires != null ? new Date(x.expires) : null })));
 }

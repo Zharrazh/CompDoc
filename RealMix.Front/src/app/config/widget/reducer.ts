@@ -1,16 +1,16 @@
-import { createReducer } from 'core/reduxHelper';
 import { Page } from 'core/page';
-import { SyncActions } from 'app/actionTypes';
+import { ActionType } from 'app/actionTypes';
 import { WidgetType } from 'enums/WidgetType';
+import { createReducer } from 'core/redux';
 
 import { WidgetModel, WidgetModelEdit } from './models';
 
-interface WidgetInitialState {
+interface WidgetState {
   page?: Page<WidgetModel>;
   item: WidgetModelEdit;
 }
 
-const initialState: () => WidgetInitialState = () => ({
+const initialState: () => WidgetState = () => ({
   item: {
     id: 0,
     name: '',
@@ -20,6 +20,6 @@ const initialState: () => WidgetInitialState = () => ({
 });
 
 export const widgetReducer = createReducer(initialState, {
-  [SyncActions.CONFIG_WIDGET_SETPAGE]: 'page',
-  [SyncActions.CONFIG_WIDGET_SETITEM]: 'item'
+  [ActionType.CONFIG_WIDGET_SETPAGE]: 'page',
+  [ActionType.CONFIG_WIDGET_SETITEM]: 'item'
 });

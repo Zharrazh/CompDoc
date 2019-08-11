@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 
-import { useLocation } from 'core/routerHooks';
+import { useLocation } from 'core/router';
 import { StoreType } from 'core/store';
 import { ImportedIcon } from 'shared/base/icon';
 import { Icon } from 'shared';

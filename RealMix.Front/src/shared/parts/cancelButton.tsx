@@ -1,8 +1,9 @@
 import React from 'react';
 import { LocationDescriptor } from 'history';
+import { useDispatch } from 'react-redux';
 
 import { Button, ButtonProps } from 'shared/base/button';
-import { useHistory, useMatch } from 'core/routerHooks';
+import { useMatch, pushRoute, goBackRoute } from 'core/router';
 
 interface CancelButtonProps extends ButtonProps {
   to?: LocationDescriptor;
@@ -10,19 +11,19 @@ interface CancelButtonProps extends ButtonProps {
 }
 
 export const CancelButton: React.FC<CancelButtonProps> = ({ to, toParent, children, ...other }) => {
-  const history = useHistory();
+  const dispatch = useDispatch();
   const match = useMatch();
   const go = () => {
     if (to != null) {
-      history.push(to.toString());
+      dispatch(pushRoute(to.toString()));
       return;
     }
     if (toParent) {
       const url = match.url.replace(/\/[\w.-]*?$/, '');
-      history.push(url);
+      dispatch(pushRoute(url));
       return;
     }
-    history.goBack();
+    dispatch(goBackRoute());
   };
   return (
     <Button secondary outline onClick={go} {...other}>

@@ -1,5 +1,5 @@
-import { createReducer } from 'core/reduxHelper';
-import { SyncActions } from 'app/actionTypes';
+import { createReducer } from 'core/redux';
+import { ActionType } from 'app/actionTypes';
 
 import { LoginModel, AuthInfo } from './models';
 
@@ -26,8 +26,8 @@ const initialState: () => AuthInitialState = () => ({
 });
 
 export const authReducer = createReducer(initialState, {
-  [SyncActions.COMMON_AUTH_SETFORM]: 'form',
-  [SyncActions.COMMON_AUTH_SETAUTHINFO]: (state, action) => {
+  [ActionType.COMMON_AUTH_SETFORM]: 'form',
+  [ActionType.COMMON_AUTH_SETAUTHINFO]: (state, action) => {
     if (action.data == null) localStorage.removeItem('authInfo');
     else localStorage.setItem('authInfo', JSON.stringify(action.data));
     return {

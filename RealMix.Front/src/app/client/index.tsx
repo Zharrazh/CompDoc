@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import { useMatch } from 'core/routerHooks';
+import { useMatch } from 'core/router';
 
 import { DashboardIndex } from './dashboard';
 import { SomeReport } from './someReport/someReport';

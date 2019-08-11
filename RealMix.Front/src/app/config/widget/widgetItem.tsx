@@ -5,7 +5,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   DefaultPage,
   CancelButton,
-  Button,
   TextBoxField,
   SelectField,
   Row,
@@ -14,11 +13,11 @@ import {
   LoadingButton
 } from 'shared';
 import { WidgetType } from 'enums/WidgetType';
-import { useMatch, useHistory } from 'core/routerHooks';
-import { AppDispatch } from 'core/reduxHelper';
+import { useMatch } from 'core/router';
 import { StoreType } from 'core/store';
 import { useMounted } from 'core/useMounted';
-import { AsyncActions } from 'app/actionTypes';
+import { ActionType } from 'app/actionTypes';
+import { useCancellation } from 'core/useCancellation';
 
 import { getItemAsync, setItem, saveAsync } from './actions';
 
@@ -33,30 +32,31 @@ const schema = yup.object().shape({
 });
 
 export const WidgetItem: React.FC = () => {
-  const history = useHistory();
+  useCancellation(ActionType.CONFIG_WIDGET_SAVEASYNC);
   const match = useMatch<{ id: number }>();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch();
   const mounted = useMounted(useCallback(() => dispatch(setItem()), [dispatch]));
   const item = useSelector((state: StoreType) => state.config.widget.item);
   const [messages, setMessages] = useState<string | string[]>();
   const get = useCallback(() => dispatch(getItemAsync(match.params)), [dispatch, match.params]);
   const save = useCallback(async () => {
     setMessages(undefined);
-    const result = await dispatch(saveAsync(item));
+    dispatch(saveAsync(item));
     if (mounted.current) {
-      if (result.isError) setMessages(result.error);
-      else history.goBack();
+      // if (result.isError) setMessages(result.error);
+      // else history.goBack();
     }
-  }, [dispatch, history, item, mounted]);
+  }, [dispatch, item, mounted]);
   useEffect(() => {
     if (match.params.id > 0) get();
   }, [get, match.params]);
   const change = (field: string, value: any) => {
     dispatch(setItem({ ...item, [field]: value }));
   };
+  console.log('***', mounted, match);
   return (
     <DefaultPage title="Widget Item Test">
-      <RepeatPanel actionType={AsyncActions.CONFIG_WIDGET_GETITEMASYNC} action={get}>
+      <RepeatPanel actionType={ActionType.CONFIG_WIDGET_GETITEMASYNC} action={get}>
         <MessagesView messages={messages}></MessagesView>
         <Row>
           <TextBoxField data={item} field="name" size={6} onChange={change} v={schema}>
@@ -70,7 +70,7 @@ export const WidgetItem: React.FC = () => {
           </TextBoxField>
         </Row>
         <div></div>
-        <LoadingButton actionType={AsyncActions.CONFIG_WIDGET_SAVEASYNC} primary onClick={save}>
+        <LoadingButton actionType={ActionType.CONFIG_WIDGET_SAVEASYNC} primary onClick={save}>
           Save
         </LoadingButton>
         <CancelButton ml="3" />

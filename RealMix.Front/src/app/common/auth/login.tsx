@@ -2,12 +2,10 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
 
-import { useHistory } from 'core/routerHooks';
 import { StoreType } from 'core/store';
-import { AppDispatch } from 'core/reduxHelper';
 import { parseError } from 'core/parseError';
 import { Block, Line, MessagesView, LoadingButton, TextBoxField } from 'shared';
-import { AsyncActions } from 'app/actionTypes';
+import { ActionType } from 'app/actionTypes';
 
 import { setForm, loginAsync } from './actions';
 
@@ -29,8 +27,7 @@ const schema = yup.object().shape({
 });
 
 export const Login = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const history = useHistory();
+  const dispatch = useDispatch();
   const form = useSelector((state: StoreType) => state.common.auth.form);
   const onChange = (field: string, value: string) => dispatch(setForm({ ...form, [field]: value }));
   const [messages, setMessages] = useState();
@@ -39,8 +36,9 @@ export const Login = () => {
       setMessages(null);
       await schema.validate(form, { abortEarly: false });
       const result = await dispatch(loginAsync(form));
-      if (result.isOk) history.push('/');
-      else setMessages(result.error);
+      console.log('HERE', result);
+      // if (result.isOk) history.push('/');
+      // else setMessages(result.error);
     } catch (error) {
       setMessages(parseError(error));
     }
@@ -54,7 +52,7 @@ export const Login = () => {
         <MessagesView messages={messages} />
         <TextBoxField data={form} field="login" onChange={onChange} placeholder="Login" />
         <TextBoxField type="password" data={form} field="password" onChange={onChange} placeholder="Password" />
-        <LoadingButton primary block onClick={login} actionType={AsyncActions.COMMON_AUTH_LOGINASYNC}>
+        <LoadingButton primary block onClick={login} actionType={ActionType.COMMON_AUTH_LOGINASYNC}>
           Login
         </LoadingButton>
       </Block>
