@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Button, Line, Spinner, Block } from 'shared';
-import { ActionType } from 'app/actionTypes';
+import { ActionType } from 'data/actionTypes';
 import { useLoader } from 'core/useLoader';
 
 interface Props {

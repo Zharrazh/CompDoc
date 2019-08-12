@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef } from 'react';
 
-export const useMounted = (onUnmount?: () => void) => {
+export const useMounted = (onUnmount?: () => any) => {
   const mounted = useRef(true);
   useLayoutEffect(() => {
     return () => {

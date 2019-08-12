@@ -14,7 +14,7 @@ class HttpWrapper {
   };
 
   private _getHeader(current?: {}) {
-    const authInfo = store.getState().common.auth.authInfo;
+    const authInfo = store.getState().auth.authInfo;
     return authInfo.isAuth
       ? { ...this._header, Authorization: 'Bearer ' + authInfo.token, ...current }
       : { ...this._header, ...current };

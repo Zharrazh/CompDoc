@@ -18,10 +18,14 @@ export { CancelButton } from './parts/cancelButton';
 export { DropdownButton } from './parts/dropdownButton';
 export { LoadingButton } from './parts/loadingButton';
 export { RepeatPanel } from './parts/repeatPanel';
+export { RepeatWrapper } from './parts/repeatWrapper';
 export { MessagesView } from './parts/messagesView';
 
 export { TextBoxField } from './fields/textBoxField';
 export { SelectField } from './fields/selectField';
 
+export { SelectFilter } from './filters/selectFilter';
+
 export { PagePanel, PageHeaderPanel, PageHeader, PageBodyPanel } from './layout/pageComponents';
 export { DefaultPage } from './layout/defaultPage';
+export { FiltersPanel } from './layout/filtersPanel';

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { ActionType } from 'app/actionTypes';
+import { ActionType } from 'data/actionTypes';
 
 import { createAction } from './redux';
 

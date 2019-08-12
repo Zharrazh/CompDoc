@@ -2,7 +2,7 @@ import { of, concat, Observable } from 'rxjs';
 import { filter, switchMap, catchError, tap, takeUntil } from 'rxjs/operators';
 import { ActionsObservable } from 'redux-observable';
 
-import { ActionType } from 'app/actionTypes';
+import { ActionType } from 'data/actionTypes';
 
 import { parseError } from './parseError';
 import { AppAction, Dictionary, LoaderData } from './baseTypes';

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ActionType } from 'app/actionTypes';
+import { ActionType } from 'data/actionTypes';
 import { Spinner } from 'shared';
 import { Button, ButtonProps } from 'shared/base/button';
 import { useLoader } from 'core/useLoader';

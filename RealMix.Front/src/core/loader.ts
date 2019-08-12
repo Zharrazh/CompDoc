@@ -1,4 +1,4 @@
-import { ActionType } from 'app/actionTypes';
+import { ActionType } from 'data/actionTypes';
 
 import { LoaderData, AppAction } from './baseTypes';
 import { createReducer } from './redux';

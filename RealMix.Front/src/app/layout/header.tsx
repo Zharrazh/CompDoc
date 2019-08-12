@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
-import { setAuthInfo } from 'app/common/auth/actions';
+import { setAuthInfo } from 'data/auth/actions';
 import { Button, Line } from 'shared';
 
 import './header.scss';

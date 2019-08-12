@@ -10,6 +10,7 @@ import { faCog } from '@fortawesome/free-solid-svg-icons/faCog';
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons/faPencilAlt';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons/faExclamationCircle';
 //regular
 import { faCircle } from '@fortawesome/free-regular-svg-icons/faCircle';
 //
@@ -31,6 +32,7 @@ library.add(
   faPencilAlt,
   faTrashAlt,
   faPlus,
+  faExclamationCircle,
   //regular
   faCircle
 );
@@ -46,7 +48,8 @@ export type ImportedIcon =
   | 'circle'
   | 'pencil-alt'
   | 'trash-alt'
-  | 'plus';
+  | 'plus'
+  | 'exclamation-circle';
 
 export interface Props extends SpaceProps {
   className?: string;

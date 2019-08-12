@@ -51,7 +51,12 @@ export const SelectField: React.FC<Props> = ({
   return (
     <div className={classNames('form-group', { [`col-md-${size}`]: size != null })}>
       {children && <label htmlFor={`${field}${key}`}>{children}</label>}
-      <select className="form-control" value={value} onChange={e => onChange(field, e.target.value)}>
+      <select
+        className="form-control"
+        id={`${field}${key}`}
+        name={`${field}${key}`}
+        value={value}
+        onChange={e => onChange(field, e.target.value)}>
         {renderFirstOption(addEmptyOption, value)}
         {values.map(item => (
           <option key={item[valueField]} value={item[valueField]}>

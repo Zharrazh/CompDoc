@@ -1,6 +1,6 @@
 import { Action } from 'redux';
 
-import { ActionType } from 'app/actionTypes';
+import { ActionType } from 'data/actionTypes';
 
 export interface AppAction<T> extends Action<ActionType> {
   data: T;
