@@ -6,7 +6,7 @@ import { ColorProps, propsToColor } from './utils/colorUtil';
 import { BorderProps, propsToBorder } from './utils/borderUtil';
 import { SizeProps, propsToSize } from './utils/sizeUtil';
 
-interface Props extends SpaceProps, ColorProps, BorderProps, SizeProps {
+interface Props extends SpaceProps, ColorProps, BorderProps, SizeProps, React.HTMLAttributes<any> {
   tag?: React.ElementType;
   className?: string;
   inline?: boolean;

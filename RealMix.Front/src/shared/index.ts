@@ -18,7 +18,7 @@ export { CancelButton } from './parts/cancelButton';
 export { DropdownButton } from './parts/dropdownButton';
 export { LoadingButton } from './parts/loadingButton';
 export { RepeatPanel } from './parts/repeatPanel';
-export { RepeatWrapper } from './parts/repeatWrapper';
+export { RepeatControl } from './parts/repeatControl';
 export { MessagesView } from './parts/messagesView';
 
 export { TextBoxField } from './fields/textBoxField';

@@ -10,12 +10,3 @@ export interface AppAction<T> extends Action<ActionType> {
 export interface Dictionary<V> {
   [key: string]: V;
 }
-
-export interface LoaderData {
-  id: ActionType;
-  mod?: string;
-  isOk: boolean;
-  isWait: boolean;
-  isError: boolean;
-  error?: string | string[];
-}

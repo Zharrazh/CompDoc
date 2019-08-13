@@ -6,8 +6,8 @@ import { ActionType } from 'data/actionTypes';
 
 import { history } from './history';
 import { parseError } from './parseError';
-import { AppAction, LoaderData } from './baseTypes';
-import { createAction } from './redux';
+import { AppAction } from './baseTypes';
+import { error, wait, ok } from './loader';
 
 export const createEpic = <TIn>(type: ActionType, handler: (data: TIn) => Observable<AppAction<any>>, mod?: string) => (
   action$: ActionsObservable<AppAction<any>>
@@ -37,7 +37,7 @@ export const routerPush = (action$: ActionsObservable<AppAction<any>>) =>
     filter(x => x.type === ActionType.CORE_ROUTER_PUSH),
     map(x => {
       history.push(x.data);
-      return { type: '' };
+      return { type: ActionType.CORE_NOPE };
     })
   );
 
@@ -46,22 +46,6 @@ export const routerGoBack = (action$: ActionsObservable<AppAction<any>>) =>
     filter(x => x.type === ActionType.CORE_ROUTER_GOBACK),
     map(() => {
       history.goBack();
-      return { type: '' };
+      return { type: ActionType.CORE_NOPE };
     })
   );
-
-const ok = (id: any, mod?: string) =>
-  createAction<LoaderData>(ActionType.CORE_LOADER)({ id, mod, isOk: true, isWait: false, isError: false });
-
-const wait = (id: any, mod?: string) =>
-  createAction<LoaderData>(ActionType.CORE_LOADER)({ id, mod, isOk: false, isWait: true, isError: false });
-
-const error = (id: any, error: string | string[], mod?: string) =>
-  createAction<LoaderData>(ActionType.CORE_LOADER)({
-    id,
-    mod,
-    isOk: false,
-    isWait: false,
-    isError: true,
-    error
-  });

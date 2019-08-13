@@ -1,10 +1,10 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { stringify } from 'query-string';
 import classNames from 'classnames';
 
 import { useLocation, pushRoute, useLocationParams } from 'core/router';
-import { RepeatWrapper } from 'shared';
+import { RepeatControl } from 'shared';
 import { ActionType } from 'data/actionTypes';
 
 interface Props<TOption extends object> {
@@ -40,10 +40,12 @@ export const SelectFilter = <TOption extends object>({
     return v != null ? v : '';
   }, [params, name]);
   const onChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) =>
-      dispatch(pushRoute({ ...location, search: stringify({ ...params, [name]: e.target.value }) })),
+    (value: string) => dispatch(pushRoute({ ...location, search: stringify({ ...params, [name]: value }) })),
     [name, params, location, dispatch]
   );
+  useEffect(() => {
+    if (value === '' && Array.isArray(options) && options.length > 0) onChange(getValue(options[0]));
+  }, [value, options, getValue, onChange]);
   return (
     <div className={classNames('input-group', { [`col-md-${size}`]: size != null })}>
       {label && (
@@ -53,13 +55,13 @@ export const SelectFilter = <TOption extends object>({
           </label>
         </div>
       )}
-      <RepeatWrapper actionType={actionType} action={action} mod={mod}>
+      <RepeatControl actionType={actionType} action={action} mod={mod}>
         <select
           className="form-control"
           id={'filter_' + name}
           name={'filter_' + name}
           value={value}
-          onChange={onChange}>
+          onChange={e => onChange(e.target.value)}>
           {renderFirstOption(addEmptyOption, value)}
           {options.map(item => (
             <option key={getValue(item)} value={getValue(item)}>
@@ -67,13 +69,12 @@ export const SelectFilter = <TOption extends object>({
             </option>
           ))}
         </select>
-      </RepeatWrapper>
+      </RepeatControl>
     </div>
   );
 };
 
 const renderFirstOption = (addEmptyOption: boolean, value: string) => {
-  console.log('renderFirstOption', addEmptyOption, value);
   if (addEmptyOption) return <option value="" />;
   if (value === '') return <option value="" disabled></option>;
   return undefined;
