@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { HTMLProps } from 'react';
 import classNames from 'classnames';
 
-interface Props {
+interface Props extends HTMLProps<HTMLDivElement> {
   className?: string;
 }
 
