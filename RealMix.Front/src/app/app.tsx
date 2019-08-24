@@ -9,7 +9,7 @@ import { asyncComponent } from 'core/asyncComponent';
 
 import { Header } from './layout/header';
 import { Sidebar } from './layout/sidebar';
-import { Login } from './common/auth/login';
+import { Login } from './common/login';
 import { NotFound } from './common/notFound';
 
 import './app.scss';
@@ -22,7 +22,7 @@ const RenderLayout: React.FC = () => {
   const [show, setShow] = useState(false);
   const toggle = useCallback(() => setShow(s => !s), []);
   const hide = useCallback(() => setShow(false), []);
-  const authInfo = useSelector((state: StoreType) => state.common.auth.authInfo);
+  const authInfo = useSelector((state: StoreType) => state.auth.authInfo);
   if (!authInfo.isAuth) {
     dispatch(pushRoute('/login'));
     return null;

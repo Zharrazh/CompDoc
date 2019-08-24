@@ -12,14 +12,13 @@ import {
   RepeatPanel,
   LoadingButton
 } from 'shared';
-import { WidgetType } from 'enums/WidgetType';
+import { WidgetType } from 'enums/widgetType';
 import { useMatch } from 'core/router';
 import { StoreType } from 'core/store';
 import { useMounted } from 'core/useMounted';
-import { ActionType } from 'app/actionTypes';
+import { ActionType } from 'data/actionTypes';
 import { useCancellation } from 'core/useCancellation';
-
-import { getItemAsync, setItem, saveAsync } from './actions';
+import { getItemAsync, setItem, saveAsync } from 'data/config/widget/actions';
 
 const schema = yup.object().shape({
   name: yup

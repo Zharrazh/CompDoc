@@ -4,7 +4,7 @@ import { http } from 'core/http';
 
 import { LoginModel, AuthInfo } from './models';
 
-const baseUrl = 'common/auth';
+const baseUrl = 'auth';
 
 export function login(model: LoginModel) {
   return http

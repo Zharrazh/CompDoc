@@ -5,9 +5,8 @@ import * as yup from 'yup';
 import { StoreType } from 'core/store';
 import { parseError } from 'core/parseError';
 import { Block, Line, MessagesView, LoadingButton, TextBoxField } from 'shared';
-import { ActionType } from 'app/actionTypes';
-
-import { setForm, loginAsync } from './actions';
+import { ActionType } from 'data/actionTypes';
+import { setForm, loginAsync } from 'data/auth/actions';
 
 const schema = yup.object().shape({
   login: yup
@@ -28,7 +27,7 @@ const schema = yup.object().shape({
 
 export const Login = () => {
   const dispatch = useDispatch();
-  const form = useSelector((state: StoreType) => state.common.auth.form);
+  const form = useSelector((state: StoreType) => state.auth.form);
   const onChange = (field: string, value: string) => dispatch(setForm({ ...form, [field]: value }));
   const [messages, setMessages] = useState();
   const login = async () => {

@@ -2,7 +2,7 @@ import { of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { combineEpics } from 'redux-observable';
 
-import { createEpic } from 'core/redux';
+import { createEpic } from 'core/epic';
 import { pushRoute } from 'core/router';
 import { ActionType } from 'data/actionTypes';
 

@@ -44,7 +44,7 @@ export const Sidebar: React.FC<Props> = ({ show, hide }) => {
   const [activeItem, setActiveItem] = useState<{ to: string }>();
   const [expanded, setExpanded] = useState<GroupItem>();
   const [maxHeight, setMaxHeight] = useState<number>(0);
-  const authInfo = useSelector((x: StoreType) => x.common.auth.authInfo);
+  const authInfo = useSelector((x: StoreType) => x.auth.authInfo);
   const groupElement = useRef<any>(null);
 
   const menu = useMemo(() => {

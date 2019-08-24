@@ -1,3 +1,3 @@
-import React from 'react';
+import { componentFactory } from 'core/componentFactory';
 
-export const FiltersPanel: React.FC = ({ children }) => <div className="filterPanel row mb-3">{children}</div>;
+export const FiltersPanel = componentFactory('filterPanel row mb-3');

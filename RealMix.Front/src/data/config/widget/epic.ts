@@ -2,16 +2,18 @@ import { combineEpics } from 'redux-observable';
 import { map, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
-import { createEpic } from 'core/redux';
-import { ActionType } from 'app/actionTypes';
+import { createEpic } from 'core/epic';
 import { goBackRoute } from 'core/router';
+import { ActionType } from 'data/actionTypes';
 
 import { WidgetModelEdit } from './models';
 import { setPage, setItem } from './actions';
 import { getPage, getItem, save } from './api';
 
-const getPageAsyncEpic = createEpic(ActionType.CONFIG_WIDGET_GETPAGEASYNC, (data: { page: number }) =>
-  getPage(data.page).pipe(map(response => setPage(response)))
+const getPageAsyncEpic = createEpic(
+  ActionType.CONFIG_WIDGET_GETPAGEASYNC,
+  (data: { page: number; widgetType?: number }) =>
+    getPage(data.page, data.widgetType).pipe(map(response => setPage(response)))
 );
 
 const getItemAsyncEpic = createEpic(ActionType.CONFIG_WIDGET_GETITEMASYNC, (data: { id: number }) =>

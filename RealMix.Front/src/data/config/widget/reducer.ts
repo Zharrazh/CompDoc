@@ -1,7 +1,7 @@
 import { Page } from 'core/page';
-import { ActionType } from 'app/actionTypes';
-import { WidgetType } from 'enums/WidgetType';
 import { createReducer } from 'core/redux';
+import { ActionType } from 'data/actionTypes';
+import { WidgetType } from 'enums/widgetType';
 
 import { WidgetModel, WidgetModelEdit } from './models';
 

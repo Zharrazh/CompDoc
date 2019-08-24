@@ -15,15 +15,18 @@ export const useLocation = <P = {}>() => {
   return context.location;
 };
 
-export const useLocationParams = <P extends ParsedQuery<string | number | boolean>>() => {
+export const useLocationParams = <P extends ParsedQuery<string | number | boolean>>(
+  parseNumbers: boolean | undefined = false,
+  parseBooleans: boolean | undefined = true
+) => {
   const context = useContext(__RouterContext);
   return useMemo(
     () =>
       parse(context.location.search, {
-        parseBooleans: true,
-        parseNumbers: true
+        parseBooleans,
+        parseNumbers
       }) as P,
-    [context.location.search]
+    [context.location.search, parseNumbers, parseBooleans]
   );
 };
 

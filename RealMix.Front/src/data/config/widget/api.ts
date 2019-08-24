@@ -9,8 +9,8 @@ import { WidgetModel, WidgetModelEdit } from './models';
 
 const baseUrl = 'config/widget';
 
-export function getPage(page: number) {
-  return http.get<Page<WidgetModel>>(baseUrl, { page }).pipe(
+export function getPage(page: number, widgetType?: number) {
+  return http.get<Page<WidgetModel>>(baseUrl, { page, type: widgetType }).pipe(
     map(x => {
       x.items.forEach(x => {
         x.created = DateTime.parse(x.created as any);

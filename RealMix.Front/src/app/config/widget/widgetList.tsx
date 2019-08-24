@@ -2,9 +2,9 @@ import React, { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { ActionType } from 'app/actionTypes';
+import { ActionType } from 'data/actionTypes';
 import { StoreType } from 'core/store';
-import { useMatch } from 'core/router';
+import { useMatch, useLocationParams } from 'core/router';
 import { useCancellation } from 'core/useCancellation';
 import {
   Table,
@@ -13,7 +13,6 @@ import {
   Tr,
   Th,
   Td,
-  Line,
   RepeatPanel,
   LinkButton,
   DefaultPage,
@@ -21,32 +20,43 @@ import {
   Icon,
   ButtonGroup,
   DropdownButton,
-  DropdownItem
+  DropdownItem,
+  FiltersPanel,
+  SelectFilter
 } from 'shared';
-import { WidgetType } from 'enums/WidgetType';
+import { WidgetType } from 'enums/widgetType';
 import { DateTime } from 'utils/dateTime';
-import { useMounted } from 'core/useMounted';
-
-import { setPage, getPageAsync } from './actions';
+import { useCleaning } from 'core/useCleaning';
+import { setPage, getPageAsync } from 'data/config/widget/actions';
 
 export const WidgetList: React.FC = () => {
   useCancellation(ActionType.CONFIG_WIDGET_GETPAGEASYNC);
-  const match = useMatch<{ page: number }>();
+  useCleaning(setPage);
+  const match = useMatch();
+  const { page: pageNumber, widgetType } = useLocationParams<{ page: number; widgetType: number }>();
   const dispatch = useDispatch();
   const get = useCallback(() => {
-    dispatch(getPageAsync({ page: +match.params.page || 1 }));
-  }, [dispatch, match.params.page]);
+    dispatch(getPageAsync({ page: Number(pageNumber) || 1, widgetType }));
+  }, [dispatch, pageNumber, widgetType]);
   useEffect(() => get(), [get]);
-  useMounted(useCallback(() => dispatch(setPage()), [dispatch]));
   const page = useSelector((state: StoreType) => state.config.widget.page);
   return (
     <DefaultPage title="Widget List">
-      <Line className="mb-3">
+      <FiltersPanel className="mb-3">
         <LinkButton primary to={`${match.url}/add`}>
           <Icon name="plus" />
         </LinkButton>
+        <SelectFilter
+          options={WidgetType.all}
+          getLabel={x => x.name}
+          getValue={x => x.id.toString()}
+          label="Widget Type"
+          name="widgetType"
+          addEmptyOption
+          disableAutoSelect
+          size={4}></SelectFilter>
         {/* <LinkButton primary to={`${match.url}/asdasd/as`}>Go to not found</LinkButton> */}
-      </Line>
+      </FiltersPanel>
       <RepeatPanel actionType={ActionType.CONFIG_WIDGET_GETPAGEASYNC} action={get}>
         {page && (
           <Table small minHeight>
