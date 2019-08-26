@@ -54,7 +54,7 @@ export type ImportedIcon =
   | 'exclamation-circle'
   | 'circle-notch';
 
-export interface Props extends SpaceProps {
+export interface Props extends SpaceProps, React.HTMLAttributes<any> {
   className?: string;
   spin?: boolean;
   prefix?: 'fas' | 'far';

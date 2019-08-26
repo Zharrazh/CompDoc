@@ -1,4 +1,7 @@
 import React, { useMemo, useState, useCallback } from 'react';
+import classNames from 'classnames';
+
+import { Icon } from 'shared';
 
 import './gridFrame.scss';
 
@@ -49,6 +52,7 @@ export const GridFrame = <TTemplates extends TemplateInfo<string, any>>(props: P
     const element = e.target as Element;
     setScroll({ x: element.scrollLeft, y: element.scrollTop });
   }, []);
+  const depth = useMemo(() => getDepth(value, 0), [value]);
   const [lockedWidth, lockedHeight] = useMemo(() => {
     let lockedRowsHeight = 0;
     let lockedColumnsWidth = 0;
@@ -67,38 +71,61 @@ export const GridFrame = <TTemplates extends TemplateInfo<string, any>>(props: P
         lockedColumnsWidth += column != null && column.width != null ? column.width : defaultColumnWidth;
       }
     }
+    lockedColumnsWidth += depth;
     return [lockedColumnsWidth, lockedRowsHeight];
-  }, [lockedColumns, lockedRows, columns, templates, value]);
+  }, [lockedColumns, lockedRows, columns, templates, value, depth]);
   return (
     <div
       className="gridFrame"
-      style={{ gridTemplateColumns: `${lockedWidth}em auto`, gridTemplateRows: `${lockedHeight}em auto` }}>
-      {renderLockedXY(props)}
-      {renderLockedY(props, scroll.x)}
-      {renderLockedX(props, scroll.y)}
-      {renderUnlocked(props, onScroll)}
+      style={{
+        gridTemplateColumns: `${lockedWidth}em calc(100% - ${lockedWidth}em)`,
+        gridTemplateRows: `${lockedHeight}em calc(100% - ${lockedHeight}em)`
+      }}>
+      {renderLockedXY(props, depth)}
+      {renderLockedY(props, depth, scroll.x)}
+      {renderLockedX(props, depth, scroll.y)}
+      {renderUnlocked(props, depth, onScroll)}
     </div>
   );
 };
 
-const renderLockedXY = <TTemplates extends TemplateInfo<string, any>>({
-  lockedColumns,
-  lockedRows,
-  columns,
-  templates,
-  value
-}: Props<TTemplates>) => {
+const getDepth = (rows: RowWrapper<any>[], depth: number) => {
+  let result = depth;
+  for (let row of rows) {
+    if (row.items != null) {
+      const subtreeDepth = getDepth(row.items, depth + 1);
+      result = Math.max(result, subtreeDepth);
+    }
+  }
+  return result;
+};
+
+const renderLockedXY = <TTemplates extends TemplateInfo<string, any>>(
+  { lockedColumns, lockedRows, columns, templates, value }: Props<TTemplates>,
+  depth: number
+) => {
   if (lockedColumns === 0 || lockedRows === 0) return undefined;
 
   return (
     <div className="lockedXY">
-      <div className="rows-container">{renderRows(columns, templates, value, 0, lockedRows, 0, lockedColumns)}</div>
+      <div className="rows-container">
+        <RenderRows
+          columns={columns}
+          templates={templates}
+          value={value}
+          rowStart={0}
+          rowCount={lockedRows}
+          columnStart={0}
+          columnCount={lockedColumns}
+          depth={depth}></RenderRows>
+      </div>
     </div>
   );
 };
 
 const renderLockedY = <TTemplates extends TemplateInfo<string, any>>(
   { lockedColumns, lockedRows, columns, templates, value }: Props<TTemplates>,
+  depth: number,
   shift: number
 ) => {
   if (lockedRows === 0) return undefined;
@@ -106,7 +133,15 @@ const renderLockedY = <TTemplates extends TemplateInfo<string, any>>(
   return (
     <div className="lockedY">
       <div className="rows-container" style={{ marginLeft: -shift }}>
-        {renderRows(columns, templates, value, 0, lockedRows, lockedColumns, Number.MAX_VALUE)}
+        <RenderRows
+          columns={columns}
+          templates={templates}
+          value={value}
+          rowStart={0}
+          rowCount={lockedRows}
+          columnStart={lockedColumns}
+          columnCount={Number.MAX_VALUE}
+          depth={depth}></RenderRows>
       </div>
     </div>
   );
@@ -114,6 +149,7 @@ const renderLockedY = <TTemplates extends TemplateInfo<string, any>>(
 
 const renderLockedX = <TTemplates extends TemplateInfo<string, any>>(
   { lockedColumns, lockedRows, columns, templates, value }: Props<TTemplates>,
+  depth: number,
   shift: number
 ) => {
   if (lockedColumns === 0) return undefined;
@@ -121,7 +157,15 @@ const renderLockedX = <TTemplates extends TemplateInfo<string, any>>(
   return (
     <div className="lockedX">
       <div className="rows-container" style={{ marginTop: -shift }}>
-        {renderRows(columns, templates, value, lockedRows, Number.MAX_VALUE, 0, lockedColumns)}
+        <RenderRows
+          columns={columns}
+          templates={templates}
+          value={value}
+          rowStart={lockedRows}
+          rowCount={Number.MAX_VALUE}
+          columnStart={0}
+          columnCount={lockedColumns}
+          depth={depth}></RenderRows>
       </div>
     </div>
   );
@@ -129,15 +173,51 @@ const renderLockedX = <TTemplates extends TemplateInfo<string, any>>(
 
 const renderUnlocked = <TTemplates extends TemplateInfo<string, any>>(
   { lockedColumns, lockedRows, columns, templates, value }: Props<TTemplates>,
+  depth: number,
   onScroll: (e: React.SyntheticEvent) => void
 ) => {
   return (
-    <div className="unlocked">
-      <div className="rows-container" onScroll={onScroll}>
-        {renderRows(columns, templates, value, lockedRows, Number.MAX_VALUE, lockedColumns, Number.MAX_VALUE)}
+    <div className="unlocked" onScroll={onScroll}>
+      <div className="rows-container">
+        <RenderRows
+          columns={columns}
+          templates={templates}
+          value={value}
+          rowStart={lockedRows}
+          rowCount={Number.MAX_VALUE}
+          columnStart={lockedColumns}
+          columnCount={Number.MAX_VALUE}
+          depth={depth}></RenderRows>
       </div>
     </div>
   );
+};
+
+interface RenderRowsProps<TTemplates extends TemplateInfo<string, any>> {
+  columns: ColumnInfo[];
+  templates: { [key: string]: TTemplates };
+  value: RowWrapper<any>[];
+  rowStart: number;
+  rowCount: number;
+  columnStart: number;
+  columnCount: number;
+  depth: number;
+}
+const RenderRows = <TTemplates extends TemplateInfo<string, any>>({
+  columns,
+  templates,
+  value,
+  rowStart,
+  rowCount,
+  columnStart,
+  columnCount,
+  depth
+}: RenderRowsProps<TTemplates>) => {
+  const result = useMemo(
+    () => renderRows(columns, templates, value, rowStart, rowCount, columnStart, columnCount, depth, 0),
+    [columns, templates, value, rowStart, rowCount, columnStart, columnCount, depth]
+  );
+  return <>{result}</>;
 };
 
 const renderRows = <TTemplates extends TemplateInfo<string, any>>(
@@ -147,7 +227,9 @@ const renderRows = <TTemplates extends TemplateInfo<string, any>>(
   rowStart: number,
   rowCount: number,
   columnStart: number,
-  columnCount: number
+  columnCount: number,
+  maxDepth: number,
+  currentDepth: number
 ) => {
   const renderedRows: React.ReactChild[] = [];
 
@@ -158,6 +240,13 @@ const renderRows = <TTemplates extends TemplateInfo<string, any>>(
       if (template == null) throw new Error("GridFrame: Can't find Row Template");
       const height = template.height == null ? defaultRowHeight : template.height;
       const renderedColumns: React.ReactChild[] = [];
+      if (maxDepth > 0 && columnStart === 0) {
+        renderedColumns.push(
+          <GridColumn key={-1} width={maxDepth} height={height} className="arrow-icon">
+            {row.items != null && <Icon name="angle-down" style={{ marginLeft: `${currentDepth / 2}em` }}></Icon>}
+          </GridColumn>
+        );
+      }
       for (let k = columnStart, l = 0; k < columns.length && l < columnCount; k++, l++) {
         const column = columns[k];
         const cell = template.renders[column.name];
@@ -167,9 +256,9 @@ const renderRows = <TTemplates extends TemplateInfo<string, any>>(
           let width = getCellWidth(columns, k, span);
           const renderCellFunction = typeof cell === 'function' ? cell : cell.render;
           renderedColumns.push(
-            <div className="gridFrame-column" key={l} style={{ width: `${width}em`, height: `${height}em` }}>
-              <div>{renderCellFunction(row, l)}</div>
-            </div>
+            <GridColumn key={l} width={width} height={height}>
+              {renderCellFunction(row, l)}
+            </GridColumn>
           );
         }
         k += span - 1;
@@ -181,13 +270,37 @@ const renderRows = <TTemplates extends TemplateInfo<string, any>>(
         </div>
       );
       if (row.items != null) {
-        const subrows = renderRows(columns, templates, row.items, 0, Number.MAX_VALUE, columnStart, columnCount);
+        const subrows = renderRows(
+          columns,
+          templates,
+          row.items,
+          0,
+          Number.MAX_VALUE,
+          columnStart,
+          columnCount,
+          maxDepth,
+          currentDepth + 1
+        );
         renderedRows.push(...subrows);
       }
     }
   }
   return renderedRows;
 };
+
+interface GridColumnProps {
+  width: number;
+  height: number;
+  className?: string;
+}
+const GridColumn: React.FC<GridColumnProps> = ({ width, height, className, children }) => (
+  <div
+    className={classNames('gridFrame-column', className)}
+    key={-1}
+    style={{ width: `${width}em`, height: `${height}em` }}>
+    {children}
+  </div>
+);
 
 const getCellWidth = (columns: ColumnInfo[], index: number, span: number) => {
   let width = 0;
