@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 
 import './gridFrame.scss';
 
@@ -20,12 +20,11 @@ interface RenderInfo<TModel> {
 export interface TemplateInfo<TName, TModel> {
   name: TName;
   height?: number;
-  renders: {
-    [key: string]: RenderInfo<TModel> | RenderMethod<TModel>;
-  };
+  renders: { [key: string]: RenderInfo<TModel> | RenderMethod<TModel> };
 }
 
 export interface RowWrapper<TModel> {
+  key: string | number;
   template: string;
   visible?: boolean;
   item: TModel;
@@ -36,9 +35,7 @@ interface Props<TTemplates extends TemplateInfo<string, any>> {
   lockedColumns: number;
   lockedRows: number;
   columns: ColumnInfo[];
-  templates: {
-    [key: string]: TTemplates;
-  };
+  templates: { [key: string]: TTemplates };
   value: RowWrapper<any>[];
 }
 
@@ -47,6 +44,11 @@ const defaultColumnWidth = 10;
 
 export const GridFrame = <TTemplates extends TemplateInfo<string, any>>(props: Props<TTemplates>) => {
   const { lockedColumns, lockedRows, columns, templates, value } = props;
+  const [scroll, setScroll] = useState({ x: 0, y: 0 });
+  const onScroll = useCallback((e: React.SyntheticEvent) => {
+    const element = e.target as Element;
+    setScroll({ x: element.scrollLeft, y: element.scrollTop });
+  }, []);
   const [lockedWidth, lockedHeight] = useMemo(() => {
     let lockedRowsHeight = 0;
     let lockedColumnsWidth = 0;
@@ -72,77 +74,82 @@ export const GridFrame = <TTemplates extends TemplateInfo<string, any>>(props: P
       className="gridFrame"
       style={{ gridTemplateColumns: `${lockedWidth}em auto`, gridTemplateRows: `${lockedHeight}em auto` }}>
       {renderLockedXY(props)}
-      {renderLockedY(props)}
-      {renderLockedX(props)}
-      {renderUnlocked(props)}
+      {renderLockedY(props, scroll.x)}
+      {renderLockedX(props, scroll.y)}
+      {renderUnlocked(props, onScroll)}
     </div>
   );
 };
 
-const renderLockedXY = <TTemplates extends TemplateInfo<string, any>>(props: Props<TTemplates>) => {
-  const { lockedColumns, lockedRows } = props;
-
+const renderLockedXY = <TTemplates extends TemplateInfo<string, any>>({
+  lockedColumns,
+  lockedRows,
+  columns,
+  templates,
+  value
+}: Props<TTemplates>) => {
   if (lockedColumns === 0 || lockedRows === 0) return undefined;
 
   return (
     <div className="lockedXY">
-      <div className="rows-container">{renderRows(props, 0, lockedRows, 0, lockedColumns)}</div>
+      <div className="rows-container">{renderRows(columns, templates, value, 0, lockedRows, 0, lockedColumns)}</div>
     </div>
   );
 };
 
-const renderLockedY = <TTemplates extends TemplateInfo<string, any>>(props: Props<TTemplates>) => {
-  const { lockedColumns, lockedRows } = props;
-
+const renderLockedY = <TTemplates extends TemplateInfo<string, any>>(
+  { lockedColumns, lockedRows, columns, templates, value }: Props<TTemplates>,
+  shift: number
+) => {
   if (lockedRows === 0) return undefined;
 
   return (
     <div className="lockedY">
-      <div className="rows-container">{renderRows(props, 0, lockedRows, lockedColumns, Number.MAX_VALUE)}</div>
-    </div>
-  );
-};
-
-const renderLockedX = <TTemplates extends TemplateInfo<string, any>>(props: Props<TTemplates>) => {
-  const { lockedColumns, lockedRows } = props;
-
-  if (lockedColumns === 0) return undefined;
-
-  return (
-    <div className="lockedX">
-      <div className="rows-container">{renderRows(props, lockedRows, Number.MAX_VALUE, 0, lockedColumns)}</div>
-    </div>
-  );
-};
-
-const renderUnlocked = <TTemplates extends TemplateInfo<string, any>>(props: Props<TTemplates>) => {
-  const { lockedColumns, lockedRows } = props;
-
-  return (
-    <div className="unlocked">
-      <div className="rows-container">
-        {renderRows(props, lockedRows, Number.MAX_VALUE, lockedColumns, Number.MAX_VALUE)}
+      <div className="rows-container" style={{ marginLeft: -shift }}>
+        {renderRows(columns, templates, value, 0, lockedRows, lockedColumns, Number.MAX_VALUE)}
       </div>
     </div>
   );
 };
 
-interface ColumnRenderInfo {
-  row: RowWrapper<any>;
-  width: number;
-  height: number;
-  index: number;
-  render: RenderMethod<any>;
-}
+const renderLockedX = <TTemplates extends TemplateInfo<string, any>>(
+  { lockedColumns, lockedRows, columns, templates, value }: Props<TTemplates>,
+  shift: number
+) => {
+  if (lockedColumns === 0) return undefined;
+
+  return (
+    <div className="lockedX">
+      <div className="rows-container" style={{ marginTop: -shift }}>
+        {renderRows(columns, templates, value, lockedRows, Number.MAX_VALUE, 0, lockedColumns)}
+      </div>
+    </div>
+  );
+};
+
+const renderUnlocked = <TTemplates extends TemplateInfo<string, any>>(
+  { lockedColumns, lockedRows, columns, templates, value }: Props<TTemplates>,
+  onScroll: (e: React.SyntheticEvent) => void
+) => {
+  return (
+    <div className="unlocked">
+      <div className="rows-container" onScroll={onScroll}>
+        {renderRows(columns, templates, value, lockedRows, Number.MAX_VALUE, lockedColumns, Number.MAX_VALUE)}
+      </div>
+    </div>
+  );
+};
 
 const renderRows = <TTemplates extends TemplateInfo<string, any>>(
-  { columns, templates, value }: Props<TTemplates>,
+  columns: ColumnInfo[],
+  templates: { [key: string]: TTemplates },
+  value: RowWrapper<any>[],
   rowStart: number,
   rowCount: number,
   columnStart: number,
   columnCount: number
 ) => {
-  const renderedRows: ColumnRenderInfo[][] = [];
+  const renderedRows: React.ReactChild[] = [];
 
   for (let i = rowStart, j = 0; i < value.length && j < rowCount; i++, j++) {
     const row = value[i];
@@ -150,7 +157,7 @@ const renderRows = <TTemplates extends TemplateInfo<string, any>>(
       const template = templates[row.template];
       if (template == null) throw new Error("GridFrame: Can't find Row Template");
       const height = template.height == null ? defaultRowHeight : template.height;
-      const renderedColumns: ColumnRenderInfo[] = [];
+      const renderedColumns: React.ReactChild[] = [];
       for (let k = columnStart, l = 0; k < columns.length && l < columnCount; k++, l++) {
         const column = columns[k];
         const cell = template.renders[column.name];
@@ -159,36 +166,32 @@ const renderRows = <TTemplates extends TemplateInfo<string, any>>(
         if (span > 1 ? isGroupVisible(columns, k, span) : isVisible(column)) {
           let width = getCellWidth(columns, k, span);
           const renderCellFunction = typeof cell === 'function' ? cell : cell.render;
-          renderedColumns.push({ row, width, height, index: i, render: renderCellFunction });
+          renderedColumns.push(
+            <div className="gridFrame-column" key={l} style={{ width: `${width}em`, height: `${height}em` }}>
+              <div>{renderCellFunction(row, l)}</div>
+            </div>
+          );
         }
         k += span - 1;
         l += span - 1;
       }
-      renderedRows.push(renderedColumns);
+      renderedRows.push(
+        <div className="gridFrame-row" key={row.key} style={{ height: `${height}em` }}>
+          {renderedColumns}
+        </div>
+      );
+      if (row.items != null) {
+        const subrows = renderRows(columns, templates, row.items, 0, Number.MAX_VALUE, columnStart, columnCount);
+        renderedRows.push(...subrows);
+      }
     }
   }
-  console.log(renderedRows);
-  return (
-    <>
-      {renderedRows.map((row, i) => (
-        <div className="gridFrame-row" key={i}>
-          {row.map((column, j) => (
-            <div
-              className="gridFrame-column"
-              key={j}
-              style={{ width: `${column.width}em`, height: `${column.height}em` }}>
-              <div>{column.render(column.row, column.index)}</div>
-            </div>
-          ))}
-        </div>
-      ))}
-    </>
-  );
+  return renderedRows;
 };
 
 const getCellWidth = (columns: ColumnInfo[], index: number, span: number) => {
   let width = 0;
-  for (let i = index, j = 0; i < columns.length && j < span; i++) {
+  for (let i = index, j = 0; i < columns.length && j < span; i++, j++) {
     const column = columns[i];
     if (isVisible(column)) {
       const currentWidth = column.width == null ? defaultColumnWidth : column.width;

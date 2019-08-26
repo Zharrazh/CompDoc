@@ -56,9 +56,9 @@ const templates: {
       id: model => <div>{model.item.id}</div>,
       selected: () => <div>noneS</div>,
       name: model => <div>{model.item.name}</div>,
-      status1: model => <div>{model.item.status1}</div>,
-      status2: model => <div>{model.item.status2}</div>,
-      status3: model => <div>{model.item.status3}</div>,
+      status1: model => <div>{model.item.status1 ? 'yes' : 'no'}</div>,
+      status2: model => <div>{model.item.status2 ? 'yes' : 'no'}</div>,
+      status3: model => <div>{model.item.status3 ? 'yes' : 'no'}</div>,
       value: model => <div>{model.item.number}</div>,
       created: model => <div>{model.item.date}</div>,
       updated: model => <div>{model.item.date}</div>
@@ -66,20 +66,23 @@ const templates: {
   }
 };
 
-const rows = groupBy(data, x => x.company).map<RowWrapper<any>>(x => ({
+const rows = groupBy(data, x => x.company).map<RowWrapper<any>>((x, g1Index) => ({
   template: 'group',
+  key: g1Index.toString(),
   item: { name: 'Group ' + x.name },
-  items: groupBy(x.items, x => x.department).map<RowWrapper<any>>(y => ({
+  items: groupBy(x.items, x => x.department).map<RowWrapper<any>>((y, g2Index) => ({
     template: 'group',
+    key: '' + g1Index + g2Index,
     item: { name: 'Group ' + y.name },
-    items: y.items.map<RowWrapper<any>>(z => ({
+    items: y.items.map<RowWrapper<any>>((z, i1Index) => ({
       template: 'item',
+      key: '' + g1Index + g2Index + i1Index,
       item: z
     }))
   }))
 }));
 
-rows.splice(0, 0, { template: 'head', item: undefined });
+rows.splice(0, 0, { template: 'head', key: 'head1', item: undefined });
 
 export const SomeReport: React.FC = () => (
   <DefaultPage title="Some Report">

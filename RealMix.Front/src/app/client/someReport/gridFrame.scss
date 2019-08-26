@@ -15,25 +15,32 @@
       overflow: hidden;
       .gridFrame-row {
         display: flex;
+        .gridFrame-column {
+          overflow: hidden;
+          flex-grow: 0;
+          flex-shrink: 0;
+          border-right: 1px solid #eee;
+          border-bottom: 1px solid #eee;
+        }
       }
     }
   }
 
   .lockedXY {
     grid-area: 1 / 1 / 1 / 1;
-    background-color: rgb(255, 180, 180);
+    background-color: rgb(255, 235, 235);
   }
   .lockedY {
     grid-area: 1 / 2 / 1 / 2;
-    background-color: rgb(180, 255, 180);
+    background-color: rgb(235, 255, 235);
   }
   .lockedX {
     grid-area: 2 / 1 / 2 / 1;
-    background-color: rgb(180, 180, 255);
+    background-color: rgb(235, 235, 255);
   }
   .unlocked {
     grid-area: 2 / 2 / 2 / 2;
-    background-color: rgb(180, 180, 180);
+    background-color: rgb(235, 235, 235);
     .rows-container {
       overflow: auto;
     }
