@@ -15,12 +15,16 @@ interface RenderInfo<TModel> {
   render: RenderMethod<TModel>;
 }
 
+export interface Renders<TModel> {
+  [key: string]: RenderInfo<TModel> | RenderMethod<TModel>;
+}
+
 export interface TemplateInfo<TName, TModel> {
   name: TName;
   onClick?: (e: RowWrapper<any>) => void;
   classNames?: string;
   height?: number;
-  renders: { [key: string]: RenderInfo<TModel> | RenderMethod<TModel> };
+  renders: Renders<TModel>;
 }
 
 export interface RowWrapper<TModel> {

@@ -4,7 +4,7 @@ import { DefaultPage } from 'shared';
 
 import { data, DataModel } from './data';
 import { groupBy } from './utils';
-import { ColumnInfo, RowWrapper, TemplateInfo, DataGrid, StaticCell } from './dataGrid';
+import { ColumnInfo, RowWrapper, TemplateInfo, DataGrid, StaticCell, Renders } from './dataGrid';
 
 const columns: ColumnInfo[] = [
   { name: 'id' },
@@ -40,6 +40,46 @@ export const SomeReport: React.FC = () => {
     return r;
   });
 
+  const headRenders: Renders<undefined> = useMemo(
+    () => ({
+      id: () => <StaticCell>Id</StaticCell>,
+      selected: () => <StaticCell>Selected</StaticCell>,
+      name: () => <StaticCell>Name</StaticCell>,
+      status1: {
+        span: 3,
+        render: () => <StaticCell>Statuses</StaticCell>
+      },
+      value: () => <StaticCell>Value</StaticCell>,
+      created: () => <StaticCell>Created</StaticCell>,
+      updated: () => <StaticCell>Updated</StaticCell>
+    }),
+    []
+  );
+  const groupRenders: Renders<{ name: string }> = useMemo(
+    () => ({
+      id: model => <StaticCell>{model.item.name}</StaticCell>,
+      selected: {
+        span: 7,
+        render: () => <StaticCell></StaticCell>
+      },
+      updated: () => <StaticCell>Some Group Data</StaticCell>
+    }),
+    []
+  );
+  const itemRenders: Renders<DataModel> = useMemo(
+    () => ({
+      id: model => <StaticCell>{model.item.id}</StaticCell>,
+      selected: () => <StaticCell>noneS</StaticCell>,
+      name: model => <StaticCell>{model.item.name}</StaticCell>,
+      status1: model => <StaticCell>{model.item.status1 ? 'yes' : 'no'}</StaticCell>,
+      status2: model => <StaticCell>{model.item.status2 ? 'yes' : 'no'}</StaticCell>,
+      status3: model => <StaticCell>{model.item.status3 ? 'yes' : 'no'}</StaticCell>,
+      value: model => <StaticCell>{model.item.number}</StaticCell>,
+      created: model => <StaticCell>{model.item.date}</StaticCell>,
+      updated: model => <StaticCell>{model.item.date}</StaticCell>
+    }),
+    []
+  );
   const templates = useMemo(() => {
     const result: {
       [key: string]:
@@ -50,49 +90,21 @@ export const SomeReport: React.FC = () => {
       head: {
         name: 'head',
         classNames: 'head',
-        renders: {
-          id: () => <StaticCell>Id</StaticCell>,
-          selected: () => <StaticCell>Selected</StaticCell>,
-          name: () => <StaticCell>Name</StaticCell>,
-          status1: {
-            span: 3,
-            render: () => <StaticCell>Statuses</StaticCell>
-          },
-          value: () => <StaticCell>Value</StaticCell>,
-          created: () => <StaticCell>Created</StaticCell>,
-          updated: () => <StaticCell>Updated</StaticCell>
-        }
+        renders: headRenders
       },
       group: {
         name: 'group',
         classNames: 'group',
         onClick: row => setRows(replaceRow(rows, row, { ...row, active: row.active === false })),
-        renders: {
-          id: model => <StaticCell>{model.item.name}</StaticCell>,
-          selected: {
-            span: 7,
-            render: () => <StaticCell></StaticCell>
-          },
-          updated: () => <StaticCell>Some Group Data</StaticCell>
-        }
+        renders: groupRenders
       },
       item: {
         name: 'item',
-        renders: {
-          id: model => <StaticCell>{model.item.id}</StaticCell>,
-          selected: () => <StaticCell>noneS</StaticCell>,
-          name: model => <StaticCell>{model.item.name}</StaticCell>,
-          status1: model => <StaticCell>{model.item.status1 ? 'yes' : 'no'}</StaticCell>,
-          status2: model => <StaticCell>{model.item.status2 ? 'yes' : 'no'}</StaticCell>,
-          status3: model => <StaticCell>{model.item.status3 ? 'yes' : 'no'}</StaticCell>,
-          value: model => <StaticCell>{model.item.number}</StaticCell>,
-          created: model => <StaticCell>{model.item.date}</StaticCell>,
-          updated: model => <StaticCell>{model.item.date}</StaticCell>
-        }
+        renders: itemRenders
       }
     };
     return result;
-  }, [rows]);
+  }, [rows, headRenders, groupRenders, itemRenders]);
   return (
     <DefaultPage title="Some Report">
       <DataGrid lockedColumns={1} lockedRows={1} columns={columns} templates={templates} rows={rows}></DataGrid>

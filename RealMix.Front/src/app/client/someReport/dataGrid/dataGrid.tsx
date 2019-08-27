@@ -1,14 +1,12 @@
-import React, { useMemo, useState, useCallback } from 'react';
+import React, { useMemo, useState, useCallback, memo } from 'react';
 import classNames from 'classnames';
 
 import { Icon } from 'shared';
 
 import { ColumnInfo, RowWrapper, TemplateInfo } from './types';
+import { defaultColumnWidth, defaultRowHeight, getCellWidth, isGroupVisible, isVisible } from './utils';
 
 import './dataGrid.scss';
-
-const defaultRowHeight = 2.25;
-const defaultColumnWidth = 10;
 
 interface Props<TTemplates extends TemplateInfo<string, any>> {
   lockedColumns: number;
@@ -86,7 +84,8 @@ const renderLockedXY = <TTemplates extends TemplateInfo<string, any>>(
           rowCount={lockedRows}
           columnStart={0}
           columnCount={lockedColumns}
-          depth={depth}></RenderRows>
+          maxDepth={depth}
+          currentDepth={0}></RenderRows>
       </div>
     </div>
   );
@@ -110,7 +109,8 @@ const renderLockedY = <TTemplates extends TemplateInfo<string, any>>(
           rowCount={lockedRows}
           columnStart={lockedColumns}
           columnCount={Number.MAX_VALUE}
-          depth={depth}></RenderRows>
+          maxDepth={depth}
+          currentDepth={0}></RenderRows>
       </div>
     </div>
   );
@@ -134,7 +134,8 @@ const renderLockedX = <TTemplates extends TemplateInfo<string, any>>(
           rowCount={Number.MAX_VALUE}
           columnStart={0}
           columnCount={lockedColumns}
-          depth={depth}></RenderRows>
+          maxDepth={depth}
+          currentDepth={0}></RenderRows>
       </div>
     </div>
   );
@@ -156,7 +157,8 @@ const renderUnlocked = <TTemplates extends TemplateInfo<string, any>>(
           rowCount={Number.MAX_VALUE}
           columnStart={lockedColumns}
           columnCount={Number.MAX_VALUE}
-          depth={depth}></RenderRows>
+          maxDepth={depth}
+          currentDepth={0}></RenderRows>
       </div>
     </div>
   );
@@ -170,97 +172,118 @@ interface RenderRowsProps<TTemplates extends TemplateInfo<string, any>> {
   rowCount: number;
   columnStart: number;
   columnCount: number;
-  depth: number;
+  maxDepth: number;
+  currentDepth: number;
 }
 
-const RenderRows = <TTemplates extends TemplateInfo<string, any>>({
-  columns,
-  templates,
-  rows,
-  rowStart,
-  rowCount,
-  columnStart,
-  columnCount,
-  depth
-}: RenderRowsProps<TTemplates>) => {
-  const result = useMemo(
-    () => renderRows(columns, templates, rows, rowStart, rowCount, columnStart, columnCount, depth, 0),
-    [columns, templates, rows, rowStart, rowCount, columnStart, columnCount, depth]
-  );
-  return <>{result}</>;
-};
-
-const renderRows = <TTemplates extends TemplateInfo<string, any>>(
-  columns: ColumnInfo[],
-  templates: { [key: string]: TTemplates },
-  rows: RowWrapper<any>[],
-  rowStart: number,
-  rowCount: number,
-  columnStart: number,
-  columnCount: number,
-  maxDepth: number,
-  currentDepth: number
-) => {
-  const renderedRows: React.ReactChild[] = [];
-
-  for (let i = rowStart, j = 0; i < rows.length && j < rowCount; i++, j++) {
-    const row = rows[i];
-    const template = templates[row.template];
-    if (template == null) throw new Error("DataGrid: Can't find Row Template");
-    const height = template.height == null ? defaultRowHeight : template.height;
-    const renderedCells: React.ReactChild[] = [];
-    if (maxDepth > 0 && columnStart === 0) {
-      renderedCells.push(
-        <GridCell key={-1} width={maxDepth} height={height} className="arrow-icon">
-          {row.items != null && <Icon name="angle-down" style={{ marginLeft: `${currentDepth * 0.75}em` }}></Icon>}
-        </GridCell>
+const RenderRows = memo(
+  <TTemplates extends TemplateInfo<string, any>>({
+    columns,
+    templates,
+    rows,
+    rowStart,
+    rowCount,
+    columnStart,
+    columnCount,
+    maxDepth,
+    currentDepth
+  }: RenderRowsProps<TTemplates>) => {
+    const renderedRows: React.ReactChild[] = [];
+    for (let i = rowStart, j = 0; i < rows.length && j < rowCount; i++, j++) {
+      const row = rows[i];
+      const template = templates[row.template];
+      if (template == null) throw new Error("DataGrid: Can't find Row Template");
+      renderedRows.push(
+        <React.Fragment key={row.key}>
+          <RenderRow
+            columns={columns}
+            template={template}
+            row={row}
+            columnStart={columnStart}
+            columnCount={columnCount}
+            maxDepth={maxDepth}
+            currentDepth={currentDepth}></RenderRow>
+          {row.items != null && (row.active == null || row.active === true) && (
+            <RenderRows
+              columns={columns}
+              templates={templates}
+              rows={row.items}
+              rowStart={rowStart}
+              rowCount={rowCount}
+              columnStart={columnStart}
+              columnCount={columnCount}
+              maxDepth={maxDepth}
+              currentDepth={currentDepth + 1}></RenderRows>
+          )}
+        </React.Fragment>
       );
     }
-    for (let k = columnStart, l = 0; k < columns.length && l < columnCount; k++, l++) {
-      const column = columns[k];
-      const cell = template.renders[column.name];
-      if (cell == null) throw new Error("DataGrid: Can't find Cell Render");
-      const span = typeof cell === 'function' || cell.span == null ? 1 : cell.span;
-      if (span > 1 ? isGroupVisible(columns, k, span) : isVisible(column)) {
-        let width = getCellWidth(columns, k, span);
-        const renderCellFunction = typeof cell === 'function' ? cell : cell.render;
+    return <>{renderedRows}</>;
+  }
+);
+
+interface RenderRowProps {
+  columns: ColumnInfo[];
+  template: TemplateInfo<string, any>;
+  row: RowWrapper<any>;
+  columnStart: number;
+  columnCount: number;
+  maxDepth: number;
+  currentDepth: number;
+}
+
+const RenderRow: React.FC<RenderRowProps> = memo(
+  ({ columns, template, row, columnStart, columnCount, maxDepth, currentDepth }) => {
+    const { renders } = template;
+    const height = template.height == null ? defaultRowHeight : template.height;
+    const cells = useMemo(() => {
+      const renderedCells: React.ReactChild[] = [];
+      if (maxDepth > 0 && columnStart === 0) {
         renderedCells.push(
-          <GridCell key={l} width={width} height={height}>
-            {renderCellFunction(row, l)}
+          <GridCell key={-1} width={maxDepth} height={height} className="arrow-icon">
+            {row.items != null && (
+              <Icon
+                name={row.active !== false ? 'angle-down' : 'angle-right'}
+                style={{ marginLeft: `${currentDepth * 0.75}em` }}></Icon>
+            )}
           </GridCell>
         );
       }
-      k += span - 1;
-      l += span - 1;
-    }
-    renderedRows.push(
+      for (let k = columnStart, l = 0; k < columns.length && l < columnCount; k++, l++) {
+        const column = columns[k];
+        const cell = renders[column.name];
+        if (cell == null) throw new Error("DataGrid: Can't find Cell Render");
+        const span = typeof cell === 'function' || cell.span == null ? 1 : cell.span;
+        if (span > 1 ? isGroupVisible(columns, k, span) : isVisible(column)) {
+          let width = getCellWidth(columns, k, span);
+          const renderCellFunction = typeof cell === 'function' ? cell : cell.render;
+          renderedCells.push(
+            <GridCell key={l} width={width} height={height}>
+              {renderCellFunction(row, l)}
+            </GridCell>
+          );
+        }
+        k += span - 1;
+        l += span - 1;
+      }
+      return renderedCells;
+    }, [renders, height, columns, columnStart, columnCount, currentDepth, maxDepth, row]);
+
+    const clickCallback = useCallback(() => {
+      if (template.onClick != null) template.onClick(row);
+    }, [template, row]);
+
+    return (
       <div
         className={classNames('dataGrid-row', template.classNames)}
-        onClick={() => {
-          if (template.onClick != null) template.onClick(row);
-        }}
+        onClick={clickCallback}
         key={row.key}
         style={{ height: `${height}em` }}>
-        {renderedCells}
+        {cells}
       </div>
     );
-    if (row.items != null && (row.active == null || row.active === true)) {
-      const subrows = renderRows(
-        columns,
-        templates,
-        row.items,
-        0,
-        Number.MAX_VALUE,
-        columnStart,
-        columnCount,
-        maxDepth,
-        currentDepth + 1
-      );
-      renderedRows.push(...subrows);
-    }
   }
-  return renderedRows;
-};
+);
 
 interface GridCellProps {
   width: number;
@@ -276,25 +299,3 @@ const GridCell: React.FC<GridCellProps> = ({ width, height, className, children 
     {children}
   </div>
 );
-
-const getCellWidth = (columns: ColumnInfo[], index: number, span: number) => {
-  let width = 0;
-  for (let i = index, j = 0; i < columns.length && j < span; i++, j++) {
-    const column = columns[i];
-    if (isVisible(column)) {
-      const currentWidth = column.width == null ? defaultColumnWidth : column.width;
-      width += currentWidth;
-    }
-  }
-  return width;
-};
-
-const isVisible = ({ visible }: { visible?: boolean }) => visible == null || visible === true;
-
-const isGroupVisible = (columns: ColumnInfo[], index: number, span: number) => {
-  for (let i = index, j = 0; i < columns.length && j < span; i++) {
-    const column = columns[i];
-    if (isVisible(column)) return true;
-  }
-  return false;
-};
