@@ -1,0 +1,61 @@
+$border-color: #ccc;
+
+.dataGrid {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  border: 1px solid $border-color;
+
+  .lockedXY,
+  .lockedY,
+  .lockedX,
+  .unlocked {
+    overflow: hidden;
+    .rows-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      .dataGrid-row {
+        display: flex;
+        &.head {
+          font-weight: bold;
+          .dataGrid-cell {
+            background-color: #ddd;
+          }
+        }
+        &.group {
+          font-weight: bold;
+          .dataGrid-cell {
+            background-color: #f2f2f2;
+          }
+        }
+
+        .dataGrid-cell {
+          overflow: hidden;
+          flex-grow: 0;
+          flex-shrink: 0;
+          border-right: 1px solid $border-color;
+          border-bottom: 1px solid $border-color;
+          &.arrow-icon {
+            padding: 0.25em;
+          }
+        }
+      }
+    }
+  }
+
+  .lockedXY {
+    grid-area: 1 / 1 / 1 / 1;
+  }
+  .lockedY {
+    grid-area: 1 / 2 / 1 / 2;
+  }
+  .lockedX {
+    grid-area: 2 / 1 / 2 / 1;
+  }
+  .unlocked {
+    grid-area: 2 / 2 / 2 / 2;
+    overflow: auto;
+  }
+}

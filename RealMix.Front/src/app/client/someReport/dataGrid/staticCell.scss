@@ -1,0 +1,14 @@
+.dataGrid-cell {
+  .staticCell {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0.25em;
+    cursor: default;
+    div {
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  }
+}
