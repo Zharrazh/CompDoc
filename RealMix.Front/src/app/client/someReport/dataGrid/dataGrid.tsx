@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback, memo } from 'react';
+import React, { useMemo, useState, useCallback, memo, useRef } from 'react';
 import classNames from 'classnames';
 
 import { Icon } from 'shared';
@@ -16,31 +16,36 @@ interface Props<TTemplates extends TemplateInfo<string, any>> {
   rows: RowWrapper<any>[];
 }
 
-export const DataGrid = <TTemplates extends TemplateInfo<string, any>>(props: Props<TTemplates>) => {
-  const { lockedColumns, lockedRows, columns, templates, rows } = props;
+export const DataGrid = <TTemplates extends TemplateInfo<string, any>>({
+  lockedColumns,
+  lockedRows,
+  columns,
+  templates,
+  rows
+}: Props<TTemplates>) => {
   const [scroll, setScroll] = useState({ x: 0, y: 0 });
+
   const onScroll = useCallback((e: React.SyntheticEvent) => {
     const element = e.target as Element;
     setScroll({ x: element.scrollLeft, y: element.scrollTop });
   }, []);
+
   const depth = useMemo(() => getDepth(rows, 0), [rows]);
-  const [lockedWidth, lockedHeight] = useMemo(() => {
-    let lockedRowsHeight = 0;
-    let lockedColumnsWidth = 0;
-    for (let i = 0, j = 0; i < rows.length && j < lockedRows; i++, j++) {
-      const template = templates[rows[i].template];
-      lockedRowsHeight += template != null && template.height != null ? template.height : defaultRowHeight;
-    }
-    for (let i = 0, j = 0; i < columns.length && j < lockedColumns; i++) {
-      const column = columns[i];
-      if (isVisible(column)) {
-        j++;
-        lockedColumnsWidth += column != null && column.width != null ? column.width : defaultColumnWidth;
-      }
-    }
-    lockedColumnsWidth += depth;
-    return [lockedColumnsWidth, lockedRowsHeight];
-  }, [lockedColumns, lockedRows, columns, templates, rows, depth]);
+
+  const [lockedWidth, lockedHeight] = useMemo(
+    () => getLockedWidthAndHeight(lockedColumns, lockedRows, columns, templates, rows, depth),
+    [lockedColumns, lockedRows, columns, templates, rows, depth]
+  );
+
+  const unlockedRef = useRef<HTMLDivElement>(null);
+
+  const wheelCallback = useCallback(
+    (e: React.WheelEvent<any>) => {
+      if (unlockedRef.current != null) unlockedRef.current.scroll(scroll.x + e.deltaX, scroll.y + e.deltaY);
+    },
+    [unlockedRef, scroll]
+  );
+
   return (
     <div
       className="dataGrid"
@@ -48,10 +53,68 @@ export const DataGrid = <TTemplates extends TemplateInfo<string, any>>(props: Pr
         gridTemplateColumns: `${lockedWidth}em calc(100% - ${lockedWidth}em)`,
         gridTemplateRows: `${lockedHeight}em calc(100% - ${lockedHeight}em)`
       }}>
-      {renderLockedXY(props, depth)}
-      {renderLockedY(props, depth, scroll.x)}
-      {renderLockedX(props, depth, scroll.y)}
-      {renderUnlocked(props, depth, onScroll)}
+      {lockedColumns !== 0 && lockedRows !== 0 && (
+        <div className="lockedXY" onWheel={wheelCallback}>
+          <div className="rows-container">
+            <RenderRows
+              columns={columns}
+              templates={templates}
+              rows={rows}
+              rowStart={0}
+              rowCount={lockedRows}
+              columnStart={0}
+              columnCount={lockedColumns}
+              maxDepth={depth}
+              currentDepth={0}></RenderRows>
+          </div>
+        </div>
+      )}
+      {lockedRows !== 0 && (
+        <div className="lockedY" onWheel={wheelCallback}>
+          <div className="rows-container" style={{ marginLeft: -scroll.x }}>
+            <RenderRows
+              columns={columns}
+              templates={templates}
+              rows={rows}
+              rowStart={0}
+              rowCount={lockedRows}
+              columnStart={lockedColumns}
+              columnCount={Number.MAX_VALUE}
+              maxDepth={depth}
+              currentDepth={0}></RenderRows>
+          </div>
+        </div>
+      )}
+      {lockedColumns !== 0 && (
+        <div className="lockedX" onWheel={wheelCallback}>
+          <div className="rows-container" style={{ marginTop: -scroll.y }}>
+            <RenderRows
+              columns={columns}
+              templates={templates}
+              rows={rows}
+              rowStart={lockedRows}
+              rowCount={Number.MAX_VALUE}
+              columnStart={0}
+              columnCount={lockedColumns}
+              maxDepth={depth}
+              currentDepth={0}></RenderRows>
+          </div>
+        </div>
+      )}
+      <div className="unlocked" onScroll={onScroll} ref={unlockedRef}>
+        <div className="rows-container">
+          <RenderRows
+            columns={columns}
+            templates={templates}
+            rows={rows}
+            rowStart={lockedRows}
+            rowCount={Number.MAX_VALUE}
+            columnStart={lockedColumns}
+            columnCount={Number.MAX_VALUE}
+            maxDepth={depth}
+            currentDepth={0}></RenderRows>
+        </div>
+      </div>
     </div>
   );
 };
@@ -67,101 +130,29 @@ const getDepth = (rows: RowWrapper<any>[], depth: number) => {
   return result;
 };
 
-const renderLockedXY = <TTemplates extends TemplateInfo<string, any>>(
-  { lockedColumns, lockedRows, columns, templates, rows }: Props<TTemplates>,
+const getLockedWidthAndHeight = <TTemplates extends TemplateInfo<string, any>>(
+  lockedColumns: number,
+  lockedRows: number,
+  columns: ColumnInfo[],
+  templates: { [key: string]: TTemplates },
+  rows: RowWrapper<any>[],
   depth: number
 ) => {
-  if (lockedColumns === 0 || lockedRows === 0) return undefined;
-
-  return (
-    <div className="lockedXY">
-      <div className="rows-container">
-        <RenderRows
-          columns={columns}
-          templates={templates}
-          rows={rows}
-          rowStart={0}
-          rowCount={lockedRows}
-          columnStart={0}
-          columnCount={lockedColumns}
-          maxDepth={depth}
-          currentDepth={0}></RenderRows>
-      </div>
-    </div>
-  );
-};
-
-const renderLockedY = <TTemplates extends TemplateInfo<string, any>>(
-  { lockedColumns, lockedRows, columns, templates, rows }: Props<TTemplates>,
-  depth: number,
-  shift: number
-) => {
-  if (lockedRows === 0) return undefined;
-
-  return (
-    <div className="lockedY">
-      <div className="rows-container" style={{ marginLeft: -shift }}>
-        <RenderRows
-          columns={columns}
-          templates={templates}
-          rows={rows}
-          rowStart={0}
-          rowCount={lockedRows}
-          columnStart={lockedColumns}
-          columnCount={Number.MAX_VALUE}
-          maxDepth={depth}
-          currentDepth={0}></RenderRows>
-      </div>
-    </div>
-  );
-};
-
-const renderLockedX = <TTemplates extends TemplateInfo<string, any>>(
-  { lockedColumns, lockedRows, columns, templates, rows }: Props<TTemplates>,
-  depth: number,
-  shift: number
-) => {
-  if (lockedColumns === 0) return undefined;
-
-  return (
-    <div className="lockedX">
-      <div className="rows-container" style={{ marginTop: -shift }}>
-        <RenderRows
-          columns={columns}
-          templates={templates}
-          rows={rows}
-          rowStart={lockedRows}
-          rowCount={Number.MAX_VALUE}
-          columnStart={0}
-          columnCount={lockedColumns}
-          maxDepth={depth}
-          currentDepth={0}></RenderRows>
-      </div>
-    </div>
-  );
-};
-
-const renderUnlocked = <TTemplates extends TemplateInfo<string, any>>(
-  { lockedColumns, lockedRows, columns, templates, rows }: Props<TTemplates>,
-  depth: number,
-  onScroll: (e: React.SyntheticEvent) => void
-) => {
-  return (
-    <div className="unlocked" onScroll={onScroll}>
-      <div className="rows-container">
-        <RenderRows
-          columns={columns}
-          templates={templates}
-          rows={rows}
-          rowStart={lockedRows}
-          rowCount={Number.MAX_VALUE}
-          columnStart={lockedColumns}
-          columnCount={Number.MAX_VALUE}
-          maxDepth={depth}
-          currentDepth={0}></RenderRows>
-      </div>
-    </div>
-  );
+  let lockedRowsHeight = 0;
+  let lockedColumnsWidth = 0;
+  for (let i = 0, j = 0; i < rows.length && j < lockedRows; i++, j++) {
+    const template = templates[rows[i].template];
+    lockedRowsHeight += template != null && template.height != null ? template.height : defaultRowHeight;
+  }
+  for (let i = 0, j = 0; i < columns.length && j < lockedColumns; i++) {
+    const column = columns[i];
+    if (isVisible(column)) {
+      j++;
+      lockedColumnsWidth += column != null && column.width != null ? column.width : defaultColumnWidth;
+    }
+  }
+  lockedColumnsWidth += depth;
+  return [lockedColumnsWidth, lockedRowsHeight];
 };
 
 interface RenderRowsProps<TTemplates extends TemplateInfo<string, any>> {
