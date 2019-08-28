@@ -4,11 +4,20 @@ import { DefaultPage } from 'shared';
 
 import { data, DataModel } from './data';
 import { groupBy } from './utils';
-import { ColumnInfo, RowWrapper, TemplateInfo, DataGrid, StaticCell, Renders } from './dataGrid';
+import {
+  ColumnInfo,
+  RowWrapper,
+  TemplateInfo,
+  DataGrid,
+  StaticCell,
+  Renders,
+  CheckboxCell,
+  SelectCell
+} from './dataGrid';
 
 const columns: ColumnInfo[] = [
+  { name: 'selected', width: 2 },
   { name: 'id' },
-  { name: 'selected' },
   { name: 'name' },
   { name: 'status1' },
   { name: 'status2' },
@@ -43,7 +52,7 @@ export const SomeReport: React.FC = () => {
   const headRenders: Renders<undefined> = useMemo(
     () => ({
       id: () => <StaticCell>Id</StaticCell>,
-      selected: () => <StaticCell>Selected</StaticCell>,
+      selected: () => <StaticCell></StaticCell>,
       name: () => <StaticCell>Name</StaticCell>,
       status1: {
         span: 3,
@@ -58,34 +67,56 @@ export const SomeReport: React.FC = () => {
   const groupRenders: Renders<{ name: string }> = useMemo(
     () => ({
       id: model => <StaticCell>{model.item.name}</StaticCell>,
-      selected: {
-        span: 7,
+      selected: () => <StaticCell></StaticCell>,
+      name: {
+        span: 6,
         render: () => <StaticCell></StaticCell>
       },
       updated: () => <StaticCell>Some Group Data</StaticCell>
     }),
     []
   );
-  const itemRenders: Renders<DataModel> = useMemo(
+  const yesnoOptions = useMemo(() => {
+    const a = new Map<string, { name: string }>();
+    a.set('true', { name: 'YES' });
+    a.set('false', { name: 'NO' });
+    return a;
+  }, []);
+  const itemRenders: Renders<DataModel & { selected: boolean }> = useMemo(
     () => ({
       id: model => <StaticCell>{model.item.id}</StaticCell>,
-      selected: () => <StaticCell>noneS</StaticCell>,
+      selected: model => {
+        const onchange = (value: boolean) =>
+          setRows(replaceRow(rows, model, { ...model, item: { ...model.item, selected: value } }));
+        return <CheckboxCell editMode value={model.item.selected} onChange={onchange}></CheckboxCell>;
+      },
       name: model => <StaticCell>{model.item.name}</StaticCell>,
-      status1: model => <StaticCell>{model.item.status1 ? 'yes' : 'no'}</StaticCell>,
+      status1: model => {
+        const onchange = (value: string) =>
+          setRows(replaceRow(rows, model, { ...model, item: { ...model.item, status1: value } }));
+        return (
+          <SelectCell
+            value={model.item.status1.toString()}
+            canChangeMode
+            options={yesnoOptions}
+            getLabel={x => x.name}
+            onChange={onchange}></SelectCell>
+        );
+      },
       status2: model => <StaticCell>{model.item.status2 ? 'yes' : 'no'}</StaticCell>,
       status3: model => <StaticCell>{model.item.status3 ? 'yes' : 'no'}</StaticCell>,
       value: model => <StaticCell>{model.item.number}</StaticCell>,
       created: model => <StaticCell>{model.item.date}</StaticCell>,
       updated: model => <StaticCell>{model.item.date}</StaticCell>
     }),
-    []
+    [setRows, rows, yesnoOptions]
   );
   const templates = useMemo(() => {
     const result: {
       [key: string]:
         | TemplateInfo<'head', undefined>
         | TemplateInfo<'group', { name: string }>
-        | TemplateInfo<'item', DataModel>;
+        | TemplateInfo<'item', DataModel & { selected: boolean }>;
     } = {
       head: {
         name: 'head',
@@ -107,7 +138,7 @@ export const SomeReport: React.FC = () => {
   }, [rows, headRenders, groupRenders, itemRenders]);
   return (
     <DefaultPage title="Some Report">
-      <DataGrid lockedColumns={1} lockedRows={1} columns={columns} templates={templates} rows={rows}></DataGrid>
+      <DataGrid lockedColumns={2} lockedRows={1} columns={columns} templates={templates} rows={rows}></DataGrid>
     </DefaultPage>
   );
 };

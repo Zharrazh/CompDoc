@@ -14,6 +14,8 @@ import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons/faExclama
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons/faCircleNotch';
 //regular
 import { faCircle } from '@fortawesome/free-regular-svg-icons/faCircle';
+import { faCheckSquare } from '@fortawesome/free-regular-svg-icons/faCheckSquare';
+import { faSquare } from '@fortawesome/free-regular-svg-icons/faSquare';
 //
 import React from 'react';
 import classNames from 'classnames';
@@ -36,7 +38,9 @@ library.add(
   faExclamationCircle,
   faCircleNotch,
   //regular
-  faCircle
+  faCircle,
+  faCheckSquare,
+  faSquare
 );
 
 export type ImportedIcon =
@@ -52,7 +56,9 @@ export type ImportedIcon =
   | 'trash-alt'
   | 'plus'
   | 'exclamation-circle'
-  | 'circle-notch';
+  | 'circle-notch'
+  | 'check-square'
+  | 'square';
 
 export interface Props extends SpaceProps, React.HTMLAttributes<any> {
   className?: string;
