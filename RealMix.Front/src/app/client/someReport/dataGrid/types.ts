@@ -15,7 +15,7 @@ interface RenderInfo<TModel> {
   render: RenderMethod<TModel>;
 }
 
-export interface Renders<TModel> {
+interface Renders<TModel> {
   [key: string]: RenderInfo<TModel> | RenderMethod<TModel>;
 }
 

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useRef, useCallback } from 'react';
 
 import { DefaultPage } from 'shared';
 
@@ -10,15 +10,15 @@ import {
   TemplateInfo,
   DataGrid,
   StaticCell,
-  Renders,
   CheckboxCell,
-  SelectCell
+  SelectCell,
+  InputCell
 } from './dataGrid';
 
 const columns: ColumnInfo[] = [
   { name: 'selected', width: 2 },
-  { name: 'id' },
-  { name: 'name' },
+  { name: 'id', visible: true },
+  { name: 'name', visible: true },
   { name: 'status1' },
   { name: 'status2' },
   { name: 'status3' },
@@ -49,93 +49,98 @@ export const SomeReport: React.FC = () => {
     return r;
   });
 
-  const headRenders: Renders<undefined> = useMemo(
-    () => ({
-      id: () => <StaticCell>Id</StaticCell>,
-      selected: () => <StaticCell></StaticCell>,
-      name: () => <StaticCell>Name</StaticCell>,
-      status1: {
-        span: 3,
-        render: () => <StaticCell>Statuses</StaticCell>
-      },
-      value: () => <StaticCell>Value</StaticCell>,
-      created: () => <StaticCell>Created</StaticCell>,
-      updated: () => <StaticCell>Updated</StaticCell>
-    }),
-    []
-  );
-  const groupRenders: Renders<{ name: string }> = useMemo(
-    () => ({
-      id: model => <StaticCell>{model.item.name}</StaticCell>,
-      selected: () => <StaticCell></StaticCell>,
-      name: {
-        span: 6,
-        render: () => <StaticCell></StaticCell>
-      },
-      updated: () => <StaticCell>Some Group Data</StaticCell>
-    }),
-    []
-  );
   const yesnoOptions = useMemo(() => {
     const a = new Map<string, { name: string }>();
     a.set('true', { name: 'YES' });
     a.set('false', { name: 'NO' });
     return a;
   }, []);
-  const itemRenders: Renders<DataModel & { selected: boolean }> = useMemo(
-    () => ({
-      id: model => <StaticCell>{model.item.id}</StaticCell>,
-      selected: model => {
-        const onchange = (value: boolean) =>
-          setRows(replaceRow(rows, model, { ...model, item: { ...model.item, selected: value } }));
-        return <CheckboxCell editMode value={model.item.selected} onChange={onchange}></CheckboxCell>;
-      },
-      name: model => <StaticCell>{model.item.name}</StaticCell>,
-      status1: model => {
-        const onchange = (value: string) =>
-          setRows(replaceRow(rows, model, { ...model, item: { ...model.item, status1: value } }));
-        return (
-          <SelectCell
-            value={model.item.status1.toString()}
-            canChangeMode
-            options={yesnoOptions}
-            getLabel={x => x.name}
-            onChange={onchange}></SelectCell>
-        );
-      },
-      status2: model => <StaticCell>{model.item.status2 ? 'yes' : 'no'}</StaticCell>,
-      status3: model => <StaticCell>{model.item.status3 ? 'yes' : 'no'}</StaticCell>,
-      value: model => <StaticCell>{model.item.number}</StaticCell>,
-      created: model => <StaticCell>{model.item.date}</StaticCell>,
-      updated: model => <StaticCell>{model.item.date}</StaticCell>
-    }),
-    [setRows, rows, yesnoOptions]
+
+  const rowsRef = useRef({ rows });
+
+  rowsRef.current.rows = rows;
+
+  type DataGridItem = DataModel & { selected: boolean };
+
+  const changeRows = useCallback(
+    (oldModel: RowWrapper<DataGridItem>, newModel: RowWrapper<DataGridItem>) => {
+      setRows(replaceRow(rowsRef.current.rows, oldModel, newModel));
+    },
+    [rowsRef]
   );
+
   const templates = useMemo(() => {
     const result: {
       [key: string]:
         | TemplateInfo<'head', undefined>
         | TemplateInfo<'group', { name: string }>
-        | TemplateInfo<'item', DataModel & { selected: boolean }>;
+        | TemplateInfo<'item', DataGridItem>;
     } = {
       head: {
         name: 'head',
         classNames: 'head',
-        renders: headRenders
+        renders: {
+          id: () => <StaticCell>Id</StaticCell>,
+          selected: () => <StaticCell></StaticCell>,
+          name: () => <StaticCell>Name</StaticCell>,
+          status1: {
+            span: 3,
+            render: () => <StaticCell>Statuses</StaticCell>
+          },
+          value: () => <StaticCell>Value</StaticCell>,
+          created: () => <StaticCell>Created</StaticCell>,
+          updated: () => <StaticCell>Updated</StaticCell>
+        }
       },
       group: {
         name: 'group',
         classNames: 'group',
-        onClick: row => setRows(replaceRow(rows, row, { ...row, active: row.active === false })),
-        renders: groupRenders
+        onClick: row => changeRows(row, { ...row, active: row.active === false }),
+        renders: {
+          id: model => <StaticCell>{model.item.name}</StaticCell>,
+          selected: () => <StaticCell></StaticCell>,
+          name: {
+            span: 6,
+            render: () => <StaticCell></StaticCell>
+          },
+          updated: () => <StaticCell>Some Group Data</StaticCell>
+        }
       },
       item: {
         name: 'item',
-        renders: itemRenders
+        renders: {
+          id: model => <StaticCell>{model.item.id}</StaticCell>,
+          selected: model => {
+            const onchange = (value: boolean) =>
+              changeRows(model, { ...model, item: { ...model.item, selected: value } });
+            return <CheckboxCell editMode value={model.item.selected} onChange={onchange}></CheckboxCell>;
+          },
+          name: model => <StaticCell>{model.item.name}</StaticCell>,
+          status1: model => {
+            const onchange = (value: string) =>
+              changeRows(model, { ...model, item: { ...model.item, status1: value !== 'false' } });
+            return (
+              <SelectCell
+                value={model.item.status1.toString()}
+                canChangeMode
+                options={yesnoOptions}
+                getLabel={x => x.name}
+                onChange={onchange}></SelectCell>
+            );
+          },
+          status2: model => <StaticCell>{model.item.status2 ? 'yes' : 'no'}</StaticCell>,
+          status3: model => <StaticCell>{model.item.status3 ? 'yes' : 'no'}</StaticCell>,
+          value: model => {
+            const onchange = (value: string) => changeRows(model, { ...model, item: { ...model.item, number: value } });
+            return <InputCell value={model.item.number} canChangeMode onChange={onchange}></InputCell>;
+          },
+          created: model => <StaticCell>{model.item.date}</StaticCell>,
+          updated: model => <StaticCell>{model.item.date}</StaticCell>
+        }
       }
     };
     return result;
-  }, [rows, headRenders, groupRenders, itemRenders]);
+  }, [changeRows, yesnoOptions]);
   return (
     <DefaultPage title="Some Report">
       <DataGrid lockedColumns={2} lockedRows={1} columns={columns} templates={templates} rows={rows}></DataGrid>

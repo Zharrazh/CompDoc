@@ -144,12 +144,10 @@ const getLockedWidthAndHeight = <TTemplates extends TemplateInfo<string, any>>(
     const template = templates[rows[i].template];
     lockedRowsHeight += template != null && template.height != null ? template.height : defaultRowHeight;
   }
-  for (let i = 0, j = 0; i < columns.length && j < lockedColumns; i++) {
+  for (let i = 0, j = 0; i < columns.length && j < lockedColumns; i++, j++) {
     const column = columns[i];
-    if (isVisible(column)) {
-      j++;
+    if (isVisible(column))
       lockedColumnsWidth += column != null && column.width != null ? column.width : defaultColumnWidth;
-    }
   }
   lockedColumnsWidth += depth;
   return [lockedColumnsWidth, lockedRowsHeight];
