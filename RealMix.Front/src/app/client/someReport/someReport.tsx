@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useRef, useCallback } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 
 import { DefaultPage } from 'shared';
 
@@ -56,17 +56,13 @@ export const SomeReport: React.FC = () => {
     return a;
   }, []);
 
-  const rowsRef = useRef({ rows });
-
-  rowsRef.current.rows = rows;
-
   type DataGridItem = DataModel & { selected: boolean };
 
   const changeRows = useCallback(
     (oldModel: RowWrapper<DataGridItem>, newModel: RowWrapper<DataGridItem>) => {
-      setRows(replaceRow(rowsRef.current.rows, oldModel, newModel));
+      setRows(replaceRow(rows, oldModel, newModel));
     },
-    [rowsRef]
+    [rows]
   );
 
   const templates = useMemo(() => {

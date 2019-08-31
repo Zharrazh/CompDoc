@@ -1,5 +1,6 @@
 import { ColumnInfo } from './types';
 
+export const emSize = 14;
 export const defaultRowHeight = 2.25;
 export const defaultColumnWidth = 10;
 
