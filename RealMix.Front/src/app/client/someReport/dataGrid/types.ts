@@ -12,6 +12,7 @@ interface RenderMethod<TModel> {
 
 interface RenderInfo<TModel> {
   span?: number;
+  renderAt?: 'start' | 'end';
   render: RenderMethod<TModel>;
 }
 

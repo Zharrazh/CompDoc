@@ -19,7 +19,7 @@ export const getCellWidth = (columns: ColumnInfo[], index: number, span: number)
 export const isVisible = ({ visible }: { visible?: boolean }) => visible == null || visible === true;
 
 export const isGroupVisible = (columns: ColumnInfo[], index: number, span: number) => {
-  for (let i = index, j = 0; i < columns.length && j < span; i++) {
+  for (let i = index, j = 0; i < columns.length && j < span; i++, j++) {
     const column = columns[i];
     if (isVisible(column)) return true;
   }

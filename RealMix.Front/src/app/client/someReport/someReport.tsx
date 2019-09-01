@@ -15,18 +15,6 @@ import {
   InputCell
 } from './dataGrid';
 
-const columns: ColumnInfo[] = [
-  { name: 'selected', width: 2 },
-  { name: 'id', visible: true },
-  { name: 'name', visible: true },
-  { name: 'status1' },
-  { name: 'status2' },
-  { name: 'status3' },
-  { name: 'value' },
-  { name: 'created' },
-  { name: 'updated' }
-];
-
 export const SomeReport: React.FC = () => {
   const [rows, setRows] = useState(() => {
     const r = groupBy(data, x => x.company).map<RowWrapper<any>>((x, g1Index) => ({
@@ -49,6 +37,21 @@ export const SomeReport: React.FC = () => {
     return r;
   });
 
+  const [columns, setColumns] = useState(() => {
+    const result: ColumnInfo[] = [
+      { name: 'selected', width: 2 },
+      { name: 'id', visible: true },
+      { name: 'name', visible: true },
+      { name: 'status1' },
+      { name: 'status2' },
+      { name: 'status3' },
+      { name: 'value' },
+      { name: 'created' },
+      { name: 'updated' }
+    ];
+    return result;
+  });
+
   const yesnoOptions = useMemo(() => {
     const a = new Map<string, { name: string }>();
     a.set('true', { name: 'YES' });
@@ -63,6 +66,19 @@ export const SomeReport: React.FC = () => {
       setRows(replaceRow(rows, oldModel, newModel));
     },
     [rows]
+  );
+
+  const onColumnWidthChangeCallback = useCallback(
+    (column: ColumnInfo, width: number) => {
+      const newColumns = [...columns];
+      const index = newColumns.indexOf(column);
+      if (index >= 0) {
+        console.log(column, width);
+        newColumns[index] = { ...column, width: width };
+        setColumns(newColumns);
+      }
+    },
+    [columns]
   );
 
   const templates = useMemo(() => {
@@ -93,11 +109,9 @@ export const SomeReport: React.FC = () => {
         classNames: 'group',
         onClick: row => changeRows(row, { ...row, active: row.active === false }),
         renders: {
-          id: model => <StaticCell>{model.item.name}</StaticCell>,
-          selected: () => <StaticCell></StaticCell>,
-          name: {
-            span: 6,
-            render: () => <StaticCell></StaticCell>
+          selected: {
+            span: 8,
+            render: model => <StaticCell>{model.item.name}</StaticCell>
           },
           updated: () => <StaticCell>Some Group Data</StaticCell>
         }
@@ -139,7 +153,13 @@ export const SomeReport: React.FC = () => {
   }, [changeRows, yesnoOptions]);
   return (
     <DefaultPage title="Some Report">
-      <DataGrid lockedColumns={2} lockedRows={1} columns={columns} templates={templates} rows={rows}></DataGrid>
+      <DataGrid
+        lockedColumns={4}
+        lockedRows={1}
+        columns={columns}
+        templates={templates}
+        rows={rows}
+        onColumnWidthChange={onColumnWidthChangeCallback}></DataGrid>
     </DefaultPage>
   );
 };

@@ -1,5 +1,7 @@
 import React, { useMemo, useState, useCallback, useRef, useEffect } from 'react';
 import classNames from 'classnames';
+import { Subject } from 'rxjs';
+import { throttleTime } from 'rxjs/operators';
 
 import { Icon } from 'shared';
 
@@ -14,6 +16,7 @@ interface Props<TTemplates extends TemplateInfo<string, any>> {
   columns: ColumnInfo[];
   templates: { [key: string]: TTemplates };
   rows: RowWrapper<any>[];
+  onColumnWidthChange?: (column: ColumnInfo, width: number) => void;
 }
 
 interface RowInfo {
@@ -36,7 +39,8 @@ export const DataGrid = <TTemplates extends TemplateInfo<string, any>>({
   lockedRows,
   columns,
   templates,
-  rows
+  rows,
+  onColumnWidthChange
 }: Props<TTemplates>) => {
   const [scroll, setScroll] = useState<ScrollInfo>({ x: 0, y: 0, height: 1000 });
 
@@ -93,7 +97,8 @@ export const DataGrid = <TTemplates extends TemplateInfo<string, any>>({
               rowStart={0}
               rowCount={lockedRows}
               columnStart={0}
-              columnCount={lockedColumns}></RenderRows>
+              columnCount={lockedColumns}
+              onColumnWidthChange={onColumnWidthChange}></RenderRows>
           </div>
         </div>
       )}
@@ -107,7 +112,8 @@ export const DataGrid = <TTemplates extends TemplateInfo<string, any>>({
               rowStart={0}
               rowCount={lockedRows}
               columnStart={lockedColumns}
-              columnCount={Number.MAX_VALUE}></RenderRows>
+              columnCount={columns.length}
+              onColumnWidthChange={onColumnWidthChange}></RenderRows>
           </div>
         </div>
       )}
@@ -119,10 +125,11 @@ export const DataGrid = <TTemplates extends TemplateInfo<string, any>>({
               rows={listOfRows}
               maxDepth={depth}
               rowStart={lockedRows}
-              rowCount={Number.MAX_VALUE}
+              rowCount={listOfRows.length - lockedRows}
               columnStart={0}
               columnCount={lockedColumns}
-              scroll={scroll}></RenderRows>
+              scroll={scroll}
+              onColumnWidthChange={onColumnWidthChange}></RenderRows>
           </div>
         </div>
       )}
@@ -133,10 +140,11 @@ export const DataGrid = <TTemplates extends TemplateInfo<string, any>>({
             rows={listOfRows}
             maxDepth={depth}
             rowStart={lockedRows}
-            rowCount={Number.MAX_VALUE}
+            rowCount={listOfRows.length - lockedRows}
             columnStart={lockedColumns}
-            columnCount={Number.MAX_VALUE}
-            scroll={scroll}></RenderRows>
+            columnCount={columns.length}
+            scroll={scroll}
+            onColumnWidthChange={onColumnWidthChange}></RenderRows>
         </div>
       </div>
     </div>
@@ -152,7 +160,7 @@ const fillRows = <TTemplates extends TemplateInfo<string, any>>(
 ) => {
   rows.forEach(row => {
     const template = templates[row.template];
-    if (template == null) throw new Error("DataGrid: Can't find Row Template");
+    if (template == null) throw new Error(`DataGrid: Can't find Row Template for '${row.template}'`);
     const height = template.height == null ? defaultRowHeight : template.height;
     listOfRows.push({
       height,
@@ -211,6 +219,7 @@ interface RenderRowsProps {
   columnCount: number;
   maxDepth: number;
   scroll?: ScrollInfo;
+  onColumnWidthChange?: (column: ColumnInfo, width: number) => void;
 }
 
 const RenderRows: React.FC<RenderRowsProps> = ({
@@ -221,7 +230,8 @@ const RenderRows: React.FC<RenderRowsProps> = ({
   columnStart,
   columnCount,
   maxDepth,
-  scroll
+  scroll,
+  onColumnWidthChange
 }) => {
   const renderedRows: React.ReactChild[] = [];
   let beforeRender = 0;
@@ -247,7 +257,8 @@ const RenderRows: React.FC<RenderRowsProps> = ({
           rowInfo={row}
           columnStart={columnStart}
           columnCount={columnCount}
-          maxDepth={maxDepth}></RenderRow>
+          maxDepth={maxDepth}
+          onColumnWidthChange={onColumnWidthChange}></RenderRow>
       );
   }
   return (
@@ -265,9 +276,17 @@ interface RenderRowProps {
   columnStart: number;
   columnCount: number;
   maxDepth: number;
+  onColumnWidthChange?: (column: ColumnInfo, width: number) => void;
 }
 
-const RenderRow: React.FC<RenderRowProps> = ({ columns, rowInfo, columnStart, columnCount, maxDepth }) => {
+const RenderRow: React.FC<RenderRowProps> = ({
+  columns,
+  rowInfo,
+  columnStart,
+  columnCount,
+  maxDepth,
+  onColumnWidthChange
+}) => {
   const { renders } = rowInfo.template;
   const cells = useMemo(() => {
     const renderedCells: React.ReactChild[] = [];
@@ -282,25 +301,44 @@ const RenderRow: React.FC<RenderRowProps> = ({ columns, rowInfo, columnStart, co
         </GridCell>
       );
     }
-    for (let k = columnStart, l = 0; k < columns.length && l < columnCount; k++, l++) {
+    for (let k = 0, l = 0; k < columns.length && l < columnCount; k++, l++) {
       const column = columns[k];
-      const cell = renders[column.name];
-      if (cell == null) throw new Error("DataGrid: Can't find Cell Render");
-      const span = typeof cell === 'function' || cell.span == null ? 1 : cell.span;
-      if (span > 1 ? isGroupVisible(columns, k, span) : isVisible(column)) {
-        let width = getCellWidth(columns, k, span);
-        const renderCellFunction = typeof cell === 'function' ? cell : cell.render;
-        renderedCells.push(
-          <GridCell key={l} width={width} height={rowInfo.height}>
-            {renderCellFunction(rowInfo.row, l)}
-          </GridCell>
-        );
+      let cell = renders[column.name];
+      if (cell == null)
+        throw new Error(`DataGrid: Can't find Cell Render for '${rowInfo.template.name}/${column.name}'`);
+      if (typeof cell === 'function') cell = { render: cell };
+      const renderAt = cell.renderAt == null ? 'start' : cell.renderAt;
+      let span = cell.span == null ? 1 : cell.span;
+      if (k + span > columnStart) {
+        let shouldRenderContent = true;
+        if (k < columnStart) {
+          shouldRenderContent = renderAt === 'end' || !isGroupVisible(columns, k, columnStart - k);
+          span = k + span - columnStart;
+          k = columnStart;
+        }
+        if (k + span > columnStart + columnCount) {
+          shouldRenderContent =
+            renderAt === 'start' ||
+            !isGroupVisible(columns, columnStart + columnCount, k + span - columnStart - columnCount);
+          span = columnStart + columnCount - k;
+        }
+        if (span > 1 ? isGroupVisible(columns, k, span) : isVisible(column)) {
+          let width = getCellWidth(columns, k, span);
+          renderedCells.push(
+            <GridCell key={l} width={width} height={rowInfo.height}>
+              {shouldRenderContent ? cell.render(rowInfo.row, l) : undefined}
+              {rowInfo.template.name === 'head' && onColumnWidthChange != null && (
+                <GridCellResizer column={columns[k + span - 1]} onChange={onColumnWidthChange}></GridCellResizer>
+              )}
+            </GridCell>
+          );
+        }
       }
       k += span - 1;
       l += span - 1;
     }
     return renderedCells;
-  }, [renders, columns, columnStart, columnCount, maxDepth, rowInfo]);
+  }, [renders, columns, columnStart, columnCount, maxDepth, rowInfo, onColumnWidthChange]);
 
   const clickCallback = useCallback(() => {
     if (rowInfo.template.onClick != null) rowInfo.template.onClick(rowInfo.row);
@@ -327,3 +365,59 @@ const GridCell: React.FC<GridCellProps> = ({ width, height, className, children 
     {children}
   </div>
 );
+
+interface GridCellResizerProps {
+  column: ColumnInfo;
+  onChange: (column: ColumnInfo, width: number) => void;
+}
+
+const GridCellResizer: React.FC<GridCellResizerProps> = ({ column, onChange }) => {
+  const [start, setStart] = useState<{ point: number; width: number } | null>(null);
+
+  const mouseDownCallback = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      e.preventDefault();
+      setStart({ point: e.clientX, width: column.width == null ? defaultColumnWidth : column.width });
+    },
+    [column]
+  );
+
+  const onMouseMoveRx = useMemo(() => new Subject<number>(), []);
+
+  useEffect(() => {
+    const s = onMouseMoveRx.pipe(throttleTime(100)).subscribe(clientX => {
+      if (start != null) {
+        const change = clientX - start.point;
+        const width = start.width * emSize + change < 2 * emSize ? 2 : start.width + change / emSize;
+        onChange(column, width);
+      }
+    });
+    return () => s.unsubscribe();
+  }, [start, column, onChange, onMouseMoveRx]);
+
+  const mouseUpCallback = useCallback(
+    (e: Event) => {
+      if (start != null) {
+        e.stopPropagation();
+        e.preventDefault();
+        setStart(null);
+      }
+    },
+    [start]
+  );
+
+  const mouseMoveCallback = useCallback((e: MouseEvent) => onMouseMoveRx.next(e.clientX), [onMouseMoveRx]);
+
+  useEffect(() => {
+    document.addEventListener('mousemove', mouseMoveCallback);
+    return () => document.removeEventListener('mousemove', mouseMoveCallback);
+  }, [mouseMoveCallback]);
+
+  useEffect(() => {
+    document.addEventListener('mouseup', mouseUpCallback);
+    return () => document.removeEventListener('mouseup', mouseUpCallback);
+  }, [mouseUpCallback]);
+
+  return <div className={classNames('resizer', { active: start != null })} onMouseDown={mouseDownCallback}></div>;
+};

@@ -32,6 +32,7 @@ $border-color: #ccc;
         }
 
         .dataGrid-cell {
+          position: relative;
           overflow: hidden;
           flex-grow: 0;
           flex-shrink: 0;
@@ -39,6 +40,18 @@ $border-color: #ccc;
           border-bottom: 1px solid $border-color;
           &.arrow-icon {
             padding: 0.25em;
+          }
+          .resizer {
+            position: absolute;
+            cursor: col-resize;
+            height: 100%;
+            top: 0;
+            right: 0;
+            border-right: 0.25em solid transparent;
+
+            &.active {
+              border-right: 0.25em solid rgb(110, 110, 110);
+            }
           }
         }
       }
