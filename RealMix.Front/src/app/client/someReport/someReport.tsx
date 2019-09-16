@@ -12,7 +12,8 @@ import {
   StaticCell,
   CheckboxCell,
   SelectCell,
-  InputCell
+  InputCell,
+  DateInputCell
 } from './dataGrid';
 
 export const SomeReport: React.FC = () => {
@@ -144,8 +145,14 @@ export const SomeReport: React.FC = () => {
             const onchange = (value: string) => changeRows(model, { ...model, item: { ...model.item, number: value } });
             return <InputCell value={model.item.number} canChangeMode onChange={onchange}></InputCell>;
           },
-          created: model => <StaticCell>{model.item.date}</StaticCell>,
-          updated: model => <StaticCell>{model.item.date}</StaticCell>
+          created: model => {
+            const onchange = (value: Date) => changeRows(model, { ...model, item: { ...model.item, date: value } });
+            return <DateInputCell value={model.item.date} canChangeMode onChange={onchange} />;
+          },
+          updated: model => {
+            const onchange = (value: Date) => changeRows(model, { ...model, item: { ...model.item, date: value } });
+            return <DateInputCell value={model.item.date} canChangeMode onChange={onchange} />;
+          }
         }
       }
     };

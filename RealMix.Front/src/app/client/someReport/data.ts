@@ -11,7 +11,7 @@ export interface DataModel {
   email: string;
   number: string;
   city: string;
-  date: string;
+  date: Date;
 }
 
 export const data: DataModel[] = [];
@@ -29,6 +29,6 @@ for (let i = 0; i < 100; i++) {
     email: faker.internet.email(),
     number: faker.phone.phoneNumber(),
     city: faker.address.city(),
-    date: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+    date: date
   });
 }
