@@ -16,7 +16,7 @@ export interface DataModel {
 
 export const data: DataModel[] = [];
 
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 1000; i++) {
   const date = faker.date.past(10);
   data.push({
     id: i,

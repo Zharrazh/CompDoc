@@ -386,7 +386,7 @@ const GridCellResizer: React.FC<GridCellResizerProps> = ({ column, onChange }) =
   const onMouseMoveRx = useMemo(() => new Subject<number>(), []);
 
   useEffect(() => {
-    const s = onMouseMoveRx.pipe(throttleTime(100)).subscribe(clientX => {
+    const s = onMouseMoveRx.pipe(throttleTime(200)).subscribe(clientX => {
       if (start != null) {
         const change = clientX - start.point;
         const width = start.width * emSize + change < 2 * emSize ? 2 : start.width + change / emSize;

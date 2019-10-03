@@ -138,7 +138,11 @@ export const SomeReport: React.FC = () => {
                 onChange={onchange}></SelectCell>
             );
           },
-          status2: model => <StaticCell>{model.item.status2 ? 'yes' : 'no'}</StaticCell>,
+          status2: model => {
+            const onchange = (value: boolean) =>
+              changeRows(model, { ...model, item: { ...model.item, status2: !!value } });
+            return <CheckboxCell canChangeMode value={model.item.status2} onChange={onchange}></CheckboxCell>;
+          },
           status3: model => <StaticCell>{model.item.status3 ? 'yes' : 'no'}</StaticCell>,
           value: model => {
             const onchange = (value: string) => changeRows(model, { ...model, item: { ...model.item, number: value } });
@@ -154,7 +158,7 @@ export const SomeReport: React.FC = () => {
   return (
     <DefaultPage title="Some Report">
       <DataGrid
-        lockedColumns={4}
+        lockedColumns={2}
         lockedRows={1}
         columns={columns}
         templates={templates}
