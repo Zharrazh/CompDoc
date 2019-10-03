@@ -12,7 +12,8 @@ import {
   StaticCell,
   CheckboxCell,
   SelectCell,
-  InputCell
+  InputCell,
+  MaskedInputCell
 } from './dataGrid';
 
 export const SomeReport: React.FC = () => {
@@ -47,6 +48,7 @@ export const SomeReport: React.FC = () => {
       { name: 'status3' },
       { name: 'value' },
       { name: 'created' },
+      { name: 'time' },
       { name: 'updated' }
     ];
     return result;
@@ -101,6 +103,7 @@ export const SomeReport: React.FC = () => {
           },
           value: () => <StaticCell>Value</StaticCell>,
           created: () => <StaticCell>Created</StaticCell>,
+          time: () => <StaticCell>Time</StaticCell>,
           updated: () => <StaticCell>Updated</StaticCell>
         }
       },
@@ -110,7 +113,7 @@ export const SomeReport: React.FC = () => {
         onClick: row => changeRows(row, { ...row, active: row.active === false }),
         renders: {
           selected: {
-            span: 8,
+            span: 9,
             render: model => <StaticCell>{model.item.name}</StaticCell>
           },
           updated: () => <StaticCell>Some Group Data</StaticCell>
@@ -149,6 +152,19 @@ export const SomeReport: React.FC = () => {
             return <InputCell value={model.item.number} canChangeMode onChange={onchange}></InputCell>;
           },
           created: model => <StaticCell>{model.item.date}</StaticCell>,
+          time: model => {
+            const onchange = (value: string) => {
+              changeRows(model, { ...model, item: { ...model.item, time: value ? convertToMinutes(value) : 0 } });
+            };
+            return (
+              <MaskedInputCell
+                value={convertFromMinutes(model.item.time)}
+                mask={[/[0-9]/, /[0-9]/, ':', /[0-5]/, /[0-9]/]}
+                canChangeMode
+                onChange={onchange}
+              />
+            );
+          },
           updated: model => <StaticCell>{model.item.date}</StaticCell>
         }
       }
@@ -186,4 +202,18 @@ const replaceRow = (oldRows: RowWrapper<any>[], oldRow: RowWrapper<any>, newRow:
     }
   }
   return oldRows;
+};
+
+const convertToMinutes = (value: string) => {
+  return parseInt(value.slice(0, 2)) * 60 + parseInt(value.slice(3, value.length));
+};
+
+const convertFromMinutes = (value: number) => {
+  let hours = Math.trunc(value / 60),
+    minutes = value % 60;
+
+  return (
+    (hours < 10 ? '0'.concat(hours.toString()) : hours.toString()) +
+    (minutes < 10 ? '0'.concat(minutes.toString()) : minutes.toString())
+  );
 };

@@ -12,6 +12,7 @@ export interface DataModel {
   number: string;
   city: string;
   date: string;
+  time: number;
 }
 
 export const data: DataModel[] = [];
@@ -29,6 +30,7 @@ for (let i = 0; i < 1000; i++) {
     email: faker.internet.email(),
     number: faker.phone.phoneNumber(),
     city: faker.address.city(),
-    date: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+    date: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
+    time: faker.random.number()
   });
 }
