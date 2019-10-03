@@ -13,6 +13,7 @@ import {
   CheckboxCell,
   SelectCell,
   InputCell,
+  DateInputCell,
   MaskedInputCell
 } from './dataGrid';
 
@@ -151,7 +152,10 @@ export const SomeReport: React.FC = () => {
             const onchange = (value: string) => changeRows(model, { ...model, item: { ...model.item, number: value } });
             return <InputCell value={model.item.number} canChangeMode onChange={onchange}></InputCell>;
           },
-          created: model => <StaticCell>{model.item.date}</StaticCell>,
+          created: model => {
+            const onchange = (value: Date) => changeRows(model, { ...model, item: { ...model.item, date: value } });
+            return <DateInputCell value={model.item.date} canChangeMode onChange={onchange} />;
+          },
           time: model => {
             const onchange = (value: string) => {
               changeRows(model, { ...model, item: { ...model.item, time: value ? convertToMinutes(value) : 0 } });
@@ -165,7 +169,10 @@ export const SomeReport: React.FC = () => {
               />
             );
           },
-          updated: model => <StaticCell>{model.item.date}</StaticCell>
+          updated: model => {
+            const onchange = (value: Date) => changeRows(model, { ...model, item: { ...model.item, date: value } });
+            return <DateInputCell value={model.item.date} canChangeMode onChange={onchange} />;
+          }
         }
       }
     };

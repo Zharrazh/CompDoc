@@ -11,7 +11,7 @@ export interface DataModel {
   email: string;
   number: string;
   city: string;
-  date: string;
+  date: Date;
   time: number;
 }
 
@@ -30,7 +30,7 @@ for (let i = 0; i < 1000; i++) {
     email: faker.internet.email(),
     number: faker.phone.phoneNumber(),
     city: faker.address.city(),
-    date: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
+    date: date,
     time: faker.random.number()
   });
 }
