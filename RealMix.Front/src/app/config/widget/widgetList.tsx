@@ -42,7 +42,7 @@ export const WidgetList: React.FC = () => {
   const page = useSelector((state: StoreType) => state.config.widget.page);
   return (
     <DefaultPage title="Widget List">
-      <FiltersPanel className="mb-3">
+      <FiltersPanel>
         <LinkButton primary to={`${match.url}/add`}>
           <Icon name="plus" />
         </LinkButton>
@@ -53,7 +53,7 @@ export const WidgetList: React.FC = () => {
           label="Widget Type"
           name="widgetType"
           addEmptyOption
-          disableAutoSelect
+          dontSelectFirstItem
           size={4}></SelectFilter>
         {/* <LinkButton primary to={`${match.url}/asdasd/as`}>Go to not found</LinkButton> */}
       </FiltersPanel>

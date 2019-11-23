@@ -106,7 +106,7 @@ export const Sidebar: React.FC<Props> = ({ show, hide }) => {
   useEffect(() => {
     hide();
     const isActive = (to: string) => RegExp(`^${to}(/\\w*)?$`, 'i').test(location.pathname);
-    for (let item of menu) {
+    for (const item of menu) {
       if (item.type === 'link' && isActive(item.to)) {
         setActiveItem(item);
         setExpanded(undefined);

@@ -1,7 +1,5 @@
 import React, { useState, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 
-import { formatMinutes } from 'app/helpers';
-
 import { StaticCell } from './staticCell';
 import './timeCell.scss';
 
@@ -163,4 +161,13 @@ const sanitizeAmPm = (value: string | undefined) => {
     }
     return '';
   });
+};
+
+export const formatMinutes = (value: number, ampm = false) => {
+  let hours = Math.floor(value / 60);
+  const minutes = (value % 60).toString().padStart(2, '0');
+  if (!ampm || hours >= 24) return `${hours}:${minutes}`;
+  const pm = hours >= 12;
+  hours = pm && hours > 12 ? hours - 12 : hours === 0 ? 12 : hours;
+  return `${hours.toString()}:${minutes}${pm ? ' PM' : ' AM'}`;
 };

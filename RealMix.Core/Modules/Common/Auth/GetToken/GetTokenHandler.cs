@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using RealMix.Core.Infrastructure.Services;
 using RealMix.Core.Infrastructure.Models;
@@ -16,7 +15,6 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using RealMix.Core.Models.Config;
-using RealMix.Common.Services;
 
 namespace RealMix.Core.Modules.Common.Auth.GetToken
 {

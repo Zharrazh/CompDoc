@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RealMix.Db;
@@ -9,7 +7,6 @@ using MediatR;
 using RealMix.Core;
 using Scrutor;
 using RealMix.Core.Infrastructure.Services;
-using RealMix.Common.Services;
 using RealMix.Core.Models.Config;
 using FluentMigrator.Runner;
 using RealMix.Back.Middleware;
@@ -23,12 +20,12 @@ namespace RealMix.Back
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -64,12 +61,10 @@ namespace RealMix.Back
 
             services.AddMediatR(typeof(Anchor).Assembly);
             services.AddDbContext<DatabaseContext>(options => options.UseSqlite(connectionString));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddControllersWithViews();
             services.AddResponseCompression();
 
-            services
-                .AddSingleton(typeof(ILogger<>), typeof(LoggerService<>))
-                .AddSingleton<IHashService>(new HashService(authConfig.PasswordSalt));
+            services.AddSingleton<IHashService>(new HashService(authConfig.PasswordSalt));
 
             services.Scan(scan => scan
                 .FromAssemblyOf<Anchor>()
@@ -80,23 +75,13 @@ namespace RealMix.Back
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IMigrationRunner runner, IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IMigrationRunner runner, IApplicationBuilder app)
         {
             runner.MigrateUp();
 
+            app.UseExceptionConverter();
+
             app.UseResponseCompression();
-
-            app.UseAuthentication();
-
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                //app.UseHsts();
-            }
 
             app.Use(async (context, next) =>
             {
@@ -109,7 +94,17 @@ namespace RealMix.Back
             app.UseCqrs();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseMvc();
+
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller}/{action=Index}/{id?}");
+            });
         }
     }
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import classNames from 'classnames';
-import { ObjectSchema } from 'yup';
+import { ObjectSchema, reach } from 'yup';
 
 interface Props {
   name: string;
@@ -28,17 +28,16 @@ export const TextBoxField: React.FC<Props> = ({
   const [message, setMessage] = useState(null);
   useEffect(() => {
     let canceled = false;
-    if (schema != null && fieldPath != null)
-      schema
-        .validateAt(fieldPath, value)
+    if (schema != null && fieldPath != null) {
+      reach(schema, fieldPath)
+        .validate(value)
         .then(() => {
           if (!canceled) setMessage(null);
-          return null;
         })
         .catch(x => {
           if (!canceled) setMessage(x.message);
-          return null;
         });
+    }
     return () => {
       canceled = true;
     };

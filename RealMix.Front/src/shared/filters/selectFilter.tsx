@@ -18,6 +18,7 @@ interface Props<TOption extends object> {
   actionType?: ActionType;
   action?: () => any;
   mod?: string;
+  dontSelectFirstItem?: boolean;
 }
 
 export const SelectFilter = <TOption extends object>({
@@ -30,7 +31,8 @@ export const SelectFilter = <TOption extends object>({
   addEmptyOption = false,
   actionType,
   action,
-  mod
+  mod,
+  dontSelectFirstItem
 }: Props<TOption>) => {
   const location = useLocation();
   const dispatch = useDispatch();
@@ -44,8 +46,9 @@ export const SelectFilter = <TOption extends object>({
     [name, params, location, dispatch]
   );
   useEffect(() => {
-    if (value === '' && Array.isArray(options) && options.length > 0) onChange(getValue(options[0]));
-  }, [value, options, getValue, onChange]);
+    if (!dontSelectFirstItem && value === '' && Array.isArray(options) && options.length > 0)
+      onChange(getValue(options[0]));
+  }, [value, options, getValue, onChange, dontSelectFirstItem]);
   return (
     <div className={classNames('input-group', { [`col-md-${size}`]: size != null })}>
       {label && (

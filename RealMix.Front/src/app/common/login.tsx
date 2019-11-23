@@ -48,9 +48,15 @@ export const Login = () => {
         <Block border="bottom" mb="3">
           <h2>Login</h2>
         </Block>
-        <MessagesView messages={messages} />
-        <TextBoxField data={form} field="login" onChange={onChange} placeholder="Login" />
-        <TextBoxField type="password" data={form} field="password" onChange={onChange} placeholder="Password" />
+        <MessagesView messages={messages} actionType={ActionType.COMMON_AUTH_LOGINASYNC} />
+        <TextBoxField name="login" value={form.login} onChange={x => onChange('login', x)} placeholder="Login" />
+        <TextBoxField
+          type="password"
+          name="password"
+          value={form.password}
+          onChange={x => onChange('password', x)}
+          placeholder="Password"
+        />
         <LoadingButton primary block onClick={login} actionType={ActionType.COMMON_AUTH_LOGINASYNC}>
           Login
         </LoadingButton>

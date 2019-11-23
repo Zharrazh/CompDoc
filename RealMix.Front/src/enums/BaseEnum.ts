@@ -31,4 +31,8 @@ export class BaseEnum {
   public get all() {
     return this._list;
   }
+
+  public get map() {
+    return new Map(this._list.map(x => [x.id.toString(), x.name]));
+  }
 }
