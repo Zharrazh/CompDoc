@@ -3,17 +3,14 @@ import classNames from 'classnames';
 
 import './staticCell.scss';
 
-interface Props {
-  value: React.ReactChild;
-  justifyContent?: 'center' | 'right';
+interface Props extends React.HTMLAttributes<any> {
+  justifyContent?: 'start' | 'center' | 'end';
 }
 
-export const StaticCell = ({ value, justifyContent }: Props) => (
+export const StaticCell: React.FC<Props> = ({ className, children, justifyContent, ...other }) => (
   <div
-    className={classNames('staticCell', {
-      'justify-content-center': justifyContent === 'center',
-      'justify-content-end': justifyContent === 'right'
-    })}>
-    <div>{value}</div>
+    className={classNames('staticCell', className, { [`justify-content-${justifyContent}`]: justifyContent != null })}
+    {...other}>
+    <div>{children}</div>
   </div>
 );

@@ -1,52 +1,75 @@
+$border-color: #ccc;
+
 .dataGrid {
-  display: flex;
-  flex-direction: column;
   width: 100%;
   height: 100%;
-  border: 1px solid #eee;
+  display: grid;
+  border: 1px solid $border-color;
 
-  .dataGrid-row {
-    display: flex;
-    height: 2.25em;
-  }
-  .dataGrid-cell {
-    width: 10em;
+  .lockedXY,
+  .lockedY,
+  .lockedX,
+  .unlocked {
     overflow: hidden;
-    flex-grow: 0;
-    flex-shrink: 0;
-    border-bottom: 1px solid #eee;
-    border-right: 1px solid #eee;
-    &:first-child {
-      border-left: 1px solid #eee;
+    .rows-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      max-height: 30rem;
+      .dataGrid-row {
+        display: flex;
+        &.head {
+          font-weight: bold;
+          .dataGrid-cell {
+            background-color: #ddd;
+          }
+        }
+        &.group {
+          font-weight: bold;
+          .dataGrid-cell {
+            background-color: #f2f2f2;
+          }
+        }
+
+        .dataGrid-cell {
+          position: relative;
+          overflow: hidden;
+          flex-grow: 0;
+          flex-shrink: 0;
+          border-right: 1px solid $border-color;
+          border-bottom: 1px solid $border-color;
+          &.arrow-icon {
+            padding: 0.25em;
+          }
+          .resizer {
+            position: absolute;
+            cursor: col-resize;
+            height: 100%;
+            top: 0;
+            right: 0;
+            border-right: 0.25em solid transparent;
+
+            &.active {
+              border-right: 0.25em solid rgb(110, 110, 110);
+            }
+          }
+        }
+      }
     }
   }
 
-  .dataGrid-header {
-    overflow: hidden;
-    flex-grow: 0;
-    flex-shrink: 0;
-    .dataGrid-cell {
-      font-weight: bold;
-      background-color: #d6d6d6;
-    }
+  .lockedXY {
+    grid-area: 1 / 1 / 1 / 1;
   }
-
-  .dataGrid-body {
+  .lockedY {
+    grid-area: 1 / 2 / 1 / 2;
+  }
+  .lockedX {
+    grid-area: 2 / 1 / 2 / 1;
+  }
+  .unlocked {
+    grid-area: 2 / 2 / 2 / 2;
     overflow: auto;
-    flex-grow: 1;
-    flex-shrink: 0;
-    height: calc(100% - 2.25em);
-    .dataGrid-row {
-      &.active {
-        .dataGrid-cell {
-          background-color: rgb(216, 229, 240);
-        }
-      }
-      &:hover {
-        .dataGrid-cell {
-          background-color: #eee;
-        }
-      }
-    }
   }
 }

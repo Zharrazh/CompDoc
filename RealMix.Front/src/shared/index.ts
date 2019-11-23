@@ -12,6 +12,9 @@ export { TBody } from './base/tbody';
 export { Tr, Th, Td } from './base/trthtd';
 export { Icon } from './base/icon';
 export { DropdownItem } from './base/dropdownItem';
+export { Modal } from './base/modal';
+export { CheckBox } from './base/checkbox';
+export { RadioButton } from './base/radioButton';
 
 export { LinkButton } from './parts/linkButton';
 export { CancelButton } from './parts/cancelButton';
@@ -23,6 +26,7 @@ export { MessagesView } from './parts/messagesView';
 
 export { TextBoxField } from './fields/textBoxField';
 export { SelectField } from './fields/selectField';
+export { DateInputField } from './fields/dateInputField';
 
 export { SelectFilter } from './filters/selectFilter';
 

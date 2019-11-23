@@ -4,10 +4,11 @@ import { PagePanel, PageHeaderPanel, PageHeader, PageBodyPanel } from './pageCom
 
 interface Props {
   title: string;
+  className?: string;
 }
 
-export const DefaultPage: React.FC<Props> = ({ title, children }) => (
-  <PagePanel>
+export const DefaultPage: React.FC<Props> = ({ title, children, className }) => (
+  <PagePanel className={className}>
     <PageHeaderPanel>
       <PageHeader>{title}</PageHeader>
     </PageHeaderPanel>

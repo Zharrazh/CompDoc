@@ -1,0 +1,10 @@
+.app-modal {
+  &.modal {
+    display: block;
+    &:not(.noHeight) {
+      .modal-body {
+        min-height: 10rem;
+      }
+    }
+  }
+}

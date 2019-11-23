@@ -2,6 +2,8 @@ import React, { CSSProperties } from 'react';
 import classNames from 'classnames';
 import { LocationDescriptor } from 'history';
 
+import './dropdownItem.scss';
+
 interface Props {
   tag?: React.ElementType;
   to?: LocationDescriptor;

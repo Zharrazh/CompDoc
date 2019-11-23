@@ -1,0 +1,10 @@
+.dataGrid .lockedX .rows-container .dataGrid-row .dataGrid-cell,
+.dataGrid .unlocked  .rows-container .dataGrid-row .dataGrid-cell {
+  overflow: visible !important;
+  position: initial;
+  .dateInputCell {
+    position: relative;
+    width: 100%;
+    height: 2.25em;
+  }
+}

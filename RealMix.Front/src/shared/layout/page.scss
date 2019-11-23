@@ -1,6 +1,8 @@
 .pagePanel {
   .pageBodyPanel {
     background-color: #fff;
-    height: calc(100vh - 8.6rem);
+    min-height: calc(100vh - 8.6rem);
+    display: flex;
+    flex-direction: column;
   }
 }

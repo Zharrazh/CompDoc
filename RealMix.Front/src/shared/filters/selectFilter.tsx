@@ -18,7 +18,6 @@ interface Props<TOption extends object> {
   actionType?: ActionType;
   action?: () => any;
   mod?: string;
-  disableAutoSelect?: boolean;
 }
 
 export const SelectFilter = <TOption extends object>({
@@ -31,8 +30,7 @@ export const SelectFilter = <TOption extends object>({
   addEmptyOption = false,
   actionType,
   action,
-  mod,
-  disableAutoSelect
+  mod
 }: Props<TOption>) => {
   const location = useLocation();
   const dispatch = useDispatch();
@@ -46,10 +44,8 @@ export const SelectFilter = <TOption extends object>({
     [name, params, location, dispatch]
   );
   useEffect(() => {
-    if (!disableAutoSelect && value === '' && Array.isArray(options) && options.length > 0)
-      onChange(getValue(options[0]));
-  }, [disableAutoSelect, value, options, getValue, onChange]);
-  console.log('VALUE', value, typeof value);
+    if (value === '' && Array.isArray(options) && options.length > 0) onChange(getValue(options[0]));
+  }, [value, options, getValue, onChange]);
   return (
     <div className={classNames('input-group', { [`col-md-${size}`]: size != null })}>
       {label && (
@@ -79,7 +75,7 @@ export const SelectFilter = <TOption extends object>({
 };
 
 const renderFirstOption = (addEmptyOption: boolean, value: string) => {
-  if (addEmptyOption) return <option value="">All</option>;
+  if (addEmptyOption) return <option value="" />;
   if (value === '') return <option value="" disabled></option>;
   return undefined;
 };

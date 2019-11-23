@@ -1,41 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import classNames from 'classnames';
-import { ObjectSchema, reach } from 'yup';
-import has from 'lodash/has';
+import { ObjectSchema } from 'yup';
 
-interface Props {
-  data: any;
-  field: string;
-  onChange: (field: string, value: string) => void;
-  v?: ObjectSchema<any>;
-  values: any[];
+interface Props<TOption extends object | string | number> {
+  name: string;
+  value: string | null | undefined;
+  onChange: (value: string) => void;
+  schema?: ObjectSchema<any>;
+  fieldPath?: string;
+  options: Map<string, TOption>;
+  getLabel: (option: TOption) => string;
   size?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 'auto';
-  key?: number | string;
   addEmptyOption?: boolean;
-  valueField?: string;
-  nameField?: string;
+  children?: React.ReactChild;
 }
 
-export const SelectField: React.FC<Props> = ({
-  data,
-  field,
+export const SelectField = <TOption extends object | string | number>({
+  name,
+  value,
   onChange,
-  nameField = 'name',
-  valueField = 'id',
-  addEmptyOption = false,
-  v,
+  schema,
+  fieldPath,
+  options,
+  getLabel,
   size,
-  key,
-  values,
+  addEmptyOption = false,
   children
-}) => {
-  const value = data[field] == null ? '' : data[field];
+}: Props<TOption>) => {
+  value = value == null ? '' : value;
   const [message, setMessage] = useState(null);
   useEffect(() => {
     let canceled = false;
-    if (v != null && has(v, 'fields') && has(v, 'fields.' + field))
-      reach(v, field)
-        .validate(value)
+    if (schema != null && fieldPath != null)
+      schema
+        .validateAt(fieldPath, value)
         .then(() => {
           if (!canceled) setMessage(null);
           return null;
@@ -48,28 +46,27 @@ export const SelectField: React.FC<Props> = ({
       canceled = true;
     };
   });
+
+  const onchange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => onChange(e.target.value), [onChange]);
+
   return (
     <div className={classNames('form-group', { [`col-md-${size}`]: size != null })}>
-      {children && <label htmlFor={`${field}${key}`}>{children}</label>}
-      <select
-        className="form-control"
-        id={`${field}${key}`}
-        name={`${field}${key}`}
-        value={value}
-        onChange={e => onChange(field, e.target.value)}>
+      {children && <label htmlFor={name}>{children}</label>}
+      <select className="form-control" id={name} name={name} value={value} onChange={onchange}>
         {renderFirstOption(addEmptyOption, value)}
-        {values.map(item => (
-          <option key={item[valueField]} value={item[valueField]}>
-            {item[nameField]}
-          </option>
-        ))}
+        {options != null &&
+          Array.from(options).map(([key, item]) => (
+            <option key={key} value={key}>
+              {getLabel(item)}
+            </option>
+          ))}
       </select>
       <div className="invalid-feedback">{message}</div>
     </div>
   );
 };
 
-const renderFirstOption = (addEmptyOption: boolean, value: any) => {
+const renderFirstOption = (addEmptyOption: boolean, value: string) => {
   if (addEmptyOption) return <option value="" />;
   if (value === '') return <option value="" disabled></option>;
   return undefined;

@@ -1,13 +1,13 @@
-import parseFn from 'date-fns/parseISO';
+import parseISO from 'date-fns/parseISO';
 import formatFn from 'date-fns/format';
 
 export class DateTime {
   public static parse(dateTime: string) {
-    const value = parseFn(dateTime);
+    const value = parseISO(dateTime);
     return value;
   }
 
-  public static format(date: Date, format?: 'date' | 'datetime' | 'iso') {
+  public static format(date: Date, format?: 'date' | 'datetime' | 'iso' | 'isodate' | 'time') {
     let useFormat: string;
     switch (format) {
       case 'date':
@@ -16,8 +16,14 @@ export class DateTime {
       case 'datetime':
         useFormat = 'MM/dd/yyyy HH:mm:ss';
         break;
+      case 'time':
+        useFormat = 'pp';
+        break;
       case 'iso':
         useFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSxxx";
+        break;
+      case 'isodate':
+        useFormat = 'yyyy-MM-dd';
         break;
       default:
         useFormat = 'MM/dd/yyyy HH:mm';

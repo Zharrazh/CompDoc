@@ -1,37 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import classNames from 'classnames';
-import { ObjectSchema, reach } from 'yup';
-import has from 'lodash/has';
+import { ObjectSchema } from 'yup';
 
 interface Props {
-  data: any;
-  field: string;
-  onChange: (field: string, value: string) => void;
+  name: string;
+  value: string | null | undefined;
+  onChange: (value: string) => void;
   placeholder?: string;
-  v?: ObjectSchema<any>;
+  schema?: ObjectSchema<any>;
+  fieldPath?: string;
   size?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 'auto';
-  key?: number | string;
   type?: string;
 }
 
 export const TextBoxField: React.FC<Props> = ({
+  name,
+  value,
   type = 'text',
-  data,
-  field,
   onChange,
   placeholder,
-  v,
+  schema,
+  fieldPath,
   size,
-  key,
   children
 }) => {
-  const value = data[field] == null ? '' : data[field];
+  value = value == null ? '' : value;
   const [message, setMessage] = useState(null);
   useEffect(() => {
     let canceled = false;
-    if (v != null && has(v, 'fields') && has(v, 'fields.' + field))
-      reach(v, field)
-        .validate(value)
+    if (schema != null && fieldPath != null)
+      schema
+        .validateAt(fieldPath, value)
         .then(() => {
           if (!canceled) setMessage(null);
           return null;
@@ -44,15 +43,19 @@ export const TextBoxField: React.FC<Props> = ({
       canceled = true;
     };
   });
+
+  const onchange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value), [onChange]);
+
   return (
     <div className={classNames('form-group', { [`col-md-${size}`]: size != null })}>
-      {children && <label htmlFor={`${field}${key}`}>{children}</label>}
+      {children && <label htmlFor={name}>{children}</label>}
       <input
         type={type}
         className={classNames('form-control', { 'is-invalid': message })}
-        id={`${field}${key}`}
+        id={name}
+        name={name}
         placeholder={placeholder}
-        onChange={e => onChange(field, e.target.value)}
+        onChange={onchange}
         value={value}
       />
       <div className="invalid-feedback">{message}</div>

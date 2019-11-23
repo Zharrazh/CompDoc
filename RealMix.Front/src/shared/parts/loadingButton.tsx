@@ -8,6 +8,7 @@ import { useLoader } from 'core/useLoader';
 interface Props extends ButtonProps {
   actionType: ActionType;
   mod?: string;
+  disabled?: boolean;
 }
 
 export const LoadingButton: React.FC<Props> = ({ actionType, mod = undefined, children, ...other }) => {

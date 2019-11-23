@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import { SpaceProps, propsToSpace } from './utils/spaceUtil';
 
-export interface ButtonProps extends SpaceProps {
+export interface ButtonProps extends SpaceProps, React.HTMLAttributes<any> {
   tag?: React.ElementType;
   className?: string;
   primary?: boolean;
