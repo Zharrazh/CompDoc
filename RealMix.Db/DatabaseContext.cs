@@ -9,6 +9,8 @@ namespace RealMix.Db
         public DbSet<UserDbModel> User { get; set; }
         public DbSet<WidgetDbModel> Widget { get; set; }
         public DbSet<UserWidgetDbModel> UserWidget { get; set; }
+        public DbSet<CompanyDbModel> Company { get; set; }
+        public DbSet<DocumentDbModel> Document { get; set; }
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {

@@ -29,5 +29,17 @@
   },
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "sqltools.connections": [
+    {
+      "database": "${workspaceFolder:template}/RealMix.Back/data.db",
+      "driver": "SQLite",
+      "name": "templateDB",
+      "previewLimit": 50
+    }
+  ],
+  "sqltools.useNodeRuntime": true
 }

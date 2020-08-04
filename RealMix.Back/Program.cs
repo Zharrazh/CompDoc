@@ -5,12 +5,14 @@ using Microsoft.Extensions.Logging;
 using NLog.Web;
 
 
+
 namespace RealMix.Back
 {
     public class Program
     {
         public static void Main(string[] args)
         {
+            
             var logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
             try
             {
