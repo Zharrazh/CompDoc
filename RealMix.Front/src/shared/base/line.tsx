@@ -24,12 +24,12 @@ export const Line: React.FC<Props> = ({
   ...other
 }) => {
   const classes = classNames(
-    'd-md-flex',
-    vertical ? 'flex-md-column' : 'flex-md-row',
+    'd-flex',
+    vertical ? 'flex-column' : 'flex-row',
     {
-      [`justify-content-md-${justifyContent}`]: justifyContent != null,
-      [`align-items-md-${alignItems}`]: alignItems != null,
-      'flex-md-wrap': wrap
+      [`justify-content-${justifyContent}`]: justifyContent != null,
+      [`align-items-${alignItems}`]: alignItems != null,
+      'flex-wrap': wrap
     },
     propsToSpace(other),
     propsToSize(other),

@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, FC } from 'react';
 import './companies.scss';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Container, Line, THead, Table, Col, Row, Td, Th, TBody, Tr, Block, Icon } from 'shared';
-import { getPageAsync } from 'data/companies/actions';
+import { Container, Line, THead, Table, Col, Row, Td, Th, TBody, Tr, Block, Icon, Button, ButtonGroup } from 'shared';
+import { getPageAsync, saveCompanyAsync } from 'data/companies/actions';
 import { StoreType } from 'core/store';
 
 export const Companies = () => {
@@ -13,6 +13,7 @@ export const Companies = () => {
   const [orderBy, setOrderBy] = useState('id');
   const [sortBy, setSortBy] = useState<'asc' | 'desc'>('asc');
   const [nameSelect, setNameSelect] = useState('');
+  const [addMode, setAddMode] = useState(false);
 
   useEffect(() => {
     dispatch(getPageAsync({ page: pageNumber, pageSize, orderBy, sortBy, name: nameSelect }));
@@ -50,6 +51,7 @@ export const Companies = () => {
                     Legal name
                   </Order>
                 </Th>
+                <Th> </Th>
               </Tr>
             </THead>
             <TBody>
@@ -59,11 +61,34 @@ export const Companies = () => {
                     <Td>{c.id}</Td>
                     <Td>{c.name}</Td>
                     <Td>{c.legalName}</Td>
+                    <Td>
+                      <ButtonGroup>
+                        <Button info={true} small={true}>
+                          Подробнее
+                        </Button>
+                        <Button primary={true} small={true}>
+                          Изменить
+                        </Button>
+                        <Button danger={true} small={true}>
+                          Удалить
+                        </Button>
+                      </ButtonGroup>
+                    </Td>
                   </Tr>
                 );
               })}
             </TBody>
           </Table>
+          {addMode || (
+            <Button
+              success={true}
+              onClick={() => {
+                setAddMode(true);
+              }}>
+              Добавить компанию
+            </Button>
+          )}
+          {addMode && <CompanyCreator onCancel={() => setAddMode(false)} />}
         </Col>
         <Col size={2}>
           <label htmlFor="pageNumber">Номер страницы</label>
@@ -100,6 +125,46 @@ export const Companies = () => {
         </Col>
       </Row>
     </Container>
+  );
+};
+
+const CompanyCreator: FC<{ onCancel: () => void }> = ({ onCancel }) => {
+  const dispatch = useDispatch();
+  const [name, setName] = useState('');
+  const [legalName, setLegalName] = useState('');
+
+  const handleOnCreate = () => {
+    dispatch(saveCompanyAsync({ name, legalName }));
+    onCancel();
+  };
+  return (
+    <Tr>
+      <Td> </Td>
+      <Td>
+        <input
+          value={name}
+          onChange={e => {
+            setName(e.currentTarget.value);
+          }}></input>
+      </Td>
+      <Td>
+        <input
+          value={legalName}
+          onChange={e => {
+            setLegalName(e.currentTarget.value);
+          }}></input>
+      </Td>
+      <Td>
+        <ButtonGroup>
+          <Button success={true} small={true} onClick={handleOnCreate}>
+            Создать
+          </Button>
+          <Button danger={true} small={true} onClick={onCancel}>
+            Отменить
+          </Button>
+        </ButtonGroup>
+      </Td>
+    </Tr>
   );
 };
 

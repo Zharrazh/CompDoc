@@ -11,7 +11,7 @@ interface Props extends SpaceProps {
 }
 
 export const Col: React.FC<Props> = ({ tag: Tag = 'div', className, size, children, ...other }) => {
-  const classes = classNames(size ? `col-md-${size}` : 'col-md', propsToSpace(other), className);
+  const classes = classNames(size ? `col-${size}` : 'col', propsToSpace(other), className);
   return (
     <Tag className={classes} {...other}>
       {children}

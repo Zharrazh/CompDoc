@@ -24,8 +24,8 @@ export const Row: React.FC<Props> = ({
   const classes = classNames(
     'row',
     {
-      [`justify-content-md-${justifyContent}`]: justifyContent != null,
-      [`align-items-md-${alignItems}`]: alignItems != null,
+      [`justify-content-${justifyContent}`]: justifyContent != null,
+      [`align-items-${alignItems}`]: alignItems != null,
       'no-gutters': noGutters
     },
     propsToSpace(other),

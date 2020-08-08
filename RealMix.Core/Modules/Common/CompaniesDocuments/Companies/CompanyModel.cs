@@ -1,4 +1,4 @@
-namespace RealMix.Core.Modules.Common.CompaniesDocuments.Companies.GetCompanyPage
+namespace RealMix.Core.Modules.Common.CompaniesDocuments.Companies
 {
     public class CompanyModel
     {

@@ -13,6 +13,17 @@ interface Props extends ButtonProps {
 
 export const LoadingButton: React.FC<Props> = ({ actionType, mod = undefined, children, ...other }) => {
   const item = useLoader(actionType, mod);
-  const content = item && item.isWait ? <Spinner small /> : children;
-  return <Button {...other}>{content}</Button>;
+  let content = item && item.isWait ? <Spinner small /> : children;
+  let myProps = {};
+  if (item?.error || item?.isWait) {
+    myProps = { disabled: true };
+  }
+  if (item?.isError) {
+    content = <span>{item.error}</span>;
+  }
+  return (
+    <Button {...other} {...myProps}>
+      {content}
+    </Button>
+  );
 };

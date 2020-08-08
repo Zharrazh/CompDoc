@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Xml.Schema;
+using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -14,7 +15,12 @@ namespace RealMix.Db.DbModels
         public string Title { get; set; }
         public string Body { get; set; }
         public DocumentType Type { get; set; }
-        public List<CompanyDocumentDbModel> CompanyDocument { get; set; }
+        public ICollection<CompanyDocumentDbModel> CompanyDocument { get; set; }
+
+        public DocumentDbModel()
+        {
+            CompanyDocument = new List<CompanyDocumentDbModel>();
+        }
 
         public void Configure(EntityTypeBuilder<DocumentDbModel> builder)
         {
@@ -23,7 +29,7 @@ namespace RealMix.Db.DbModels
             builder.Property(x => x.Title).HasMaxLength(50).IsRequired();
             builder.Property(x => x.Body).IsRequired();
             builder.Property(x => x.Type).IsRequired();
-            builder.HasMany(x => x.CompanyDocument).WithOne(x => x.Document).HasForeignKey(x => x.DocumentId);
+            builder.HasMany(x=>x.CompanyDocument).WithOne(x=>x.Document).HasForeignKey(x=>x.DocumentId);
         }
     }
 }

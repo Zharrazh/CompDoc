@@ -11,6 +11,7 @@ namespace RealMix.Db
         public DbSet<UserWidgetDbModel> UserWidget { get; set; }
         public DbSet<CompanyDbModel> Company { get; set; }
         public DbSet<DocumentDbModel> Document { get; set; }
+        public DbSet<CompanyDocumentDbModel> CompanyDocument {get;set;}
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {
