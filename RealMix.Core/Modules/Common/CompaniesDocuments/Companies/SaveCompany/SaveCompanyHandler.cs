@@ -19,12 +19,28 @@ namespace RealMix.Core.Modules.Common.CompaniesDocuments.Companies.SaveCompany
 
         public override async Task Handle(SaveCompanyCommand model)
         {
-            _db.Company.Add(new CompanyDbModel
+            CompanyDbModel dbModel = new CompanyDbModel();
+            if (model.Id < 0)
             {
-                Name = model.Name,
-                LegalName = model.LegalName
-            });
-
+                dbModel = new CompanyDbModel
+                {
+                    Name = model.Name,
+                    LegalName = model.LegalName
+                };
+                _db.Company.Add(dbModel);
+            }
+            else
+            {
+                dbModel = await _db.Company.Include(x => x.CompanyDocument)
+                    .FirstOrDefaultAsync(x => x.Id == model.Id);
+                if (dbModel == null) NotFound();
+                _db.CompanyDocument.RemoveRange(dbModel.CompanyDocument);
+            }
+            await _db.SaveChangesAsync();
+            foreach (int id in model.DocumentIds)
+            {
+                _db.CompanyDocument.Add(new CompanyDocumentDbModel { DocumentId = id, CompanyId = dbModel.Id });
+            }
             await _db.SaveChangesAsync();
         }
     }

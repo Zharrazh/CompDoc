@@ -25,7 +25,7 @@ namespace RealMix.Back.Controllers.Documents
         }
 
         [HttpGet]
-        public async Task<Page<DocumentModel>> GetPage([FromQuery] GetDocumentPageQuery model)
+        public async Task<Page<DocumentModelFull>> GetPage([FromQuery] GetDocumentPageQuery model)
         {
             return await _mediator.Send(model);
         }
@@ -42,9 +42,9 @@ namespace RealMix.Back.Controllers.Documents
         }
 
         [HttpPost]
-        public async Task<DocumentModel> Save([FromBody] SaveDocumentCommand model)
+        public async Task Save([FromBody] SaveDocumentCommand model)
         {
-            return await _mediator.Send(model);
+            await _mediator.Send(model);
         }
 
         [HttpPost("{id}")]

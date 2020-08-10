@@ -18,7 +18,8 @@ namespace RealMix.Core.Modules.Common.CompaniesDocuments.Documents.GetDocumentAl
 
         public override async Task<List<DocumentModel>> Handle(GetDocumentAllQuery model)
         {
-            var items = await _db.Document.Select(d => new DocumentModel { Id = d.Id, Title = d.Title, Type = d.Type }).ToListAsync();
+            var items = await _db.Document.Select(d => 
+                new DocumentModel { Id = d.Id, Title = d.Title, Type = d.Type }).ToListAsync();
 
             return items;
         }

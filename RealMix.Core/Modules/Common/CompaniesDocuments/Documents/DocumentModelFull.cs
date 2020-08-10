@@ -10,6 +10,10 @@ namespace RealMix.Core.Modules.Common.CompaniesDocuments.Documents
         public string Title { get; set; }
         public DocumentType Type { get; set; }
         public string Body { get; set; }
-        public List<CompanyModel> Companies { get; set; }
+        public IEnumerable<CompanyModel> Companies { get; set; }
+        public DocumentModelFull()
+        {
+            Companies = new List<CompanyModel>();
+        }
     }
 }

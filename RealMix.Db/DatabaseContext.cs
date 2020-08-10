@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Security.Cryptography.X509Certificates;
+using Microsoft.EntityFrameworkCore;
 using RealMix.Common.Constants;
 using RealMix.Db.DbModels;
 
@@ -20,6 +21,8 @@ namespace RealMix.Db
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema(DbConstants.SchemaName);
+            modelBuilder.Entity<CompanyDbModel>().HasMany(x=>x.CompanyDocument).WithOne(x=>x.Company).HasForeignKey(x=>x.CompanyId);
+            modelBuilder.Entity<DocumentDbModel>().HasMany(x=>x.CompanyDocument).WithOne(x=>x.Document).HasForeignKey(x=>x.DocumentId);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(DatabaseContext).Assembly);
         }
     }

@@ -11,7 +11,7 @@ namespace RealMix.Db.Migrations
         public override void Up()
         {
             Create.Table(DbConstants.UserTableName)
-                .InSchema(DbConstants.SchemaName)
+                //.InSchema(DbConstants.SchemaName)
                 .WithColumn("id").AsInt32().NotNullable().PrimaryKey().Identity()
                 .WithColumn("name").AsString(50).Nullable()
                 .WithColumn("login").AsString(50).NotNullable()
@@ -23,7 +23,7 @@ namespace RealMix.Db.Migrations
                 .WithColumn("updated").AsDateTime2().NotNullable();
 
             Create.Table(DbConstants.WidgetTableName)
-                .InSchema(DbConstants.SchemaName)
+                //.InSchema(DbConstants.SchemaName)
                 .WithColumn("id").AsInt32().NotNullable().PrimaryKey().Identity()
                 .WithColumn("name").AsString(50).Nullable()
                 .WithColumn("type").AsInt32().NotNullable()
@@ -32,7 +32,7 @@ namespace RealMix.Db.Migrations
                 .WithColumn("updated").AsDateTime2().NotNullable();
 
             Create.Table(DbConstants.UserWidgetTableName)
-                .InSchema(DbConstants.SchemaName)
+                //.InSchema(DbConstants.SchemaName)
                 .WithColumn("id").AsInt32().NotNullable().PrimaryKey().Identity()
                 .WithColumn("userid").AsInt32().ForeignKey($"fk_{DbConstants.UserWidgetTableName}_{DbConstants.UserTableName}", DbConstants.UserTableName, "id")
                 .WithColumn("widgetid").AsInt32().ForeignKey($"fk_{DbConstants.UserWidgetTableName}_{DbConstants.WidgetTableName}", DbConstants.WidgetTableName, "id")
@@ -40,7 +40,7 @@ namespace RealMix.Db.Migrations
                 .WithColumn("isactive").AsBoolean().NotNullable();
 
             Insert.IntoTable(DbConstants.UserTableName)
-                .InSchema(DbConstants.SchemaName)
+                //.InSchema(DbConstants.SchemaName)
                 .Row(new
                 {
                     name = "Admin Name",

@@ -1,0 +1,20 @@
+@import "../layout/sidebar.scss";
+
+.companiesAndDocuments {
+    &__header {
+        background-color: $sidebar-submenu-background;
+        a {
+            color: whitesmoke;
+
+            &:hover {
+                color: white;
+                text-decoration: none;
+            }
+
+            &.active {
+                color: white;
+                font-weight: 600;
+            }
+        }
+    }
+}

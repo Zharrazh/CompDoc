@@ -8,7 +8,7 @@ using RealMix.Db;
 
 namespace RealMix.Core.Modules.Common.CompaniesDocuments.Companies.GetCompanyPage
 {
-    public class GetCompanyPageHandler : QueryHandler<GetCompanyPageQuery, Page<CompanyModel>>
+    public class GetCompanyPageHandler : QueryHandler<GetCompanyPageQuery, Page<CompanyModelFull>>
     {
         private readonly DatabaseContext _db;
 
@@ -17,7 +17,7 @@ namespace RealMix.Core.Modules.Common.CompaniesDocuments.Companies.GetCompanyPag
             _db = db;
         }
 
-        public override async Task<Page<CompanyModel>> Handle(GetCompanyPageQuery model)
+        public override async Task<Page<CompanyModelFull>> Handle(GetCompanyPageQuery model)
         {
             var query = _db.Company.AsNoTracking();
 
@@ -33,15 +33,23 @@ namespace RealMix.Core.Modules.Common.CompaniesDocuments.Companies.GetCompanyPag
                     .Default(x => x.Id)
                     .Apply()
                 .Page(model.Page, model.PageSize)
-                .Select(x => new CompanyModel
+                .Select(x => new CompanyModelFull
                 {
                     Id = x.Id,
                     Name = x.Name,
-                    LegalName = x.LegalName
+                    LegalName = x.LegalName,
+                    Documents = x.CompanyDocument.Select(x => 
+                        new Documents.DocumentModel 
+                        { 
+                            Id = x.Document.Id,
+                             Title = x.Document.Title,
+                              Type = x.Document.Type,
+                               Body = x.Document.Body
+                        })
                 })
                 .ToListAsync();
 
-            return new Page<CompanyModel>(items, count, model.Page, model.PageSize);
+            return new Page<CompanyModelFull>(items, count, model.Page, model.PageSize);
         }
     }
 }

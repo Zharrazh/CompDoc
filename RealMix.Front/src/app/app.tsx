@@ -12,9 +12,7 @@ import { Route, Switch } from 'react-router-dom';
 // import { pushRoute } from 'core/router';
 
 import './app.scss';
-import { Companies } from './compainesDocuments/companies';
-import { Documents } from './compainesDocuments/documents';
-import { DocumentPageEdit } from './compainesDocuments/documentPageEdit/documentPageEdit';
+import { CompaniesAndDocuments } from './compainesDocuments/companiesAndDocuments';
 
 // const ConfigIndexAsync: React.FC = asyncComponent(() => import('./config').then(x => x.ConfigIndex));
 // const ClientIndexAsync: React.FC = asyncComponent(() => import('./client').then(x => x.ClientIndex));
@@ -54,8 +52,6 @@ export const App: React.FC = () => (
 
 export const App: React.FC = () => (
   <Switch>
-    <Route exact path="/companies" component={Companies} />
-    <Route exact path="/documents" component={Documents} />
-    <Route path="/documents/edit/:id" component={DocumentPageEdit} />
+    <Route path="/" component={CompaniesAndDocuments} />
   </Switch>
 );

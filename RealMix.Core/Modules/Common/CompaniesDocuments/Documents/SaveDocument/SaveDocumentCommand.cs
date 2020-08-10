@@ -4,7 +4,7 @@ using RealMix.Db.Enums;
 
 namespace RealMix.Core.Modules.Common.CompaniesDocuments.Documents.SaveDocument
 {
-    public class SaveDocumentCommand : Command<DocumentModel>
+    public class SaveDocumentCommand : Command
     {
         public int Id { get; set; }
         public string Title { get; set; }

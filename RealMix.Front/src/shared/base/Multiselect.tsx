@@ -4,6 +4,8 @@ import './Multiselect.scss';
 import cn from 'classnames';
 import React, { ChangeEvent, FunctionComponent, useEffect, useRef, useState } from 'react';
 
+import { Icon } from './icon';
+
 export type Option = {
   readonly title: string;
   readonly id: number;
@@ -126,13 +128,17 @@ export const Multiselect: FunctionComponent<MultiselectProps> = ({ options, defa
           {selectedOptions.map(option => {
             return (
               <>
-                <Dropzone isDraggingNow={isDraggingNow} onDropItem={createOnDropItemCallback(option)} />
+                <Dropzone
+                  isDraggingNow={isDraggingNow}
+                  onDropItem={createOnDropItemCallback(option)}
+                  key={option.id + 'dz'}
+                />
                 <SelectedOptionItem
                   option={option}
                   onDeleteClick={createOnDeleteClickSelectedItemCallback(option)}
                   onDragStart={createOnDragStartItemCallback(option)}
                   onDragEnd={handleOnDragEnd}
-                  key={option.id}
+                  key={option.id + 'soi'}
                 />
               </>
             );
@@ -156,7 +162,11 @@ export const Multiselect: FunctionComponent<MultiselectProps> = ({ options, defa
         <div className="multiselect__list" onFocus={handleOnFocus} onBlur={handleOnBlur} tabIndex={0}>
           {showedOptions.map(opinion => {
             return (
-              <OptionListItem option={opinion} onClick={createOnClickListItemCallback(opinion)} key={opinion.id} />
+              <OptionListItem
+                option={opinion}
+                onClick={createOnClickListItemCallback(opinion)}
+                key={opinion.id + 'opt-i'}
+              />
             );
           })}
         </div>
@@ -172,7 +182,7 @@ type DeleteAllBtnProps = {
 const DeleteAllBtn: FunctionComponent<DeleteAllBtnProps> = ({ onClick }) => {
   return (
     <div className={'deleteAllBtn'} onClick={onClick}>
-      <i className="fas fa-times" />
+      <Icon name="times" />
     </div>
   );
 };
@@ -184,7 +194,7 @@ type ExpandListBtnProps = {
 const ExpandListBtn: FunctionComponent<ExpandListBtnProps> = ({ onClick }) => {
   return (
     <div className={'expandListBtn'} onClick={onClick}>
-      <i className="fas fa-angle-down" />
+      <Icon name="angle-down" />
     </div>
   );
 };
@@ -239,7 +249,7 @@ const SelectedOptionItem: FunctionComponent<SelectedOptionItemProps> = ({
       onDragEnd={handleOnDragEnd}>
       <div className="selectedOptionItem__title">{option.title}</div>
       <div className="selectedOptionItem__deleteBtn" onClick={onDeleteClick}>
-        <i className="fas fa-times" />
+        <Icon name="times" />
       </div>
     </div>
   );

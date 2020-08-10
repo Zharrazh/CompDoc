@@ -7,6 +7,8 @@ using RealMix.Core.Modules.Common.CompaniesDocuments.Companies.SaveCompany;
 using RealMix.Core.Modules.Common.CompaniesDocuments.Companies;
 using System.Collections.Generic;
 using RealMix.Core.Modules.Common.CompaniesDocuments.Companies.GetCompanyAll;
+using RealMix.Core.Modules.Common.CompaniesDocuments.Companies.DeleteCompany;
+using RealMix.Core.Modules.Common.CompaniesDocuments.Companies.GetCompany;
 
 namespace RealMix.Back.Controllers.Config
 {
@@ -24,11 +26,17 @@ namespace RealMix.Back.Controllers.Config
         }
 
         [HttpGet]
-        public async Task<Page<CompanyModel>> GetPage([FromQuery] GetCompanyPageQuery model)
+        public async Task<Page<CompanyModelFull>> GetPage([FromQuery] GetCompanyPageQuery model)
         {
             return await _mediator.Send(model);
         }
-        [HttpGet ("all")]
+        [HttpGet("{id}")]
+        public async Task<CompanyModelFull> GetFull([FromRoute] GetCompanyQuery model)
+        {
+            return await _mediator.Send(model);
+        }
+
+        [HttpGet("all")]
         public async Task<List<CompanyModel>> GetAll([FromQuery] GetCompanyAllQuery model)
         {
             return await _mediator.Send(model);
@@ -39,28 +47,11 @@ namespace RealMix.Back.Controllers.Config
         {
             await _mediator.Send(model);
         }
-        /*[HttpGet]
-        public async Task<Page<Core.Modules.Config.Widget.GetWidgetPage.WidgetModel>> GetPage([FromQuery]GetWidgetPageQuery model)
-        {
-            return await _mediator.Send(model);
-        }
 
-        [HttpGet("{id}")]
-        public async Task<Core.Modules.Config.Widget.GetWidgetItem.WidgetModel> GetItem([FromRoute]GetWidgetItemQuery model)
-        {
-            return await _mediator.Send(model);
-        }
-
-        [HttpPost]
-        public async Task Save([FromBody] SaveWidgetCommand model)
+        [HttpPost("{id}")]
+        public async Task Delete([FromRoute] DeleteCompanyCommand model)
         {
             await _mediator.Send(model);
         }
-
-        [HttpDelete("{id}")]
-        public async Task Delete([FromRoute] DeleteWidgetCommand model)
-        {
-            await _mediator.Send(model);
-        }*/
     }
 }

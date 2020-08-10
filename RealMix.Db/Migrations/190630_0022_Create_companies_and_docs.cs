@@ -22,9 +22,9 @@ namespace RealMix.Db.Migrations
 
             Create.Table(DbConstants.CompanyDocumentTableName)
                 .WithColumn("id").AsInt32().NotNullable().PrimaryKey().Identity()
-                .WithColumn("companyid").AsInt32().Identity()
+                .WithColumn("companyid").AsInt32()
                     .ForeignKey($"fk_{DbConstants.CompanyDocumentTableName}_{DbConstants.CompanyTableName}", DbConstants.CompanyTableName, "id").OnDelete(Rule.Cascade)
-                .WithColumn("documentid").AsInt32().Identity()
+                .WithColumn("documentid").AsInt32()
                     .ForeignKey($"fk_{DbConstants.CompanyDocumentTableName}_{DbConstants.DocumentTableName}", DbConstants.DocumentTableName, "id").OnDelete(Rule.Cascade);
         }
 

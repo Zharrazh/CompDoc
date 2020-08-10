@@ -1,170 +1,177 @@
-import React, { useEffect, useState, useCallback, FC } from 'react';
-import './companies.scss';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Container, Line, THead, Table, Col, Row, Td, Th, TBody, Tr, Block, Icon, Button, ButtonGroup } from 'shared';
-import { getPageAsync, saveCompanyAsync } from 'data/companies/actions';
+import { Container, Line, Col, Row, Block, Icon, LinkButton, Button, LoadingButton, Modal, TextBoxField } from 'shared';
+import { getPageAsync, deleteCompanyAsync } from 'data/companies/actions';
 import { StoreType } from 'core/store';
+import { CompanyFull } from 'data/companies/models';
+import { ActionType } from 'data/actionTypes';
+import { Paginator } from 'shared/base/paginator';
 
 export const Companies = () => {
   const dispatch = useDispatch();
   const [pageNumber, setPageNumber] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const pageSize = 5;
   const [orderBy, setOrderBy] = useState('id');
   const [sortBy, setSortBy] = useState<'asc' | 'desc'>('asc');
   const [nameSelect, setNameSelect] = useState('');
-  const [addMode, setAddMode] = useState(false);
 
   useEffect(() => {
     dispatch(getPageAsync({ page: pageNumber, pageSize, orderBy, sortBy, name: nameSelect }));
   }, [dispatch, nameSelect, orderBy, pageNumber, pageSize, sortBy]);
 
-  const selector = useSelector((state: StoreType) => state.companies);
+  const page = useSelector((state: StoreType) => state.companies.page);
 
   const handleOnOrderClick = useCallback((name, sortBy) => {
     setOrderBy(name);
     setSortBy(sortBy);
   }, []);
   return (
-    <Container className="companies">
-      <Line>COMPANIES</Line>
+    <Container className="companies" pt="3">
       <Row>
-        <Col size={10}>
-          <Table className="companies__table">
-            <THead className="head">
-              <Tr>
-                <Th>
+        <h2>Таблица компаний</h2>
+      </Row>
+      <Row>
+        <Col>
+          <Line alignItems="baseline" mt="3">
+            <label htmlFor="pageSize" className="pr-2">
+              Поиск по названию компании:
+            </label>
+            <TextBoxField
+              name="titleSelect"
+              value={nameSelect}
+              onChange={value => setNameSelect(value)}
+              placeholder="Введите название компании"
+              size={3}
+            />
+          </Line>
+          <LinkButton success to="companies/create" my="2">
+            Добавить компанию
+          </LinkButton>
+          <Block className="companies_table">
+            <Block className="table_header" style={{ fontWeight: 'bold' }}>
+              <Row m="2">
+                <Col size={1}>
                   <Order name="id" state={orderBy === 'id' ? sortBy : 'none'} onClick={handleOnOrderClick}>
                     Id
                   </Order>
-                </Th>
-                <Th>
+                </Col>
+                <Col size={3}>
                   <Order name="name" state={orderBy === 'name' ? sortBy : 'none'} onClick={handleOnOrderClick}>
-                    Name
+                    Название
                   </Order>
-                </Th>
-                <Th>
+                </Col>
+                <Col size={3}>
                   <Order
                     name="legalName"
                     state={orderBy === 'legalName' ? sortBy : 'none'}
                     onClick={handleOnOrderClick}>
-                    Legal name
+                    Официальное название
                   </Order>
-                </Th>
-                <Th> </Th>
-              </Tr>
-            </THead>
-            <TBody>
-              {selector.page.items.map(c => {
-                return (
-                  <Tr key={c.id}>
-                    <Td>{c.id}</Td>
-                    <Td>{c.name}</Td>
-                    <Td>{c.legalName}</Td>
-                    <Td>
-                      <ButtonGroup>
-                        <Button info={true} small={true}>
-                          Подробнее
-                        </Button>
-                        <Button primary={true} small={true}>
-                          Изменить
-                        </Button>
-                        <Button danger={true} small={true}>
-                          Удалить
-                        </Button>
-                      </ButtonGroup>
-                    </Td>
-                  </Tr>
-                );
-              })}
-            </TBody>
-          </Table>
-          {addMode || (
-            <Button
-              success={true}
-              onClick={() => {
-                setAddMode(true);
-              }}>
-              Добавить компанию
-            </Button>
-          )}
-          {addMode && <CompanyCreator onCancel={() => setAddMode(false)} />}
-        </Col>
-        <Col size={2}>
-          <label htmlFor="pageNumber">Номер страницы</label>
-          <input
-            id={'pageNumber'}
-            value={pageNumber}
-            type="number"
-            min={1}
-            max={selector.page.totalPages}
-            onChange={e => {
-              setPageNumber(Number(e.currentTarget.value));
-            }}
-          />
-          <label htmlFor="pageSize">Кол-во элементов на странице</label>
-          <input
-            id="pageSize"
-            value={pageSize}
-            type="number"
-            min={1}
-            max={50}
-            onChange={e => {
-              setPageSize(Number(e.currentTarget.value));
-            }}
-          />
-          <label htmlFor="nameSelect">Поиск по имени</label>
-          <input
-            id="nameSelect"
-            type="text"
-            value={nameSelect}
-            onChange={e => {
-              setNameSelect(e.currentTarget.value);
-            }}
-          />
+                </Col>
+                <Col size={3}>Подписанные документы</Col>
+                <Col size={2} />
+              </Row>
+            </Block>
+            <Block className="table_body">
+              {page.items.map(x => (
+                <CompanyItem item={x} key={x.id} />
+              ))}
+            </Block>
+
+            <Block mt="5">
+              <Paginator
+                currentPage={pageNumber}
+                totalPages={page.totalPages}
+                onChange={value => {
+                  setPageNumber(value);
+                }}
+              />
+            </Block>
+          </Block>
         </Col>
       </Row>
     </Container>
   );
 };
 
-const CompanyCreator: FC<{ onCancel: () => void }> = ({ onCancel }) => {
-  const dispatch = useDispatch();
-  const [name, setName] = useState('');
-  const [legalName, setLegalName] = useState('');
-
-  const handleOnCreate = () => {
-    dispatch(saveCompanyAsync({ name, legalName }));
-    onCancel();
-  };
+const CompanyItem: React.FC<{ item: CompanyFull }> = ({ item }) => {
+  const [deleteModalHidden, setDeleteModalHidden] = useState(true);
   return (
-    <Tr>
-      <Td> </Td>
-      <Td>
-        <input
-          value={name}
-          onChange={e => {
-            setName(e.currentTarget.value);
-          }}></input>
-      </Td>
-      <Td>
-        <input
-          value={legalName}
-          onChange={e => {
-            setLegalName(e.currentTarget.value);
-          }}></input>
-      </Td>
-      <Td>
-        <ButtonGroup>
-          <Button success={true} small={true} onClick={handleOnCreate}>
-            Создать
-          </Button>
-          <Button danger={true} small={true} onClick={onCancel}>
-            Отменить
-          </Button>
-        </ButtonGroup>
-      </Td>
-    </Tr>
+    <Container>
+      <Row className="documentItem" m="2">
+        <Container>
+          <Row>
+            <Col className="id" size={1}>
+              {item.id}
+            </Col>
+            <Col className="name" size={3}>
+              {item.name}
+            </Col>
+            <Col className="legalName" size={3}>
+              {item.legalName}
+            </Col>
+            <Col className="signedDocuments" size={3}>
+              <ul>
+                {item.documents.map(x => (
+                  <li key={x.id}>{x.title}</li>
+                ))}
+              </ul>
+            </Col>
+            <Col className="controls" size={2}>
+              <Line>
+                <LinkButton small to={`/companies/edit/${item.id}`}>
+                  Изменить
+                </LinkButton>
+                <Button small onClick={() => setDeleteModalHidden(false)}>
+                  Удалить
+                </Button>
+              </Line>
+
+              {deleteModalHidden || <DeleteCompanyModal company={item} onCancel={() => setDeleteModalHidden(true)} />}
+            </Col>
+          </Row>
+        </Container>
+      </Row>
+    </Container>
+  );
+};
+
+const DeleteCompanyModal: React.FC<{ onCancel: () => void; company: { id: number; name: string } }> = ({
+  onCancel,
+  company
+}) => {
+  const dispatch = useDispatch();
+  const handleOnClickDeleteBtn = useCallback(
+    () =>
+      dispatch(
+        deleteCompanyAsync(company.id, company.id.toString(), () => {
+          onCancel();
+        })
+      ),
+
+    [company.id, dispatch, onCancel]
+  );
+  const footer = (
+    <Line>
+      <LoadingButton
+        danger
+        onClick={handleOnClickDeleteBtn}
+        actionType={ActionType.COMMON_COMPANIES_DELETECOMPANYASYNC}
+        mod={company.id.toString()}>
+        Удалить
+      </LoadingButton>
+      <Button light onClick={onCancel}>
+        Отменить
+      </Button>
+    </Line>
+  );
+  return (
+    <Modal footer={footer} size="sm" header={<span>{`Удаление "${company.name}"`}</span>} noHeight onCancel={onCancel}>
+      {`Вы уверены что хотите удалить документ "${company.name}"?`}
+      <br />
+      Эти изменения нельзя будет отменить.
+    </Modal>
   );
 };
 
@@ -183,10 +190,12 @@ const Order: React.FC<{
   }, [name, onClick, state]);
   return (
     <Block onClick={clickHandler}>
-      <Block mr={'2'} inline={true}>
-        {children}
-      </Block>
-      {angle}
+      <Line>
+        <Block inline mr="2">
+          {children}
+        </Block>
+        <Block inline>{angle}</Block>
+      </Line>
     </Block>
   );
 };

@@ -20,7 +20,8 @@ namespace RealMix.Core.Modules.Common.CompaniesDocuments.Documents.GetDocument
 
         public override async Task<DocumentModelFull> Handle(GetDocumentQuery model)
         {
-            DocumentDbModel document = await _db.Document.Include(d => d.CompanyDocument).ThenInclude(cd => cd.Company).FirstOrDefaultAsync(i => i.Id == model.Id);
+            DocumentDbModel document = await _db.Document.Include(d => d.CompanyDocument)
+                .ThenInclude(cd => cd.Company).FirstOrDefaultAsync(i => i.Id == model.Id);
 
             if (document == null)
             {
