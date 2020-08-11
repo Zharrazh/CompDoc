@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import * as yup from 'yup';
 
 import { Container, Row, TextBoxField, LoadingButton, LinkButton, Col, RepeatPanel, MessagesView, Line } from 'shared';
 import { StoreType } from 'core/store';
@@ -8,6 +9,31 @@ import { Multiselect, Option } from 'shared/base/Multiselect';
 import { ActionType } from 'data/actionTypes';
 import { getAllDocumentsAsync, saveCompanyAsync, getCompanyFullAsync } from 'data/companies/actions';
 
+type CompanyForm = {
+  id: number;
+  name: string;
+  legalName: string;
+  documentIds: number[];
+};
+
+const schema = yup.object().shape({
+  id: yup
+    .number()
+    .integer()
+    .required()
+    .label('Id'),
+
+  name: yup
+    .string()
+    .required('Название - это обязательное поле')
+    .min(3, 'Кол-во символов в названии компании должно превышать 3')
+    .max(50, 'Кол-во символов в названии компании должно быть меньше 50'),
+  legalName: yup
+    .string()
+    .required('Официальное название - это обязательное поле')
+    .min(3, 'Кол-во символов в названии компании должно превышать 3')
+    .max(50, 'Кол-во символов в названии компании должно быть меньше 50')
+});
 export const CompanyEditPage: React.FC<{}> = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -19,32 +45,46 @@ export const CompanyEditPage: React.FC<{}> = () => {
     dispatch(getCompanyFullAsync(Number(id)));
   }, [dispatch, id]);
 
-  const [name, setName] = useState('');
-  useEffect(() => {
-    compFull && setName(compFull?.name);
-  }, [compFull]);
-  const [legalName, setLegalName] = useState('');
-  useEffect(() => {
-    compFull && setLegalName(compFull?.legalName);
-  }, [compFull]);
-  const [documentIds, setDocumentIds] = useState<number[]>([]);
+  const [companyForm, setCompanyForm] = useState<CompanyForm>({ id, name: '', legalName: '', documentIds: [] });
+  const [validErrorMessages, setValidErrorMessages] = useState<string[]>([]);
   const [defaultDocumentIds, setDefaultDocumentId] = useState<number[]>([]);
+
   useEffect(() => {
-    compFull && setDefaultDocumentId(compFull?.documents.map(c => c.id));
+    if (compFull) {
+      setDefaultDocumentId(compFull.documents.map(c => c.id));
+      setCompanyForm({
+        id: compFull.id,
+        name: compFull.name,
+        legalName: compFull.legalName,
+        documentIds: []
+      });
+    }
   }, [compFull]);
 
   const options: Option[] = useMemo(() => {
     return allDocuments.map(c => ({ id: c.id, title: c.title }));
   }, [allDocuments]);
 
-  const handleOnChangeMultiselect = useCallback((op: Option[]) => {
-    const ids = op.map(o => o.id);
-    setDocumentIds(ids);
+  const change = useCallback((field: keyof CompanyForm, value: any) => {
+    setCompanyForm(x => ({ ...x, [field]: value }));
   }, []);
+  const handleOnChangeMultiselect = useCallback(
+    (op: Option[]) => {
+      const ids = op.map(o => o.id);
+      change('documentIds', ids);
+    },
+    [change]
+  );
 
-  const handleOnSaveChanges = useCallback(() => {
-    dispatch(saveCompanyAsync({ id: Number(id), name, legalName, documentIds }));
-  }, [dispatch, documentIds, id, legalName, name]);
+  const handleOnSaveChanges = useCallback(async () => {
+    schema
+      .validate(companyForm)
+      .then(() => {
+        setValidErrorMessages([]);
+        dispatch(saveCompanyAsync(companyForm));
+      })
+      .catch(x => setValidErrorMessages(x.message));
+  }, [companyForm, dispatch]);
   return (
     <Container pt="4">
       <Row mb="4">
@@ -66,11 +106,11 @@ export const CompanyEditPage: React.FC<{}> = () => {
 
               <TextBoxField
                 name="name"
-                value={name}
+                value={companyForm.name}
                 onChange={value => {
-                  setName(value);
+                  change('name', value);
                 }}
-                placeholder="Name..."
+                placeholder="Название..."
                 size={5}
               />
             </Row>
@@ -80,11 +120,11 @@ export const CompanyEditPage: React.FC<{}> = () => {
               </Col>
               <TextBoxField
                 name="legalName"
-                value={legalName}
+                value={companyForm.legalName}
                 onChange={value => {
-                  setLegalName(value);
+                  change('legalName', value);
                 }}
-                placeholder="Legal name..."
+                placeholder="Оф. название..."
                 size={5}
               />
             </Row>
@@ -101,7 +141,10 @@ export const CompanyEditPage: React.FC<{}> = () => {
             <Row mt="5">
               <Line vertical>
                 <Line>
-                  <MessagesView actionType={ActionType.COMMON_COMPANIES_SAVECOMPANYASYNC} />
+                  <MessagesView
+                    messages={validErrorMessages}
+                    actionType={ActionType.COMMON_COMPANIES_SAVECOMPANYASYNC}
+                  />
                 </Line>
                 <Line>
                   <LoadingButton

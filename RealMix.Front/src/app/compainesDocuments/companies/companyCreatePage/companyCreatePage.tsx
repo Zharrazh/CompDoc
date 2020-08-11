@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import * as yup from 'yup';
 
 import { Container, Row, TextBoxField, LoadingButton, LinkButton, Col, MessagesView, Line } from 'shared';
 import { StoreType } from 'core/store';
@@ -7,6 +8,31 @@ import { Multiselect, Option } from 'shared/base/Multiselect';
 import { ActionType } from 'data/actionTypes';
 import { getAllDocumentsAsync, saveCompanyAsync } from 'data/companies/actions';
 
+type CompanyForm = {
+  id: number;
+  name: string;
+  legalName: string;
+  documentIds: number[];
+};
+
+const schema = yup.object().shape({
+  id: yup
+    .number()
+    .integer()
+    .required()
+    .label('Id'),
+
+  name: yup
+    .string()
+    .required('Название - это обязательное поле')
+    .min(3, 'Кол-во символов в названии компании должно превышать 3')
+    .max(50, 'Кол-во символов в названии компании должно быть меньше 50'),
+  legalName: yup
+    .string()
+    .required('Официальное название - это обязательное поле')
+    .min(3, 'Кол-во символов в названии компании должно превышать 3')
+    .max(50, 'Кол-во символов в названии компании должно быть меньше 50')
+});
 export const CompanyCreatePage: React.FC<{}> = () => {
   const id = -1;
   const dispatch = useDispatch();
@@ -16,26 +42,38 @@ export const CompanyCreatePage: React.FC<{}> = () => {
     dispatch(getAllDocumentsAsync());
   }, [dispatch, id]);
 
-  const [name, setName] = useState('');
-  const [legalName, setLegalName] = useState('');
-  const [documentIds, setDocumentIds] = useState<number[]>([]);
+  const [companyForm, setCompanyForm] = useState<CompanyForm>({ id, name: '', legalName: '', documentIds: [] });
+  const [validErrorMessages, setValidErrorMessages] = useState<string[]>([]);
 
   const options: Option[] = useMemo(() => {
     return allDocuments.map(c => ({ id: c.id, title: c.title }));
   }, [allDocuments]);
 
-  const handleOnChangeMultiselect = useCallback((op: Option[]) => {
-    const ids = op.map(o => o.id);
-    setDocumentIds(ids);
+  const change = useCallback((field: keyof CompanyForm, value: any) => {
+    setCompanyForm(x => ({ ...x, [field]: value }));
   }, []);
 
-  const handleOnSaveChanges = useCallback(() => {
-    dispatch(saveCompanyAsync({ id, name, legalName, documentIds }));
-  }, [dispatch, documentIds, id, legalName, name]);
+  const handleOnChangeMultiselect = useCallback(
+    (op: Option[]) => {
+      const ids = op.map(o => o.id);
+      change('documentIds', ids);
+    },
+    [change]
+  );
+
+  const handleOnSaveChanges = useCallback(async () => {
+    schema
+      .validate(companyForm)
+      .then(() => {
+        setValidErrorMessages([]);
+        dispatch(saveCompanyAsync(companyForm));
+      })
+      .catch(x => setValidErrorMessages(x.message));
+  }, [companyForm, dispatch]);
   return (
     <Container pt="4">
       <Row mb="4">
-        <h2>Создание компании</h2>
+        <h2>{'Создание компании'}</h2>
       </Row>
       <Row>
         <Col size={6}>
@@ -48,11 +86,11 @@ export const CompanyCreatePage: React.FC<{}> = () => {
 
             <TextBoxField
               name="name"
-              value={name}
+              value={companyForm.name}
               onChange={value => {
-                setName(value);
+                change('name', value);
               }}
-              placeholder="Name..."
+              placeholder="Название..."
               size={5}
             />
           </Row>
@@ -62,11 +100,11 @@ export const CompanyCreatePage: React.FC<{}> = () => {
             </Col>
             <TextBoxField
               name="legalName"
-              value={legalName}
+              value={companyForm.legalName}
               onChange={value => {
-                setLegalName(value);
+                change('legalName', value);
               }}
-              placeholder="Legal name..."
+              placeholder="Оф. название..."
               size={5}
             />
           </Row>
@@ -76,13 +114,10 @@ export const CompanyCreatePage: React.FC<{}> = () => {
               <Multiselect options={options} onChange={handleOnChangeMultiselect} />
             </Col>
           </Row>
-          <Row>
-            <MessagesView actionType={ActionType.COMMON_COMPANIES_SAVECOMPANYASYNC} />
-          </Row>
           <Row mt="5">
             <Line vertical>
               <Line>
-                <MessagesView actionType={ActionType.COMMON_COMPANIES_SAVECOMPANYASYNC} />
+                <MessagesView messages={validErrorMessages} actionType={ActionType.COMMON_COMPANIES_SAVECOMPANYASYNC} />
               </Line>
               <Line>
                 <LoadingButton

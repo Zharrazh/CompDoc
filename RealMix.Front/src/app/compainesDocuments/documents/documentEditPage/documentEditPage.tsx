@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import * as yup from 'yup';
 
 import {
   Container,
@@ -20,6 +21,33 @@ import { Multiselect, Option } from 'shared/base/Multiselect';
 import { DocumentType } from 'enums/documentType';
 import { ActionType } from 'data/actionTypes';
 
+type DocumentForm = {
+  id: number;
+  title: string;
+  type: number;
+  body: string;
+  companyIds: number[];
+};
+
+const schema = yup.object().shape({
+  id: yup
+    .number()
+    .integer()
+    .required()
+    .label('Id'),
+
+  title: yup
+    .string()
+    .required('Название - это обязательное поле')
+    .min(3, 'Кол-во символов в названии документа должно превышать 3')
+    .max(50, 'Кол-во символов в названии документа должно быть меньше 50'),
+  type: yup
+    .number()
+    .integer()
+    .required(),
+  body: yup.string()
+});
+
 export const DocumentEditPage: React.FC<{}> = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -31,39 +59,53 @@ export const DocumentEditPage: React.FC<{}> = () => {
     dispatch(getAllCompaniesAsync());
   }, [dispatch, id]);
 
+  const [documentForm, setDocumentForm] = useState<DocumentForm>({
+    id: Number(id),
+    title: '',
+    type: 0,
+    body: '',
+    companyIds: []
+  });
+  const change = useCallback((field: string, value: any) => {
+    setDocumentForm(x => ({ ...x, [field]: value }));
+  }, []);
+  const [validErrorMessages, setValidErrorMessages] = useState<string[]>([]);
   const [defaultCompanyIds, setDefaultCompanyId] = useState<number[]>([]);
   useEffect(() => {
-    if (fullDoc) setDefaultCompanyId(fullDoc?.companies.map(c => c.id));
-  }, [fullDoc]);
-  const [title, setTitle] = useState('');
-  useEffect(() => {
-    if (fullDoc) setTitle(fullDoc?.title);
-  }, [fullDoc]);
-  const [type, setType] = useState(0);
-  useEffect(() => {
-    if (fullDoc) setType(fullDoc?.type);
-  }, [fullDoc]);
-  const [body, setBody] = useState('');
-  useEffect(() => {
-    if (fullDoc) setBody(fullDoc?.body);
-  }, [fullDoc]);
-  const [companyIds, setCompanyIds] = useState<number[]>([]);
-  useEffect(() => {
-    if (fullDoc) setCompanyIds(fullDoc?.companies.map(c => c.id));
+    if (fullDoc) {
+      setDefaultCompanyId(fullDoc?.companies.map(c => c.id));
+      setDocumentForm({
+        id: fullDoc.id,
+        title: fullDoc.title,
+        type: fullDoc.type,
+        body: fullDoc.body,
+        companyIds: []
+      });
+    }
   }, [fullDoc]);
 
   const options: Option[] = useMemo(() => {
     return allCompanies.map(c => ({ id: c.id, title: c.name }));
   }, [allCompanies]);
 
-  const handleOnChangeMultiselect = useCallback((op: Option[]) => {
-    const ids = op.map(o => o.id);
-    setCompanyIds(ids);
-  }, []);
+  const handleOnChangeMultiselect = useCallback(
+    (op: Option[]) => {
+      const ids = op.map(o => o.id);
+      change('companyIds', ids);
+    },
+    [change]
+  );
 
-  const handleOnSaveChanges = useCallback(() => {
-    dispatch(saveDocumentAsync({ id: Number(id), title, type, body, companyIds }));
-  }, [body, companyIds, dispatch, id, title, type]);
+  const handleOnSaveChanges = useCallback(async () => {
+    schema
+      .validate(documentForm)
+      .then(() => {
+        setValidErrorMessages([]);
+        dispatch(saveDocumentAsync(documentForm));
+      })
+      .catch(x => setValidErrorMessages(x.message));
+  }, [dispatch, documentForm]);
+
   return (
     <Container pt="4">
       <Row mb="4">
@@ -80,9 +122,9 @@ export const DocumentEditPage: React.FC<{}> = () => {
               </Col>
               <TextBoxField
                 name="title"
-                value={title}
+                value={documentForm.title}
                 onChange={value => {
-                  setTitle(value);
+                  change('title', value);
                 }}
                 placeholder="Title..."
                 size={5}
@@ -96,8 +138,8 @@ export const DocumentEditPage: React.FC<{}> = () => {
                 name="type"
                 options={DocumentType.map}
                 getLabel={x => x}
-                value={type.toString()}
-                onChange={value => setType(Number(value))}
+                value={documentForm.type.toString()}
+                onChange={value => change('type', Number(value))}
                 size={5}
               />
             </Row>
@@ -118,8 +160,8 @@ export const DocumentEditPage: React.FC<{}> = () => {
               <Col size={9}>
                 <textarea
                   name="body"
-                  value={body}
-                  onChange={e => setBody(e.target.value)}
+                  value={documentForm.body}
+                  onChange={e => change('body', e.target.value)}
                   rows={5}
                   cols={59}></textarea>
               </Col>
@@ -131,7 +173,7 @@ export const DocumentEditPage: React.FC<{}> = () => {
       <Row mt="5">
         <Line vertical>
           <Line>
-            <MessagesView actionType={ActionType.COMMON_DOCUMENTS_SAVEDOCUMENTASYNC} />
+            <MessagesView messages={validErrorMessages} actionType={ActionType.COMMON_DOCUMENTS_SAVEDOCUMENTASYNC} />
           </Line>
           <Line>
             <LoadingButton

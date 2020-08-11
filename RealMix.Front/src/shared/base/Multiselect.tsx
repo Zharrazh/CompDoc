@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 import './Multiselect.scss';
 import cn from 'classnames';
 import React, { ChangeEvent, FunctionComponent, useEffect, useRef, useState } from 'react';
@@ -50,11 +48,11 @@ export const Multiselect: FunctionComponent<MultiselectProps> = ({ options, defa
 
   const createOnClickListItemCallback = (option: Option) => () => {
     setSelectedOptions([...selectedOptions, option]);
-    inputText.current!.focus();
+    inputText.current?.focus();
   };
   const createOnDeleteClickSelectedItemCallback = (option: Option) => () => {
     setSelectedOptions(selectedOptions.filter(o => o !== option));
-    inputText.current!.focus();
+    inputText.current?.focus();
   };
   const createOnDragStartItemCallback = (option: Option) => {
     return () => {
@@ -68,24 +66,26 @@ export const Multiselect: FunctionComponent<MultiselectProps> = ({ options, defa
     //Находим индекс элемента перед которым нужно вставить item
     const inputIndex = selectedOptions.indexOf(option);
     //Вставляем перед ним
-    newSelectedOptions.splice(inputIndex, 0, draggableItem!);
+    draggableItem && newSelectedOptions.splice(inputIndex, 0, draggableItem);
     setSelectedOptions(newSelectedOptions);
 
     setDraggingNow(false);
   };
 
   const handleOnDropItemLast = () => {
-    const newSelectedOptions = [...selectedOptions.filter(o => o !== draggableItem), draggableItem!];
-    setSelectedOptions(newSelectedOptions);
+    if (draggableItem) {
+      const newSelectedOptions = [...selectedOptions.filter(o => o !== draggableItem), draggableItem];
+      setSelectedOptions(newSelectedOptions);
+    }
   };
 
   const handleDeleteAll = () => {
     setSelectedOptions([]);
-    inputText.current!.focus();
+    inputText.current?.focus();
   };
   const handleToggleExpand = () => {
     setExpanded(!isExpanded);
-    inputText.current!.focus();
+    inputText.current?.focus();
   };
   const handleChangeQuery = (event: ChangeEvent<HTMLInputElement>) => {
     setQuery(event.currentTarget.value);
@@ -122,24 +122,20 @@ export const Multiselect: FunctionComponent<MultiselectProps> = ({ options, defa
         className={cn('multiselect__select', { focused: isFocused })}
         onFocus={handleOnFocus}
         onBlur={handleOnBlur}
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
         tabIndex={0}>
         <div className="multiselect__select__input">
           {selectedOptions.map(option => {
             return (
-              <>
-                <Dropzone
-                  isDraggingNow={isDraggingNow}
-                  onDropItem={createOnDropItemCallback(option)}
-                  key={option.id + 'dz'}
-                />
+              <div key={option.id + 'so'}>
+                <Dropzone isDraggingNow={isDraggingNow} onDropItem={createOnDropItemCallback(option)} />
                 <SelectedOptionItem
                   option={option}
                   onDeleteClick={createOnDeleteClickSelectedItemCallback(option)}
                   onDragStart={createOnDragStartItemCallback(option)}
                   onDragEnd={handleOnDragEnd}
-                  key={option.id + 'soi'}
                 />
-              </>
+              </div>
             );
           })}
           <Dropzone isDraggingNow={isDraggingNow} onDropItem={handleOnDropItemLast} />
@@ -162,15 +158,12 @@ export const Multiselect: FunctionComponent<MultiselectProps> = ({ options, defa
           className="multiselect__list"
           onFocus={handleOnFocus}
           onBlur={handleOnBlur}
+          // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
           tabIndex={0}
           style={{ zIndex: 999 }}>
           {showedOptions.map(opinion => {
             return (
-              <OptionListItem
-                option={opinion}
-                onClick={createOnClickListItemCallback(opinion)}
-                key={opinion.id + 'opt-i'}
-              />
+              <OptionListItem option={opinion} onClick={createOnClickListItemCallback(opinion)} key={opinion.id} />
             );
           })}
         </div>
@@ -234,13 +227,13 @@ const SelectedOptionItem: FunctionComponent<SelectedOptionItemProps> = ({
   const handleOnDragStart = () => {
     onDragStart();
     setTimeout(() => {
-      itemRef.current!.classList.add('hidden');
+      itemRef.current?.classList.add('hidden');
     }, 0);
   };
   const handleOnDragEnd = () => {
     onDragEnd();
     setTimeout(() => {
-      itemRef.current!.classList.remove('hidden');
+      itemRef.current?.classList.remove('hidden');
     }, 0);
   };
 

@@ -3,12 +3,12 @@ import { NavLink, Switch, Route } from 'react-router-dom';
 
 import { Container, Line, Block } from 'shared';
 
-import { Companies } from './companies';
-import { CompanyCreatePage } from './companyCreatePage/companyCreatePage';
-import { CompanyEditPage } from './companyCreatePage/companyEditPage';
-import { Documents } from './documents';
-import { DocumentEditPage } from './documentEditPage/documentEditPage';
-import { DocumentCreatePage } from './documentCreatePage/documentCreatePage';
+import { Companies } from './companies/companies';
+import { CompanyCreatePage } from './companies/companyCreatePage/companyCreatePage';
+import { CompanyEditPage } from './companies/companyEditPage/companyEditPage';
+import { Documents } from './documents/documents';
+import { DocumentEditPage } from './documents/documentEditPage/documentEditPage';
+import { DocumentCreatePage } from './documents/documentCreatePage/documentCreatePage';
 import './companiesAndDocuments.scss';
 
 export const CompaniesAndDocuments = () => {
