@@ -16,7 +16,9 @@ namespace RealMix.Core.Modules.Common.CompaniesDocuments.Documents.DeleteDocumen
 
         public override async Task Handle(DeleteDocumentCommand model)
         {
-            _db.Document.Remove(new DocumentDbModel { Id = model.Id });
+            var dbModel = await _db.Document.FindAsync(model.Id);
+            if (dbModel == null) NotFound();
+            _db.Document.Remove(dbModel);
             await _db.SaveChangesAsync();
         }
 

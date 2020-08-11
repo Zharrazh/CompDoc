@@ -18,7 +18,7 @@ const saveCompanyAsyncEpic = createEpic<SaveCompanyForm>(ActionType.COMMON_COMPA
   return save(data).pipe(map(() => goBackRoute()));
 });
 
-const deleteCompanyAsyncEpic = createEpic<number>(ActionType.COMMON_DOCUMENTS_DELETEDOCUMENTASYNC, data => {
+const deleteCompanyAsyncEpic = createEpic<number>(ActionType.COMMON_COMPANIES_DELETECOMPANYASYNC, data => {
   return deleteCompany({ id: data }).pipe(map(() => deleteCompanyOnPage(data)));
 });
 
