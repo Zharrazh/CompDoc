@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { Container, Row, TextBoxField, LoadingButton, LinkButton, Col, RepeatPanel } from 'shared';
+import { Container, Row, TextBoxField, LoadingButton, LinkButton, Col, RepeatPanel, MessagesView, Line } from 'shared';
 import { StoreType } from 'core/store';
 import { Multiselect, Option } from 'shared/base/Multiselect';
 import { ActionType } from 'data/actionTypes';
@@ -99,13 +99,20 @@ export const CompanyEditPage: React.FC<{}> = () => {
               </Col>
             </Row>
             <Row mt="5">
-              <LoadingButton
-                success
-                actionType={ActionType.COMMON_COMPANIES_SAVECOMPANYASYNC}
-                onClick={handleOnSaveChanges}>
-                Применить изменения
-              </LoadingButton>
-              <LinkButton to="/companies">Вернуться назад</LinkButton>
+              <Line vertical>
+                <Line>
+                  <MessagesView actionType={ActionType.COMMON_COMPANIES_SAVECOMPANYASYNC} />
+                </Line>
+                <Line>
+                  <LoadingButton
+                    success
+                    actionType={ActionType.COMMON_COMPANIES_SAVECOMPANYASYNC}
+                    onClick={handleOnSaveChanges}>
+                    Применить изменения
+                  </LoadingButton>
+                  <LinkButton to="/companies">Вернуться назад</LinkButton>
+                </Line>
+              </Line>
             </Row>
           </Col>
         </RepeatPanel>

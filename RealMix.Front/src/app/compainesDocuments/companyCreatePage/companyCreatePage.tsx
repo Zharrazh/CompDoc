@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Container, Row, TextBoxField, LoadingButton, LinkButton, Col } from 'shared';
+import { Container, Row, TextBoxField, LoadingButton, LinkButton, Col, MessagesView, Line } from 'shared';
 import { StoreType } from 'core/store';
 import { Multiselect, Option } from 'shared/base/Multiselect';
 import { ActionType } from 'data/actionTypes';
@@ -76,14 +76,24 @@ export const CompanyCreatePage: React.FC<{}> = () => {
               <Multiselect options={options} onChange={handleOnChangeMultiselect} />
             </Col>
           </Row>
+          <Row>
+            <MessagesView actionType={ActionType.COMMON_COMPANIES_SAVECOMPANYASYNC} />
+          </Row>
           <Row mt="5">
-            <LoadingButton
-              success
-              actionType={ActionType.COMMON_COMPANIES_SAVECOMPANYASYNC}
-              onClick={handleOnSaveChanges}>
-              Добавить компанию
-            </LoadingButton>
-            <LinkButton to="/companies">Вернуться назад</LinkButton>
+            <Line vertical>
+              <Line>
+                <MessagesView actionType={ActionType.COMMON_COMPANIES_SAVECOMPANYASYNC} />
+              </Line>
+              <Line>
+                <LoadingButton
+                  success
+                  actionType={ActionType.COMMON_COMPANIES_SAVECOMPANYASYNC}
+                  onClick={handleOnSaveChanges}>
+                  Добавить компанию
+                </LoadingButton>
+                <LinkButton to="/companies">Вернуться назад</LinkButton>
+              </Line>
+            </Line>
           </Row>
         </Col>
       </Row>

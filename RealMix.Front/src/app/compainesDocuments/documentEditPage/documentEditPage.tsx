@@ -2,7 +2,18 @@ import React, { useEffect, useMemo, useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Container, Row, TextBoxField, SelectField, LoadingButton, LinkButton, Col, RepeatPanel } from 'shared';
+import {
+  Container,
+  Row,
+  TextBoxField,
+  SelectField,
+  LoadingButton,
+  LinkButton,
+  Col,
+  RepeatPanel,
+  MessagesView,
+  Line
+} from 'shared';
 import { getDocumentFullAsync, getAllCompaniesAsync, saveDocumentAsync } from 'data/documents/actions';
 import { StoreType } from 'core/store';
 import { Multiselect, Option } from 'shared/base/Multiselect';
@@ -118,10 +129,20 @@ export const DocumentEditPage: React.FC<{}> = () => {
       </Row>
 
       <Row mt="5">
-        <LoadingButton success actionType={ActionType.COMMON_DOCUMENTS_SAVEDOCUMENTASYNC} onClick={handleOnSaveChanges}>
-          Применить изменения
-        </LoadingButton>
-        <LinkButton to="/documents">Вернуться назад</LinkButton>
+        <Line vertical>
+          <Line>
+            <MessagesView actionType={ActionType.COMMON_DOCUMENTS_SAVEDOCUMENTASYNC} />
+          </Line>
+          <Line>
+            <LoadingButton
+              success
+              actionType={ActionType.COMMON_DOCUMENTS_SAVEDOCUMENTASYNC}
+              onClick={handleOnSaveChanges}>
+              Применить изменения
+            </LoadingButton>
+            <LinkButton to="/documents">Вернуться назад</LinkButton>
+          </Line>
+        </Line>
       </Row>
     </Container>
   );

@@ -15,7 +15,6 @@ import {
 import { WidgetType } from 'enums/widgetType';
 import { useMatch } from 'core/router';
 import { StoreType } from 'core/store';
-import { useMounted } from 'core/useMounted';
 import { ActionType } from 'data/actionTypes';
 import { useCancellation } from 'core/useCancellation';
 import { getItemAsync, setItem, saveAsync } from 'data/config/widget/actions';

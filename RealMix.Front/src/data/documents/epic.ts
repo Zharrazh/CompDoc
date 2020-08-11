@@ -8,7 +8,7 @@ import { getAllCompanies } from 'data/companies/api';
 
 import { getPage, save, deleteDocument, getDocumentFull } from './api';
 import { PageRequest, DocumentCreatorForm } from './models';
-import { setPage, deleteDocumentOnPage, setDocumentFull, setCompanies } from './actions';
+import { setPage, setDocumentFull, setCompanies } from './actions';
 
 const getPageAsyncEpic = createEpic<PageRequest>(ActionType.COMMON_DOCUMENTS_GETPAGEASYNC, data => {
   return getPage(data).pipe(map(request => setPage(request)));

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Container, Row, TextBoxField, SelectField, LoadingButton, LinkButton, Col } from 'shared';
+import { Container, Row, TextBoxField, SelectField, LoadingButton, LinkButton, Col, MessagesView, Line } from 'shared';
 import { getAllCompaniesAsync, saveDocumentAsync } from 'data/documents/actions';
 import { StoreType } from 'core/store';
 import { Multiselect, Option } from 'shared/base/Multiselect';
@@ -84,11 +84,22 @@ export const DocumentCreatePage: React.FC<{}> = () => {
           </Row>
         </Col>
       </Row>
+
       <Row mt="5">
-        <LoadingButton success actionType={ActionType.COMMON_DOCUMENTS_SAVEDOCUMENTASYNC} onClick={handleOnSaveChanges}>
-          Добавить документ
-        </LoadingButton>
-        <LinkButton to="/documents">Вернуться назад</LinkButton>
+        <Line vertical>
+          <Line>
+            <MessagesView actionType={ActionType.COMMON_DOCUMENTS_SAVEDOCUMENTASYNC} />
+          </Line>
+          <Line>
+            <LoadingButton
+              success
+              actionType={ActionType.COMMON_DOCUMENTS_SAVEDOCUMENTASYNC}
+              onClick={handleOnSaveChanges}>
+              Добавить документ
+            </LoadingButton>
+            <LinkButton to="/documents">Вернуться назад</LinkButton>
+          </Line>
+        </Line>
       </Row>
     </Container>
   );
