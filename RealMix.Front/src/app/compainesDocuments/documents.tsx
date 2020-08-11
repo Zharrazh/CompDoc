@@ -15,7 +15,7 @@ import {
   RepeatPanel
 } from 'shared';
 import { StoreType } from 'core/store';
-import { getPageAsync, deleteDocumentAsync } from 'data/documents/actions';
+import { getPageAsync, deleteDocumentAsync, deleteDocumentOnPage } from 'data/documents/actions';
 import { DocumentType } from 'enums/documentType';
 import { DocumentFull } from 'data/documents/models';
 import { ActionType } from 'data/actionTypes';
@@ -111,6 +111,7 @@ export const Documents = () => {
 };
 
 const DocumentItem: React.FC<{ item: DocumentFull }> = ({ item }) => {
+  const dispatch = useDispatch();
   const [deleteModalHidden, setDeleteModalHidden] = useState(true);
   return (
     <Container>
@@ -146,7 +147,13 @@ const DocumentItem: React.FC<{ item: DocumentFull }> = ({ item }) => {
                 </Button>
               </Line>
 
-              {deleteModalHidden || <DeleteDocumentModal document={item} onCancel={() => setDeleteModalHidden(true)} />}
+              {deleteModalHidden || (
+                <DeleteDocumentModal
+                  document={item}
+                  onCancel={() => setDeleteModalHidden(true)}
+                  onDelete={() => dispatch(deleteDocumentOnPage(item.id))}
+                />
+              )}
             </Col>
           </Row>
         </Container>
@@ -155,19 +162,20 @@ const DocumentItem: React.FC<{ item: DocumentFull }> = ({ item }) => {
   );
 };
 
-const DeleteDocumentModal: React.FC<{ onCancel: () => void; document: { id: number; title: string } }> = ({
-  onCancel,
-  document
-}) => {
+const DeleteDocumentModal: React.FC<{
+  onCancel: () => void;
+  onDelete: () => void;
+  document: { id: number; title: string };
+}> = ({ onCancel, document, onDelete }) => {
   const dispatch = useDispatch();
   const handleOnClickDeleteBtn = useCallback(
     () =>
       dispatch(
         deleteDocumentAsync(document.id, document.id.toString(), () => {
-          onCancel();
+          onDelete();
         })
       ),
-    [dispatch, document.id, onCancel]
+    [dispatch, document.id, onDelete]
   );
   const footer = (
     <Line>

@@ -1,4 +1,4 @@
-import { map } from 'rxjs/operators';
+import { map, ignoreElements } from 'rxjs/operators';
 import { combineEpics } from 'redux-observable';
 
 import { createEpic } from 'core/epic';
@@ -19,7 +19,7 @@ const saveDocumentAsyncEpic = createEpic<DocumentCreatorForm>(ActionType.COMMON_
 });
 
 const deleteDocumentAsyncEpic = createEpic<number>(ActionType.COMMON_DOCUMENTS_DELETEDOCUMENTASYNC, data => {
-  return deleteDocument({ id: data }).pipe(map(() => deleteDocumentOnPage(data)));
+  return deleteDocument({ id: data }).pipe(ignoreElements());
 });
 
 const getDocumentFullAsyncEpic = createEpic<number>(ActionType.COMMON_DOCUMENTS_GETDOCUMENTFULLASYNC, data => {

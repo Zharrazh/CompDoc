@@ -1,4 +1,4 @@
-import { map } from 'rxjs/operators';
+import { map, ignoreElements } from 'rxjs/operators';
 import { combineEpics } from 'redux-observable';
 
 import { createEpic } from 'core/epic';
@@ -19,7 +19,7 @@ const saveCompanyAsyncEpic = createEpic<SaveCompanyForm>(ActionType.COMMON_COMPA
 });
 
 const deleteCompanyAsyncEpic = createEpic<number>(ActionType.COMMON_COMPANIES_DELETECOMPANYASYNC, data => {
-  return deleteCompany({ id: data }).pipe(map(() => deleteCompanyOnPage(data)));
+  return deleteCompany({ id: data }).pipe(ignoreElements());
 });
 
 const getAllDocumentsAsyncEpic = createEpic(ActionType.COMMON_COMPANIES_GETALLDOCUMENTSASYNC, () => {

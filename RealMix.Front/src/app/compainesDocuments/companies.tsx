@@ -14,7 +14,7 @@ import {
   TextBoxField,
   RepeatPanel
 } from 'shared';
-import { getPageAsync, deleteCompanyAsync } from 'data/companies/actions';
+import { getPageAsync, deleteCompanyAsync, deleteCompanyOnPage } from 'data/companies/actions';
 import { StoreType } from 'core/store';
 import { CompanyFull } from 'data/companies/models';
 import { ActionType } from 'data/actionTypes';
@@ -112,6 +112,7 @@ export const Companies = () => {
 };
 
 const CompanyItem: React.FC<{ item: CompanyFull }> = ({ item }) => {
+  const dispatch = useDispatch();
   const [deleteModalHidden, setDeleteModalHidden] = useState(true);
   return (
     <Container>
@@ -144,7 +145,13 @@ const CompanyItem: React.FC<{ item: CompanyFull }> = ({ item }) => {
                 </Button>
               </Line>
 
-              {deleteModalHidden || <DeleteCompanyModal company={item} onCancel={() => setDeleteModalHidden(true)} />}
+              {deleteModalHidden || (
+                <DeleteCompanyModal
+                  company={item}
+                  onCancel={() => setDeleteModalHidden(true)}
+                  onDelete={() => dispatch(deleteCompanyOnPage(item.id))}
+                />
+              )}
             </Col>
           </Row>
         </Container>
@@ -153,20 +160,21 @@ const CompanyItem: React.FC<{ item: CompanyFull }> = ({ item }) => {
   );
 };
 
-const DeleteCompanyModal: React.FC<{ onCancel: () => void; company: { id: number; name: string } }> = ({
-  onCancel,
-  company
-}) => {
+const DeleteCompanyModal: React.FC<{
+  onCancel: () => void;
+  onDelete: () => void;
+  company: { id: number; name: string };
+}> = ({ onCancel, company, onDelete }) => {
   const dispatch = useDispatch();
   const handleOnClickDeleteBtn = useCallback(
     () =>
       dispatch(
         deleteCompanyAsync(company.id, company.id.toString(), () => {
-          onCancel();
+          onDelete();
         })
       ),
 
-    [company.id, dispatch, onCancel]
+    [company.id, dispatch, onDelete]
   );
   const footer = (
     <Line>
