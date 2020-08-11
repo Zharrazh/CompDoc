@@ -1,23 +1,23 @@
-import React from 'react';
-// import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 
-// import { asyncComponent } from 'core/asyncComponent';
-// import { Header } from './layout/header';
-// import { Sidebar } from './layout/sidebar';
-// import { Login } from './common/login';
-// import { NotFound } from './common/notFound';
-// import { Block } from 'shared';
-// import { StoreType } from 'core/store';
-// import { pushRoute } from 'core/router';
+import { asyncComponent } from 'core/asyncComponent';
+import { Block } from 'shared';
+import { StoreType } from 'core/store';
+import { pushRoute } from 'core/router';
 
+import { Header } from './layout/header';
+import { Sidebar } from './layout/sidebar';
+import { Login } from './common/login';
+import { NotFound } from './common/notFound';
 import './app.scss';
 import { CompaniesAndDocuments } from './compainesDocuments/companiesAndDocuments';
 
-// const ConfigIndexAsync: React.FC = asyncComponent(() => import('./config').then(x => x.ConfigIndex));
-// const ClientIndexAsync: React.FC = asyncComponent(() => import('./client').then(x => x.ClientIndex));
+const ConfigIndexAsync: React.FC = asyncComponent(() => import('./config').then(x => x.ConfigIndex));
+const ClientIndexAsync: React.FC = asyncComponent(() => import('./client').then(x => x.ClientIndex));
 
-/*const RenderLayout: React.FC = () => {
+const RenderLayout: React.FC = () => {
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const toggle = useCallback(() => setShow(s => !s), []);
@@ -43,15 +43,9 @@ import { CompaniesAndDocuments } from './compainesDocuments/companiesAndDocument
 
 export const App: React.FC = () => (
   <Switch>
+    <Route path="/" component={CompaniesAndDocuments} />
     <Route path="/login" component={Login} />
     <Route path="/notFound" component={NotFound} />
     <Route component={RenderLayout} />
-  </Switch>
-);
-*/
-
-export const App: React.FC = () => (
-  <Switch>
-    <Route path="/" component={CompaniesAndDocuments} />
   </Switch>
 );

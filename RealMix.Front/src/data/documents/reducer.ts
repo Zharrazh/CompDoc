@@ -6,16 +6,20 @@ import { Company } from 'data/companies/models';
 
 import { DocumentFull } from './models';
 
-const initState = () => ({
-  documentFull: null as DocumentFull | null,
-  companies: [] as Company[],
+type DocumentsState = {
+  documentFull?: DocumentFull;
+  companies: Company[];
+  page: Page<DocumentFull>;
+};
+const initState: () => DocumentsState = () => ({
+  companies: [],
   page: {
     items: [],
     currentPage: 0,
     pageSize: 0,
     totalItems: 0,
     totalPages: 0
-  } as Page<DocumentFull>
+  }
 });
 export const documentsReducer = createReducer(initState, {
   [ActionType.COMMON_DOCUMENTS_SETPAGE]: 'page',

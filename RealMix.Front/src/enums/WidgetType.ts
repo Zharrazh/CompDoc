@@ -1,4 +1,4 @@
-import { BaseEnum } from './BaseEnum';
+import { BaseEnum } from './baseEnum';
 
 class Type extends BaseEnum {
   public Text = 0;

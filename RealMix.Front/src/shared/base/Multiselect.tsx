@@ -23,8 +23,7 @@ export const Multiselect: FunctionComponent<MultiselectProps> = ({ options, defa
 
   useEffect(() => {
     setSelectedOptions(options.filter(o => defaultSelectedId?.includes(o.id)));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultSelectedId]);
+  }, [defaultSelectedId, options]);
   useEffect(() => {
     onChange(selectedOptions);
   }, [selectedOptions, onChange]);
@@ -159,7 +158,12 @@ export const Multiselect: FunctionComponent<MultiselectProps> = ({ options, defa
         </div>
       </div>
       {isExpanded && showedOptions.length !== 0 && (
-        <div className="multiselect__list" onFocus={handleOnFocus} onBlur={handleOnBlur} tabIndex={0}>
+        <div
+          className="multiselect__list"
+          onFocus={handleOnFocus}
+          onBlur={handleOnBlur}
+          tabIndex={0}
+          style={{ zIndex: 999 }}>
           {showedOptions.map(opinion => {
             return (
               <OptionListItem

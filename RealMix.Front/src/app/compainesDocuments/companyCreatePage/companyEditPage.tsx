@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { Container, Row, TextBoxField, LoadingButton, LinkButton, Col } from 'shared';
+import { Container, Row, TextBoxField, LoadingButton, LinkButton, Col, RepeatPanel } from 'shared';
 import { StoreType } from 'core/store';
 import { Multiselect, Option } from 'shared/base/Multiselect';
 import { ActionType } from 'data/actionTypes';
@@ -51,58 +51,64 @@ export const CompanyEditPage: React.FC<{}> = () => {
         <h2>{`Изменение компании "${compFull?.name}"`}</h2>
       </Row>
       <Row>
-        <Col size={6}>
-          <Row alignItems="baseline">
-            <Col size={4}>
-              <label htmlFor="name" className="mr-4">
-                Название:
-              </label>
-            </Col>
+        <RepeatPanel
+          actionType={ActionType.COMMON_COMPANIES_GETCOMPANYFULLASYNC}
+          action={() => {
+            dispatch(getCompanyFullAsync(Number(id)));
+          }}>
+          <Col size={6}>
+            <Row alignItems="baseline">
+              <Col size={4}>
+                <label htmlFor="name" className="mr-4">
+                  Название:
+                </label>
+              </Col>
 
-            <TextBoxField
-              name="name"
-              value={name}
-              onChange={value => {
-                setName(value);
-              }}
-              placeholder="Name..."
-              size={5}
-            />
-          </Row>
-          <Row alignItems="center">
-            <Col size={4}>
-              <label htmlFor="legalName">Оффициальное название:</label>
-            </Col>
-            <TextBoxField
-              name="legalName"
-              value={legalName}
-              onChange={value => {
-                setLegalName(value);
-              }}
-              placeholder="Legal name..."
-              size={5}
-            />
-          </Row>
-          <Row alignItems="center">
-            <Col size={4}>Документы подписанные компанией:</Col>
-            <Col>
-              <Multiselect
-                defaultSelectedId={defaultDocumentIds}
-                options={options}
-                onChange={handleOnChangeMultiselect}
+              <TextBoxField
+                name="name"
+                value={name}
+                onChange={value => {
+                  setName(value);
+                }}
+                placeholder="Name..."
+                size={5}
               />
-            </Col>
-          </Row>
-          <Row mt="5">
-            <LoadingButton
-              success
-              actionType={ActionType.COMMON_COMPANIES_SAVECOMPANYASYNC}
-              onClick={handleOnSaveChanges}>
-              Добавить компанию
-            </LoadingButton>
-            <LinkButton to="/companies">Вернуться назад</LinkButton>
-          </Row>
-        </Col>
+            </Row>
+            <Row alignItems="center">
+              <Col size={4}>
+                <label htmlFor="legalName">Оффициальное название:</label>
+              </Col>
+              <TextBoxField
+                name="legalName"
+                value={legalName}
+                onChange={value => {
+                  setLegalName(value);
+                }}
+                placeholder="Legal name..."
+                size={5}
+              />
+            </Row>
+            <Row alignItems="center">
+              <Col size={4}>Документы подписанные компанией:</Col>
+              <Col>
+                <Multiselect
+                  defaultSelectedId={defaultDocumentIds}
+                  options={options}
+                  onChange={handleOnChangeMultiselect}
+                />
+              </Col>
+            </Row>
+            <Row mt="5">
+              <LoadingButton
+                success
+                actionType={ActionType.COMMON_COMPANIES_SAVECOMPANYASYNC}
+                onClick={handleOnSaveChanges}>
+                Применить изменения
+              </LoadingButton>
+              <LinkButton to="/companies">Вернуться назад</LinkButton>
+            </Row>
+          </Col>
+        </RepeatPanel>
       </Row>
     </Container>
   );

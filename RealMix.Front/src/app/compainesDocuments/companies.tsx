@@ -1,12 +1,25 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Container, Line, Col, Row, Block, Icon, LinkButton, Button, LoadingButton, Modal, TextBoxField } from 'shared';
+import {
+  Container,
+  Line,
+  Col,
+  Row,
+  Block,
+  LinkButton,
+  Button,
+  LoadingButton,
+  Modal,
+  TextBoxField,
+  RepeatPanel
+} from 'shared';
 import { getPageAsync, deleteCompanyAsync } from 'data/companies/actions';
 import { StoreType } from 'core/store';
 import { CompanyFull } from 'data/companies/models';
 import { ActionType } from 'data/actionTypes';
 import { Paginator } from 'shared/base/paginator';
+import { Order } from 'shared/base/order';
 
 export const Companies = () => {
   const dispatch = useDispatch();
@@ -73,12 +86,15 @@ export const Companies = () => {
                 <Col size={2} />
               </Row>
             </Block>
-            <Block className="table_body">
-              {page.items.map(x => (
-                <CompanyItem item={x} key={x.id} />
-              ))}
-            </Block>
-
+            <RepeatPanel
+              actionType={ActionType.COMMON_COMPANIES_GETPAGEASYNC}
+              action={() => dispatch(getPageAsync({ page: pageNumber, pageSize, orderBy, sortBy, name: nameSelect }))}>
+              <Block className="table_body">
+                {page.items.map(x => (
+                  <CompanyItem item={x} key={x.id} />
+                ))}
+              </Block>
+            </RepeatPanel>
             <Block mt="5">
               <Paginator
                 currentPage={pageNumber}
@@ -172,30 +188,5 @@ const DeleteCompanyModal: React.FC<{ onCancel: () => void; company: { id: number
       <br />
       Эти изменения нельзя будет отменить.
     </Modal>
-  );
-};
-
-const Order: React.FC<{
-  name: string;
-  state: 'asc' | 'desc' | 'none';
-  onClick: (name: string, sortBy: 'asc' | 'desc') => void;
-}> = ({ name, state, onClick, children }) => {
-  let angle;
-  if (state === 'asc') angle = <Icon name={'angle-down'} className={'fa-rotate-180'} />;
-  else if (state === 'desc') angle = <Icon name={'angle-down'} />;
-
-  const clickHandler = useCallback(() => {
-    const nextState = state !== 'desc' ? 'desc' : 'asc';
-    onClick(name, nextState);
-  }, [name, onClick, state]);
-  return (
-    <Block onClick={clickHandler}>
-      <Line>
-        <Block inline mr="2">
-          {children}
-        </Block>
-        <Block inline>{angle}</Block>
-      </Line>
-    </Block>
   );
 };

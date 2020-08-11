@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Container, Row, TextBoxField, SelectField, LoadingButton, LinkButton, Col, Line } from 'shared';
+import { Container, Row, TextBoxField, SelectField, LoadingButton, LinkButton, Col } from 'shared';
 import { getAllCompaniesAsync, saveDocumentAsync } from 'data/documents/actions';
 import { StoreType } from 'core/store';
 import { Multiselect, Option } from 'shared/base/Multiselect';
-import { DocumentType } from 'enums/DocumentType';
+import { DocumentType } from 'enums/documentType';
 import { ActionType } from 'data/actionTypes';
 
 export const DocumentCreatePage: React.FC<{}> = () => {

@@ -1,13 +1,26 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Container, Line, Row, Col, Block, Icon, Button, Modal, LoadingButton, LinkButton, TextBoxField } from 'shared';
+import {
+  Container,
+  Line,
+  Row,
+  Col,
+  Block,
+  Button,
+  Modal,
+  LoadingButton,
+  LinkButton,
+  TextBoxField,
+  RepeatPanel
+} from 'shared';
 import { StoreType } from 'core/store';
 import { getPageAsync, deleteDocumentAsync } from 'data/documents/actions';
-import { DocumentType } from 'enums/DocumentType';
+import { DocumentType } from 'enums/documentType';
 import { DocumentFull } from 'data/documents/models';
 import { ActionType } from 'data/actionTypes';
 import { Paginator } from 'shared/base/paginator';
+import { Order } from 'shared/base/order';
 
 export const Documents = () => {
   const selector = useSelector((state: StoreType) => state.documents);
@@ -70,11 +83,17 @@ export const Documents = () => {
                 <Col size={2} />
               </Row>
             </Block>
-            <Block className="table_elements">
-              {selector.page.items.map(i => (
-                <DocumentItem item={i} key={i.id} />
-              ))}
-            </Block>
+            <RepeatPanel
+              actionType={ActionType.COMMON_DOCUMENTS_GETPAGEASYNC}
+              action={() =>
+                dispatch(getPageAsync({ page: pageNumber, pageSize, orderBy, sortBy, title: titleSelect }))
+              }>
+              <Block className="table_elements">
+                {selector.page.items.map(i => (
+                  <DocumentItem item={i} key={i.id} />
+                ))}
+              </Block>
+            </RepeatPanel>
           </Block>
           <Block mt="5">
             <Paginator
@@ -175,30 +194,5 @@ const DeleteDocumentModal: React.FC<{ onCancel: () => void; document: { id: numb
       <br />
       Эти изменения нельзя будет отменить.
     </Modal>
-  );
-};
-
-const Order: React.FC<{
-  name: string;
-  state: 'asc' | 'desc' | 'none';
-  onClick: (name: string, sortBy: 'asc' | 'desc') => void;
-}> = ({ name, state, onClick, children }) => {
-  let angle;
-  if (state === 'asc') angle = <Icon name={'angle-down'} className={'fa-rotate-180'} />;
-  else if (state === 'desc') angle = <Icon name={'angle-down'} />;
-
-  const clickHandler = useCallback(() => {
-    const nextState = state !== 'desc' ? 'desc' : 'asc';
-    onClick(name, nextState);
-  }, [name, onClick, state]);
-  return (
-    <Block onClick={clickHandler}>
-      <Line>
-        <Block inline mr="2">
-          {children}
-        </Block>
-        <Block inline>{angle}</Block>
-      </Line>
-    </Block>
   );
 };

@@ -2,11 +2,11 @@ import React, { useEffect, useMemo, useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Container, Row, TextBoxField, SelectField, LoadingButton, LinkButton, Line, Col } from 'shared';
+import { Container, Row, TextBoxField, SelectField, LoadingButton, LinkButton, Col, RepeatPanel } from 'shared';
 import { getDocumentFullAsync, getAllCompaniesAsync, saveDocumentAsync } from 'data/documents/actions';
 import { StoreType } from 'core/store';
 import { Multiselect, Option } from 'shared/base/Multiselect';
-import { DocumentType } from 'enums/DocumentType';
+import { DocumentType } from 'enums/documentType';
 import { ActionType } from 'data/actionTypes';
 
 export const DocumentEditPage: React.FC<{}> = () => {
@@ -59,57 +59,67 @@ export const DocumentEditPage: React.FC<{}> = () => {
         <h2>{`Изменение документа "${fullDoc?.title}"`}</h2>
       </Row>
       <Row>
-        <Col size={6}>
-          <Row alignItems="baseline">
-            <Col size={3}>
-              <label htmlFor="title">Название:</label>
-            </Col>
-            <TextBoxField
-              name="title"
-              value={title}
-              onChange={value => {
-                setTitle(value);
-              }}
-              placeholder="Title..."
-              size={5}
-            />
-          </Row>
-          <Row>
-            <Col size={3}>
-              <label htmlFor="type">Тип документа:</label>
-            </Col>
-            <SelectField
-              name="type"
-              options={DocumentType.map}
-              getLabel={x => x}
-              value={type.toString()}
-              onChange={value => setType(Number(value))}
-              size={5}
-            />
-          </Row>
-          <Row alignItems="center">
-            <Col size={3}>Компании, подписавшие документ:</Col>
-            <Col size={9}>
-              <Multiselect
-                defaultSelectedId={defaultCompanyIds}
-                options={options}
-                onChange={handleOnChangeMultiselect}
+        <RepeatPanel
+          action={() => dispatch(getDocumentFullAsync(id))}
+          actionType={ActionType.COMMON_DOCUMENTS_GETDOCUMENTFULLASYNC}>
+          <Col size={6}>
+            <Row alignItems="baseline">
+              <Col size={3}>
+                <label htmlFor="title">Название:</label>
+              </Col>
+              <TextBoxField
+                name="title"
+                value={title}
+                onChange={value => {
+                  setTitle(value);
+                }}
+                placeholder="Title..."
+                size={5}
               />
-            </Col>
-          </Row>
-          <Row mt="3">
-            <Col size={3}>
-              <label htmlFor="body">Тело документа:</label>
-            </Col>
-            <Col size={9}>
-              <textarea name="body" value={body} onChange={e => setBody(e.target.value)} rows={5} cols={59}></textarea>
-            </Col>
-          </Row>
-        </Col>
+            </Row>
+            <Row>
+              <Col size={3}>
+                <label htmlFor="type">Тип документа:</label>
+              </Col>
+              <SelectField
+                name="type"
+                options={DocumentType.map}
+                getLabel={x => x}
+                value={type.toString()}
+                onChange={value => setType(Number(value))}
+                size={5}
+              />
+            </Row>
+            <Row alignItems="center">
+              <Col size={3}>Компании, подписавшие документ:</Col>
+              <Col size={9}>
+                <Multiselect
+                  defaultSelectedId={defaultCompanyIds}
+                  options={options}
+                  onChange={handleOnChangeMultiselect}
+                />
+              </Col>
+            </Row>
+            <Row mt="3">
+              <Col size={3}>
+                <label htmlFor="body">Тело документа:</label>
+              </Col>
+              <Col size={9}>
+                <textarea
+                  name="body"
+                  value={body}
+                  onChange={e => setBody(e.target.value)}
+                  rows={5}
+                  cols={59}></textarea>
+              </Col>
+            </Row>
+          </Col>
+        </RepeatPanel>
       </Row>
+
       <Row mt="5">
         <LoadingButton success actionType={ActionType.COMMON_DOCUMENTS_SAVEDOCUMENTASYNC} onClick={handleOnSaveChanges}>
-          Добавить документ
+          Применить изменения
         </LoadingButton>
         <LinkButton to="/documents">Вернуться назад</LinkButton>
       </Row>
